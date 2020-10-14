@@ -5,9 +5,49 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Styling for gradient background */
+  min-height: 90vh;
+  height: auto;
+  background: linear-gradient(#788be0, #6e3bdb);
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(#788be0),
+    to(#6e3bdb)
+  );
+  background: -o-linear-gradient(#788be0, #6e3bdb);
+  background: linear-gradient(#788be0, #6e3bdb);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+/* Form Textfield Placeholder overrrides  */
+
+::-webkit-input-placeholder {
+  /* Edge */
+  color: black !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
+  text-align: center !important;
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer */
+  color: black !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
+  text-align: center !important;
+}
+
+::placeholder {
+  color: black !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
+  text-align: center !important;
 }
