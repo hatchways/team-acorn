@@ -6,7 +6,7 @@
 2. Install the dependencies with `pipenv install`. This also createa a virtual environment, if there isn't one already
 3. Activate the virtual environment and start the app with `pipenv run flask run`
 
-## Setup Local Postgres Database
+## Setup Local Postgres Database (for linux machines)
 
 1. Update `sudo apt-get update`
 2. Install PostgreSQL 10.4 `sudo apt-get install postgresql-10.4`
