@@ -9,22 +9,20 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
+
 app = Flask(__name__)
 api = Api(app)
 
-
-
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'some-secret-string'
-
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 db = SQLAlchemy(app)
 
 @app.before_first_request
 def create_tables():
   db.create_all()
 
-app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
+app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
 jwt = JWTManager(app)
 
 # enable blacklisting in configuration
