@@ -17,7 +17,7 @@
 7. Create databases, `create database team_acorn;`, `create database team_acorn_test;`
 8. To stop server `sudo service postgresql stop`
 
-### Useful commands for postgres command line
+### Useful commands for postgres command line (will remove later)
 
 - `psql` - open postgres command line
 - `\list` - list all databases hosted on server

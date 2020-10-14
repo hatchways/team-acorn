@@ -4,10 +4,12 @@ from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, jwt_refresh_token_required, get_jwt_identity)
 
 parser = reqparse.RequestParser()
-parser.add_argument(
-    'email', help='This field cannot be blank', required=True)
-parser.add_argument(
-    'password', help='This field cannot be blank', required=True)
+parser.add_argument('email',
+                    help='This field cannot be blank', required=True)
+parser.add_argument('password',
+                    help='This field cannot be blank', required=True)
+parser.add_argument('password_confirmation',
+                    help='This field cannot be blank', required=True)
 
 
 class UserRegistration(Resource):
@@ -15,7 +17,11 @@ class UserRegistration(Resource):
         data = parser.parse_args()
 
         if UserModel.find_by_email(data['email']):
-            return {'message': 'User {} already exists'.format(data['email'])}
+            return {'message': 'User {} already exists'.format(data['email'])}, 400
+        elif data['password'] != data['password_confirmation']:
+            return {'message': 'Passwords do not match'}, 400
+        elif len(data['password']) < 6:
+            return {'message': 'Password must be greater then 6 characters'}, 400
 
         new_user = UserModel(
             email=data['email'],
@@ -83,9 +89,11 @@ class UserLogoutRefresh(Resource):
 
 
 class AllUsers(Resource):
+    @jwt_required
     def get(self):
         return UserModel.return_all()
 
+    @jwt_required
     def delete(self):
         return UserModel.delete_all()
 
