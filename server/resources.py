@@ -30,7 +30,7 @@ class UserRegistration(Resource):
                 'message': 'User {} was created'.format(data['email']),
                 'access_token': access_token,
                 'refresh_token': refresh_token
-            }
+            }, 201
         except:
             return{'message': 'Something went wrong'}, 500
 
@@ -55,7 +55,7 @@ class UserLogin(Resource):
                 'refresh_token': refresh_token
             }
         else:
-            return {'message': 'Wrong credentials'}
+            return {'message': 'Wrong credentials'},
 
 
 class UserLogoutAccess(Resource):

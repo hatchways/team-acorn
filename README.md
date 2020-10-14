@@ -25,3 +25,5 @@
 - `\dt` - if connected to a database, list all tables in selected database
 - `TABLE tableName;` - if connected to a database, list rows inside the table tableName
 - `\q` - exit out of psql command line
+
+### Current features implemented for issue 15
