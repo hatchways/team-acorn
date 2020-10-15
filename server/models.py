@@ -15,13 +15,20 @@ class UserModel(db.Model):
         db.session.commit()
 
     @classmethod
+    def get_id(cls, email):
+        user = cls.query.filter_by(email=email).first()
+        return user.id
+
+    @classmethod
     def find_by_email(cls, email):
         return cls.query.filter_by(email=email).first()
 
     @classmethod
     def return_all(cls):
+
         def to_json(x):
             return {
+                'id': x.id,
                 'email': x.email,
                 'password': x.password
             }

@@ -47,7 +47,7 @@ const SignUp = () => {
   const handleSignup = (e) => {
     e.preventDefault();
     if (form.password === form.confirmPassword) {
-      fetch("/signin", {
+      fetch("/registration", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
