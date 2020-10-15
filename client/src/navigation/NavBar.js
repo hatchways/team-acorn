@@ -31,11 +31,6 @@ const useStyles = makeStyles((theme) => ({
     textTransform: "capitalize",
     color: theme.turquoise,
   },
-  navlinkButton: {
-    "&:active": {
-      textDecoration: "none",
-    },
-  },
 }));
 
 const NavBar = () => {
@@ -47,7 +42,6 @@ const NavBar = () => {
       <NavbarLink path={"/reviews"} text={"Reviews"} />
       <NavbarLink path={"/balance"} text={"Balance"} />
       <NavbarNotification />
-
       <NavbarLink path={"/upload"}>
         <Button
           classes={{

@@ -12,6 +12,14 @@ code {
     monospace;
 }
 
+a,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none;
+  color: inherit;
+}
+
 @font-face {
   font-family: "Avenir";
   src: url("./fonts/Avenir-Book.otf");

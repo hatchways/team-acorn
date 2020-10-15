@@ -6,7 +6,8 @@ import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   navlinkButton: {
-    "&:active": {
+    textDecoration: "none",
+    "&:focus": {
       textDecoration: "none",
     },
   },
@@ -28,7 +29,6 @@ const NavbarLink = ({ path, text, children }) => {
       {children && children}
       {!children && (
         <Button
-          disableRipple={true}
           classes={{
             root: classes.navlinkRoot,
             label: classes.navlinkLabel,
