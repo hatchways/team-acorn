@@ -24,3 +24,27 @@ a:active {
   font-family: "Avenir";
   src: url("./fonts/Avenir-Book.otf");
 }
+/* Form Textfield Placeholder overrrides  */
+
+::-webkit-input-placeholder {
+  /* Edge */
+  color: black !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
+  text-align: center !important;
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer */
+  color: black !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
+  text-align: center !important;
+}
+
+::placeholder {
+  color: black !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
+  text-align: center !important;
+}
