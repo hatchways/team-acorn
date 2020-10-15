@@ -1,11 +1,11 @@
-import { makeStyles, TextareaAutosize } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   container: {
     width: "100%",
     [theme.breakpoints.down("xs")]: {
       minHeight: "100vh",
-      height: TextareaAutosize,
+      height: "auto",
     },
     background: "white",
     margin: "0px auto",
@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 15,
     marginLeft: -60,
   },
-  loginButon: {
-    backgroundColor: "#43DDC1",
+  loginButton: {
+    backgroundColor: theme.focusColor,
     color: "#fff",
     borderRadius: 50,
     width: 175,

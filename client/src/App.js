@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { theme } from "./themes/theme";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
+import OnboardingExperience from "./pages/OnboardingExperience";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route exact path="/" component={SignUp} />
           <Route path="/signup" component={SignUp} />
           <Route path="/signin" component={SignIn} />
+          <Route path="/onboard" component={OnboardingExperience} />
           <Route path="*" component={SignUp} />
         </Switch>
       </BrowserRouter>
