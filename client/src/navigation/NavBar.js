@@ -3,6 +3,7 @@ import { useTheme, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { NavLink } from "react-router-dom";
 
+import NavbarLink from "../components/NavbarLink";
 import NavbarNotification from "../components/NavbarNotification";
 import NavbarProfile from "../components/NavbarProfile";
 
@@ -14,12 +15,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     height: 60,
     padding: "0 20px",
-  },
-  navbarLink: {
-    margin: 25,
-    color: "white",
-    textDecoration: "none",
-    ...theme.typography,
   },
   buttonRoot: {
     background: "transparent",
@@ -50,12 +45,8 @@ const NavBar = () => {
 
   return (
     <div class={classes.navbarContainer}>
-      <NavLink exact to="/reviews" className={classes.navbarLink}>
-        Reviews
-      </NavLink>
-      <NavLink exact to="/balance" className={classes.navbarLink}>
-        Balance
-      </NavLink>
+      <NavbarLink path={"/reviews"} text={"Reviews"} />
+      <NavbarLink path={"/balance"} text={"Balance"} />
       <NavbarNotification />
 
       <NavLink exact to="/upload">
