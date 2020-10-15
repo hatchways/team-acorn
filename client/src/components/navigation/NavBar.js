@@ -3,9 +3,9 @@ import { useTheme, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { NavLink } from "react-router-dom";
 
-import NavbarLink from "../components/NavbarLink";
-import NavbarNotification from "../components/NavbarNotification";
-import NavbarProfile from "../components/NavbarProfile";
+import NavbarLink from "./NavbarLink";
+import NavbarNotification from "./NavbarNotification";
+import NavbarProfile from "./NavbarProfile";
 
 const useStyles = makeStyles((theme) => ({
   navbarContainer: {

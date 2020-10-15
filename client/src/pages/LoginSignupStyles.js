@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: -60,
   },
   loginButton: {
-    backgroundColor: theme.focusColor,
+    backgroundColor: theme.turquoise,
     color: "#fff",
     borderRadius: 50,
     width: 175,
