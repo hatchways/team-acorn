@@ -8,22 +8,21 @@ parser.add_argument('email',
                     help='This field cannot be blank', required=True)
 parser.add_argument('password',
                     help='This field cannot be blank', required=True)
-parser.add_argument('password_confirmation',
-                    help='This field cannot be blank', required=True)
 
 
 class UserRegistration(Resource):
     def post(self):
+        parser.add_argument('name',
+                            help='This field cannot be blank', required=True)
         data = parser.parse_args()
 
         if UserModel.find_by_email(data['email']):
             return {'message': 'User {} already exists'.format(data['email'])}, 400
-        elif data['password'] != data['password_confirmation']:
-            return {'message': 'Passwords do not match'}, 400
         elif len(data['password']) < 6:
             return {'message': 'Password must be greater then 6 characters'}, 400
 
         new_user = UserModel(
+            full_name=data['name'],
             email=data['email'],
             password=UserModel.generate_hash(data['password'])
         )
@@ -42,6 +41,7 @@ class UserRegistration(Resource):
 
 
 class UserLogin(Resource):
+
     def post(self):
         # parse request params, then lookup by email, if email doesnt exist return error message,
         # if user exists then check password, if password match then return user logged in message,
