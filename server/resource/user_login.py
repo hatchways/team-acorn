@@ -1,9 +1,8 @@
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import (create_access_token)
-import sys
-sys.path.append("..")
-from models import UserModel
+from server.models.user_model import UserModel
 import datetime
+
 
 class UserLogin(Resource):
 
@@ -20,7 +19,7 @@ class UserLogin(Resource):
         current_email = UserModel.find_by_email(data['email'])
 
         if not current_email:
-            return {'message': 'email {} doesn\'t exist'.format(data['email'])}
+            return {'message': 'Wrong credentials'}
 
         if UserModel.verify_hash(data['password'], current_email.password):
             expires = datetime.timedelta(days=1)

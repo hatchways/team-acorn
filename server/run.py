@@ -5,10 +5,7 @@ from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
-from dotenv import load_dotenv
 import os
-
-load_dotenv()
 
 app = Flask(__name__)
 api = Api(app)
@@ -35,13 +32,14 @@ def check_if_token_in_blacklist(decrypted_token):
     # @ decorator is called every time client tries to access secured endpoint
     # function will return True or False depending if the passed token is blacklisted
     jti = decrypted_token['jti']
-    return models.RevokedTokenModel.is_jti_blacklisted(jti)
+    return revoked_token_model.RevokedTokenModel.is_jti_blacklisted(jti)
 
 
-import models, resource.secretResource, resource.allUsers, resource.userLogoutAccess, resource.userLogin, resource.userRegistration
+from server.resource.user_logout_access import UserLogoutAccess
+from server.resource.user_login import UserLogin
+from server.resource.user_registration import UserRegistration
+from server.models import revoked_token_model
 
-api.add_resource(resource.userRegistration.UserRegistration, '/registration')
-api.add_resource(resource.userLogin.UserLogin, '/login')
-api.add_resource(resource.userLogoutAccess.UserLogoutAccess, '/logout/access')
-api.add_resource(resource.allUsers.AllUsers, '/users')
-api.add_resource(resource.secretResource.SecretResource, '/secret')
+api.add_resource(UserRegistration, '/registration')
+api.add_resource(UserLogin, '/login')
+api.add_resource(UserLogoutAccess, '/logout/access')
