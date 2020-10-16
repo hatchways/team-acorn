@@ -1,11 +1,11 @@
 import React from "react";
 import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-
 import { theme } from "./themes/theme";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import OnboardingExperience from "./pages/OnboardingExperience";
+import UploadCodeDailog from "./components/UploadCodeDailog";
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
           <Route path="/signup" component={SignUp} />
           <Route path="/signin" component={SignIn} />
           <Route path="/onboard" component={OnboardingExperience} />
-          <Route path="*" component={SignUp} />
+          <Route path="*" component={UploadCodeDailog} />
         </Switch>
       </BrowserRouter>
     </MuiThemeProvider>

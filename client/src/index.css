@@ -12,27 +12,24 @@ code {
     monospace;
 }
 
-/* Form Textfield Placeholder overrrides  */
-
-::-webkit-input-placeholder {
-  /* Edge */
-  color: black !important;
-  font-weight: 500 !important;
-  opacity: 1 !important;
-  text-align: center !important;
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
 }
 
-:-ms-input-placeholder {
-  /* Internet Explorer */
-  color: black !important;
-  font-weight: 500 !important;
-  opacity: 1 !important;
-  text-align: center !important;
+/* Track */
+::-webkit-scrollbar-track {
+  width: 7px;
+  box-shadow: none;
 }
 
-::placeholder {
-  color: black !important;
-  font-weight: 500 !important;
-  opacity: 1 !important;
-  text-align: center !important;
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #43ddc1;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: grey;
 }

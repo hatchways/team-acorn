@@ -13,6 +13,12 @@ const useStyles = makeStyles((theme) => ({
       backgroundRepeat: "no-repeat",
       backgroundSize: "contain",
     },
+    "& ::placeholder": {
+      color: "black !important",
+      fontWeight: "500 !important",
+      opacity: "1 !important",
+      textAlign: "center !important",
+    },
   },
   paper: {
     borderRadius: 15,
