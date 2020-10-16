@@ -13,27 +13,41 @@ import NavBar from "./components/navigation/NavBar";
 
 const Context = createContext(null);
 function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(true);
   //Need To Fetch user Data and setUser Here. User info will be avalable in all children of Context.Provider
+
   return (
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
-        <NavBar />
         <Switch>
-          <Context.Provider value={{ user, setUser }}>
-            <Route path="/reviews" component={ReviewsPage} />
-            <Route path="/balance" component={BalancePage} />
-            <Route path="/upload" component={UploadCodePage} />
-          </Context.Provider>
-          <Route exact path="/" component={SignUp} />
-          <Route path="/signup" component={SignUp} />
-          <Route path="/signin" component={SignIn} />
-          <Route path="/onboard" component={OnboardingExperience} />
-          <Route path="*" component={SignUp} />
+          {!user && AuthStack()}
+          {user && (
+            <Context.Provider value={{ user, setUser }}>
+              <NavBar />
+              {DefaultStack()}
+            </Context.Provider>
+          )}
         </Switch>
       </BrowserRouter>
     </MuiThemeProvider>
   );
 }
+const AuthStack = () => (
+  <Switch>
+    <Route exact path="/" component={SignUp} />
+    <Route exact path="/signup" component={SignUp} />
+    <Route path="/signin" component={SignIn} />
+    <Route path="/onboard" component={OnboardingExperience} />
+    <Route path="*" component={SignUp} />
+  </Switch>
+);
+
+const DefaultStack = () => (
+  <Switch>
+    <Route path="/reviews" component={ReviewsPage} />
+    <Route path="/balance" component={BalancePage} />
+    <Route path="/upload" component={UploadCodePage} />
+  </Switch>
+);
 
 export default App;
