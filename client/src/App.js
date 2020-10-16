@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext, useState } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { theme } from "./themes/theme";
@@ -11,15 +11,20 @@ import OnboardingExperience from "./pages/OnboardingExperience";
 
 import NavBar from "./components/navigation/NavBar";
 
+const Context = createContext(null);
 function App() {
+  const [user, setUser] = useState(null);
+  //Need To Fetch user Data and setUser Here. User info will be avalable in all children of Context.Provider
   return (
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
         <NavBar />
         <Switch>
-          <Route path="/reviews" component={ReviewsPage} />
-          <Route path="/balance" component={BalancePage} />
-          <Route path="/upload" component={UploadCodePage} />
+          <Context.Provider value={{ user, setUser }}>
+            <Route path="/reviews" component={ReviewsPage} />
+            <Route path="/balance" component={BalancePage} />
+            <Route path="/upload" component={UploadCodePage} />
+          </Context.Provider>
           <Route exact path="/" component={SignUp} />
           <Route path="/signup" component={SignUp} />
           <Route path="/signin" component={SignIn} />
