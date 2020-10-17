@@ -4,7 +4,7 @@
 
 1. Open a terminal and go to the server folder. Make sure you have **pipenv** installed (`pip install pipenv`)
 2. Install the dependencies with `pipenv install`. This also createa a virtual environment, if there isn't one already
-3. Activate the virtual environment and start the app with `pipenv run flask run`
+3. Activate the virtual environment and start the app with `FLASK_APP=run.py FLASK_DEBUG=1 flask run`
 
 ## Setup Local Postgres Database (for linux machines)
 
@@ -17,7 +17,7 @@
 7. Create databases, `create database team_acorn;`, `create database team_acorn_test;`
 8. To stop server `sudo service postgresql stop`
 
-### Useful commands for postgres command line
+### Useful commands for postgres command line (will remove later)
 
 - `psql` - open postgres command line
 - `\list` - list all databases hosted on server
@@ -25,3 +25,5 @@
 - `\dt` - if connected to a database, list all tables in selected database
 - `TABLE tableName;` - if connected to a database, list rows inside the table tableName
 - `\q` - exit out of psql command line
+
+### Current features implemented for issue 15
