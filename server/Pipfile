@@ -13,6 +13,7 @@ passlib = "*"
 flask-sqlalchemy = "*"
 psycopg2-binary = "*"
 python-dotenv = "*"
+pylint-flask = "*"
 
 [requires]
 python_version = "3.7"

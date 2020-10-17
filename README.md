@@ -9,7 +9,7 @@
 ## Setup Local Postgres Database (for linux machines)
 
 1. Update `sudo apt-get update`
-2. Install PostgreSQL 10.4 `sudo apt-get install postgresql-10.4`
+2. Install PostgreSQL 10.4 `sudo apt-get install postgresql`
 3. Create postgres user `sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"`
 4. Start PostgresSQL server `sudo service postgresql start`
 5. Login to server `sudo -i -u postgres`
