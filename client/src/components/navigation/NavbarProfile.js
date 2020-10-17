@@ -5,6 +5,8 @@ import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 
+const PROFILE_IMG_URL =
+  "https://www.dovercourt.org/wp-content/uploads/2019/11/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg";
 const useStyles = makeStyles((theme) => ({
   profileContainer: {
     display: "flex",
@@ -39,12 +41,7 @@ const NavbarProfile = () => {
 
   return (
     <div class={classes.profileContainer}>
-      <img
-        src={
-          "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"
-        }
-        class={classes.profileImage}
-      />
+      <img src={PROFILE_IMG_URL} class={classes.profileImage} />
       <Button
         onClick={handleClick}
         classes={{

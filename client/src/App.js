@@ -20,11 +20,11 @@ function App() {
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
         <Switch>
-          {!user && AuthStack()}
+          {!user && <AuthStack />}
           {user && (
             <Context.Provider value={{ user, setUser }}>
               <NavBar />
-              {DefaultStack()}
+              <DefaultStack />
             </Context.Provider>
           )}
         </Switch>
