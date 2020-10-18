@@ -1,6 +1,5 @@
 from flask_restful import Resource, reqparse
-from flask_jwt_extended import (
-    create_access_token, jwt_required, get_jwt_identity)
+from flask_jwt_extended import (create_access_token, jwt_required, get_jwt_identity)
 import datetime
 from server.models.user_model import UserModel
 
