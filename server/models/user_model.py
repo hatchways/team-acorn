@@ -9,6 +9,8 @@ class UserModel(db.Model):
     full_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
+    experience = db.Column(db.JSON, nullable = True)
+
 
     def save_to_db(self):
         db.session.add(self)
@@ -18,6 +20,11 @@ class UserModel(db.Model):
     def get_id(cls, email):
         user = cls.query.filter_by(email=email).first()
         return user.id
+
+    @classmethod
+    def get_user(cls, id):
+        user = cls.query.get(id)
+        return user
 
     @classmethod
     def find_by_email(cls, email):
@@ -52,3 +59,11 @@ class UserModel(db.Model):
     def verify_hash(password, hash):
         # check given password
         return sha256.verify(password, hash)
+
+    @classmethod
+    def update_experience(cls, id, exp):
+        print(id)
+        print(exp)
+        user = cls.query.get(id)
+        user.experience = exp
+        db.session.commit()
