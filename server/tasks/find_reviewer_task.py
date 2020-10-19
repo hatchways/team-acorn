@@ -1,4 +1,5 @@
 import time
+import os           
 from server.models.user_model import UserModel
 
 def find_reviewer(lang_lvls):
@@ -10,6 +11,8 @@ def find_reviewer(lang_lvls):
 
 # Test task
 def background_task(n):
+
+    print(os.getcwd())
     delay = 7
     print("Task Running")
     print(f"Simulating {delay} second delay")
