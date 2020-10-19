@@ -50,17 +50,11 @@ from server.resource.user_logout_access import UserLogoutAccess
 from server.resource.user_login import UserLogin
 from server.resource.user_registration import UserRegistration
 from server.models import revoked_token_model
-<<<<<<< HEAD
 from server.resource.request_new import RequestNew
-=======
 from server.resource.user_experience import UserExperience
->>>>>>> dev
 
 api.add_resource(UserRegistration, '/registration')
 api.add_resource(UserLogin, '/login')
 api.add_resource(UserLogoutAccess, '/logout/access')
-<<<<<<< HEAD
 api.add_resource(RequestNew, '/new_request')
-=======
 api.add_resource(UserExperience, '/experience')
->>>>>>> dev
