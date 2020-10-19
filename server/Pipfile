@@ -14,6 +14,8 @@ flask-sqlalchemy = "*"
 psycopg2-binary = "*"
 python-dotenv = "*"
 pylint-flask = "*"
+redis = "*"
+rq = "*"
 
 [requires]
 python_version = "3.7"
