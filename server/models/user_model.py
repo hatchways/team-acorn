@@ -62,8 +62,6 @@ class UserModel(db.Model):
 
     @classmethod
     def update_experience(cls, id, exp):
-        print(id)
-        print(exp)
         user = cls.query.get(id)
         user.experience = exp
         db.session.commit()
