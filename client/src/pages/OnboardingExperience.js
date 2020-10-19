@@ -1,18 +1,51 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useContext } from "react";
+import { UserContext } from "../context/userContext";
 import OnboardingContainer from "../components/OnboardingContainer";
 import { Grid, Typography, TextField, Button } from "@material-ui/core";
 import useStyles from "./LoginSignupStyles";
 
 // Signup experience level dropdown options
 const experienceOptions = [
-  { value: "Beginner", label: "Beginner" },
-  { value: "Junior", label: "Junior" },
-  { value: "Intermediate", label: "Intermediate" },
-  { value: "Senior", label: "Senior" },
+  { value: 0, label: "Beginner" },
+  { value: 1, label: "Junior" },
+  { value: 2, label: "Intermediate" },
+  { value: 3, label: "Senior" },
 ];
 
+const uploadUserExperience = (experience, dispatch) => {
+  fetch("/experience", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("Token"),
+    },
+    body: JSON.stringify({
+      experience: experience,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.error) {
+        // handle error if we recieve error from server
+      } else {
+        dispatch({
+          type: "sotreUserExperience",
+          payload: {
+            javascript: experience,
+          },
+        });
+
+        // Redirect user to Home page..
+        // history.push("/onboard");
+      }
+    })
+    .catch((err) => console.log(err));
+  alert();
+};
 const OnboardingExperience = () => {
   const classes = useStyles(); // makeStyles MaterialUI hook from styles.js
+  const userContext = useContext(UserContext);
+  const { dispatch } = userContext;
 
   const [form, setForm] = useState({ experience: experienceOptions[0].value });
 
@@ -37,6 +70,8 @@ const OnboardingExperience = () => {
   const handleLogin = (e) => {
     e.preventDefault();
     alert(`experience: ${form.experience}`);
+    uploadUserExperience(form.experience, dispatch);
+
     return false;
     // Implement API call to send data to flask backend :: reminder
   };

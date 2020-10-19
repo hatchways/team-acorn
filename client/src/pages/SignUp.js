@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Grid,
   Typography,
@@ -7,11 +7,14 @@ import {
   Link,
   Button,
 } from "@material-ui/core";
+import { UserContext } from "../context/userContext";
 import useStyles from "./LoginSignupStyles";
 import OnboardingContainer from "../components/OnboardingContainer";
 import { useHistory } from "react-router-dom";
 
 const SignUp = () => {
+  const userContext = useContext(UserContext);
+  const { dispatch } = userContext;
   const classes = useStyles(); // makeStyles MaterialUI hook from styles.js
   const history = useHistory();
   const [form, setForm] = useState({
@@ -56,6 +59,7 @@ const SignUp = () => {
           email: form.email,
           password: form.password,
           name: form.name,
+          experience: {},
         }),
       })
         .then((response) => response.json())
@@ -63,10 +67,20 @@ const SignUp = () => {
           if (data.error) {
             // handle error if we recieve error from server
           } else {
+            dispatch({
+              type: "storeUserInfo",
+              payload: {
+                email: form.email,
+                password: form.password,
+                name: form.name,
+                experience: {},
+              },
+            });
             // clear form
             setForm({ email: "", password: "", name: "", confirmPassword: "" });
+
             // Saving token in localStorage
-            localStorage.setItem("Token", data.token);
+            localStorage.setItem("Token", data.access_token);
             // Redirect user to Home page..
             history.push("/onboard");
           }
