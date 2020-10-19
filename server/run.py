@@ -46,12 +46,12 @@ def check_if_token_in_blacklist(decrypted_token):
     return revoked_token_model.RevokedTokenModel.is_jti_blacklisted(jti)
 
 
-from server.resource.user_logout_access import UserLogoutAccess
-from server.resource.user_login import UserLogin
-from server.resource.user_registration import UserRegistration
+from server.resources.user_logout_access import UserLogoutAccess
+from server.resources.user_login import UserLogin
+from server.resources.user_registration import UserRegistration
 from server.models import revoked_token_model
-from server.resource.request_new import RequestNew
-from server.resource.user_experience import UserExperience
+from server.resources.request_new import RequestNew
+from server.resources.user_experience import UserExperience
 
 api.add_resource(UserRegistration, '/registration')
 api.add_resource(UserLogin, '/login')

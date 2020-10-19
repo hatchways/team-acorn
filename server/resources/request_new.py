@@ -2,7 +2,6 @@ from flask_restful import Resource, reqparse
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 
 from server.models.revquest_model import RevquestModel
-
 from server.run import queue_object, redis_instance
 from server.tasks.find_reviewer_task import background_task
 import time
@@ -52,18 +51,4 @@ class RequestNew(Resource):
         except:
             return{'message': 'Something went wrong'}, 500
         
-
-    # test function to see if api route is working
-    @jwt_required
-    def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('code', help='This field cannot be blank', required=True)
-        data = parser.parse_args()
-        user_id = get_jwt_identity()
-        code = data['code']
-        return {
-            'user_id': user_id,
-            'recieved code': code
-        }
-
         

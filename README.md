@@ -4,12 +4,13 @@
 
 1. Open a terminal and go to the server folder. Make sure you have **pipenv** installed (`pip install pipenv`)
 2. Install the dependencies with `pipenv install`. This also createa a virtual environment, if there isn't one already
+4. run `pipenv shell`
 3. Activate the virtual environment and start the app with `FLASK_APP=run.py FLASK_DEBUG=1 flask run`
 
 ## Setup Local Postgres Database (for linux machines)
 
 1. Update `sudo apt-get update`
-2. Install PostgreSQL 10.4 `sudo apt-get install postgresql`
+2. Install PostgreSQL `sudo apt-get install postgresql`
 3. Create postgres user `sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"`
 4. Start PostgresSQL server `sudo service postgresql start`
 5. Login to server `sudo -i -u postgres`
