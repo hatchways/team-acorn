@@ -19,6 +19,7 @@ class UserRegistration(Resource):
             return {'message': 'User {} already exists'.format(data['email'])}, 400
         elif len(data['password']) < 6:
             return {'message': 'Password must be greater then 6 characters'}, 400
+        
 
         new_user = UserModel(
             full_name=data['name'],
