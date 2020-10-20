@@ -83,16 +83,15 @@ const SignUp = () => {
               error: true,
             });
           } else {
-            // clear form
-            setForm({ email: "", password: "", name: "", confirmPassword: "" });
-            // snackbar activate
-            setSnackbar({
-              open: true,
-              message: data.message,
-              error: false,
-            });
             // Redirect user to login page
-            history.push("/login");
+            history.push({
+              pathname: "/signin",
+              state: {
+                open: true,
+                message: "Registeration Successful, Please login to continue !",
+                error: false,
+              },
+            });
           }
         })
         .catch((err) => console.log(err));

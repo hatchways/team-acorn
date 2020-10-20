@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 // MUI imports
 import {
   Grid,
@@ -12,33 +12,22 @@ import {
 import useStyles from "./LoginSignupStyles";
 import OnboardingContainer from "../components/OnboardingContainer";
 // Router imports
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 // Snackbar
 import Snackbar from "../components/SnackbarComponent";
+import { UserContext } from "../App";
 
 const SignIn = () => {
   const classes = useStyles(); // makeStyles MaterialUI hook from styles.js
   const history = useHistory(); // useHistory hook from router-dom
+  const location = useLocation(); // useLocation hook from router-dom
+  const context = useContext(UserContext);
 
   useEffect(() => {
-    fetch("/user", {
-      method: "get",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    })
-      .then((data) => data.json())
-      .then((data) => {
-        if (data.error) {
-        } else {
-          console.log(data.user);
-        }
-      })
-      .catch((er) => console.log(er));
+    if (location.state) setSnackbar(location.state);
+    window.history.replaceState(null, document.title, "/signin");
+    // eslint-disable-next-line
   }, []);
-
-  // Local states..
 
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -90,6 +79,9 @@ const SignIn = () => {
           setForm({ email: "", password: "" });
           // Saving token in localStorage
           localStorage.setItem("token", data.access_token);
+          // Updating context
+          console.log(context);
+          context.setIsLogged(true);
           // Redirect user to onboard page..
           history.push("/onboard");
         }
