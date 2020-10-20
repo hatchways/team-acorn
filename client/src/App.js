@@ -13,7 +13,7 @@ import NavBar from "./components/navigation/NavBar";
 
 const Context = createContext(null);
 function App() {
-  const [user, setUser] = useState(true);
+  const [user, setUser] = useState(false);
   //Need To Fetch user Data and setUser Here. User info will be avalable in all children of Context.Provider
 
   return (
