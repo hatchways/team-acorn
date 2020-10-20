@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // MUI imports
 import {
   Grid,
@@ -19,6 +19,24 @@ import Snackbar from "../components/SnackbarComponent";
 const SignIn = () => {
   const classes = useStyles(); // makeStyles MaterialUI hook from styles.js
   const history = useHistory(); // useHistory hook from router-dom
+
+  useEffect(() => {
+    fetch("/user", {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((data) => data.json())
+      .then((data) => {
+        if (data.error) {
+        } else {
+          console.log(data.user);
+        }
+      })
+      .catch((er) => console.log(er));
+  }, []);
 
   // Local states..
 
