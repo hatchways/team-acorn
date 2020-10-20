@@ -76,6 +76,17 @@ const OnboardingExperience = () => {
   const upadateRow = (rowObj) => {
     setRows({ ...rows, ...rowObj });
   };
+  const isExperienceEmpty = (rows) => {
+    let isEmpty = true;
+    for (var key in rows) {
+      const value = rows[key];
+      if (value) {
+        isEmpty = false;
+        break;
+      }
+    }
+    return isEmpty;
+  };
   return (
     <>
       <OnboardingContainer>
@@ -131,7 +142,12 @@ const OnboardingExperience = () => {
             className={classes.loginButton}
             type="submit"
             onClick={() => {
-              uploadUserExperience(rows, dispatch);
+              console.log(isExperienceEmpty(rows));
+              if (!isExperienceEmpty(rows)) {
+                uploadUserExperience(rows, dispatch);
+              } else {
+                alert("Add at least one Language");
+              }
             }}
           >
             Get Started
