@@ -50,9 +50,10 @@ const useStyles = makeStyles((theme) => ({
     display: "inline-flex",
     flex: 0,
     fontWeight: "bold",
+    marginLeft: 10,
   },
   experienceRowContainer: {
-    widht: "100%",
+    margin: 0,
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
@@ -89,6 +90,8 @@ const useStyles = makeStyles((theme) => ({
     color: "red",
   },
   dropDown: {
+    width: 100,
+    marginLeft: 10,
     borderRadius: 5,
     borderColor: "rgba(0,0,0,0.3)",
     borderWidth: 1,
@@ -105,6 +108,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   dropDownText: {
+    marginLeft: 10,
     color: theme.purple,
     fontWeight: "bold",
     borderWidth: 0,

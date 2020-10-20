@@ -4,6 +4,9 @@ import { makeStyles, Paper } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   container: {
     position: "absolute",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     zIndex: -999,
     width: "100%",
     backgroundColor: "white",
@@ -15,17 +18,12 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   paper: {
+    display: "flex",
     borderRadius: 15,
+    padding: "5rem",
     [theme.breakpoints.down("sm")]: {
       minHeight: "calc(100vh - 36px)",
       height: "auto",
-    },
-    padding: "18px",
-    [theme.breakpoints.up("sm")]: {
-      minHeight: 300,
-      width: 400,
-      padding: "5rem",
-      margin: "10vh auto",
     },
   },
 }));

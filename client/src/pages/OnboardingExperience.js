@@ -99,28 +99,28 @@ const OnboardingExperience = () => {
           >
             Your experience:
           </Typography>
-
-          <div>
-            {Object.keys(rows).map((languageRow, i) => {
-              if (rows[languageRow] != null) {
-                return (
-                  <ExperienceRow
-                    key={i}
-                    language={languageRow}
-                    experience={rows[languageRow]}
-                    experienceOptions={experienceLabelList}
-                    upadateRow={upadateRow}
-                    languages={[
-                      languageRow,
-                      ...Object.keys(rows).filter((lang) => {
-                        return rows[lang] == null;
-                      }),
-                    ]}
-                  />
-                );
-              }
-            })}
-          </div>
+          {Object.keys(rows).map((languageRow, i) => {
+            if (rows[languageRow] != null) {
+              return (
+                <ExperienceRow
+                  key={i}
+                  language={languageRow}
+                  experience={rows[languageRow]}
+                  experienceOptions={experienceLabelList}
+                  upadateRow={upadateRow}
+                  deleteRow={() => {
+                    availableLanguages.push(languageRow);
+                  }}
+                  languages={[
+                    languageRow,
+                    ...Object.keys(rows).filter((lang) => {
+                      return rows[lang] == null;
+                    }),
+                  ]}
+                />
+              );
+            }
+          })}
           {availableLanguages.length != 0 && (
             <IconButton
               disableRipple

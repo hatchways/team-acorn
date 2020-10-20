@@ -10,6 +10,7 @@ const ExperienceRow = ({
   experience,
   experienceOptions,
   upadateRow,
+  deleteRow,
 }) => {
   const classes = useStyles(); // makeStyles MaterialUI hook from styles.js
 
@@ -22,6 +23,7 @@ const ExperienceRow = ({
             const tempObj = {};
             tempObj[language] = null;
             upadateRow(tempObj);
+            deleteRow();
           }}
         />
       </Button>
