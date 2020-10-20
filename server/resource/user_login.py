@@ -19,7 +19,7 @@ class UserLogin(Resource):
         current_email = UserModel.find_by_email(data['email'])
 
         if not current_email:
-            return {'error': 'Invalid email or password !!'}
+            return {'error': 'Invalid email or password'}
 
         if UserModel.verify_hash(data['password'], current_email.password):
             expires = datetime.timedelta(days=1)
@@ -30,4 +30,4 @@ class UserLogin(Resource):
                 'access_token': access_token
             }
         else:
-            return {'error': 'Invalid email or password !!'}, 400
+            return {'error': 'Invalid email or password'}, 400

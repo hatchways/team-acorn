@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 // MUI imports
 import {
   Grid,
@@ -14,10 +14,12 @@ import OnboardingContainer from "../components/OnboardingContainer";
 import { useHistory } from "react-router-dom";
 // Snackbar
 import Snackbar from "../components/SnackbarComponent";
+import { UserContext } from "../App";
 
 const SignUp = () => {
   const classes = useStyles(); // makeStyles MaterialUI hook from styles.js
   const history = useHistory(); // useHistory hook from router-dom
+  const context = useContext(UserContext);
 
   // Local states..
 
@@ -83,15 +85,12 @@ const SignUp = () => {
               error: true,
             });
           } else {
-            // Redirect user to login page
-            history.push({
-              pathname: "/signin",
-              state: {
-                open: true,
-                message: "Registeration Successful, Please login to continue !",
-                error: false,
-              },
-            });
+            // Saving token in localStorage
+            localStorage.setItem("token", data.access_token);
+            // Updating context
+            context.setIsLogged(true);
+            // Redirect user to onboard page..
+            history.push("/onboard");
           }
         })
         .catch((err) => console.log(err));

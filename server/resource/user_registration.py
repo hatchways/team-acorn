@@ -1,4 +1,7 @@
 from flask_restful import Resource, reqparse
+from flask_jwt_extended import (
+    create_access_token, jwt_required, get_jwt_identity)
+import datetime
 from server.models.user_model import UserModel
 
 
@@ -27,8 +30,12 @@ class UserRegistration(Resource):
 
         try:
             new_user.save_to_db()
+            expires = datetime.timedelta(days=1)
+            access_token = create_access_token(
+                identity=UserModel.get_id(data['email']), expires_delta=expires)
             return{
                 'message': 'User {} was created'.format(data['email']),
+                'access_token': access_token
             }, 201
         except:
             return{'error': 'Something went wrong'}, 500
