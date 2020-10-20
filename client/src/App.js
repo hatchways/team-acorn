@@ -13,7 +13,9 @@ import OnboardingExperience from "./pages/OnboardingExperience";
 import NavBar from "./components/navigation/NavBar";
 
 function App() {
-  const [user, setUser] = useState(localStorage.getItem("Token") != null);
+  const [user, setUser] = useState(false);
+
+  // const [user, setUser] = useState(localStorage.getItem("Token") != null);
   //Need To Fetch user Data and setUser Here. User info will be avalable in all children of Context.Provider
 
   return (
