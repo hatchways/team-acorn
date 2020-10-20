@@ -69,7 +69,7 @@ const OnboardingExperience = () => {
     });
     return tempObj;
   });
-  const [experience, setExperience] = useState(experienceLabelList[0]);
+  const experience = experienceLabelList[0];
   const userContext = useContext(UserContext);
   const { dispatch } = userContext;
 
@@ -99,23 +99,7 @@ const OnboardingExperience = () => {
           >
             Your experience:
           </Typography>
-          {availableLanguages.length != 0 && (
-            <IconButton
-              disableRipple
-              classes={{ root: classes.buttonAddRoot }}
-              onClick={() => {
-                let currentLang = availableLanguages.splice(0, 1);
-                let temp = {};
-                temp[currentLang] = experience;
-                setRows({ ...rows, ...temp });
-              }}
-            >
-              <AddIcon className={classes.buttonAddIcon} />
-              <Typography className={classes.addButtonText}>
-                Add Language
-              </Typography>
-            </IconButton>
-          )}
+
           <div>
             {Object.keys(rows).map((languageRow, i) => {
               if (rows[languageRow] != null) {
@@ -137,6 +121,23 @@ const OnboardingExperience = () => {
               }
             })}
           </div>
+          {availableLanguages.length != 0 && (
+            <IconButton
+              disableRipple
+              classes={{ root: classes.buttonAddRoot }}
+              onClick={() => {
+                let currentLang = availableLanguages.splice(0, 1);
+                let temp = {};
+                temp[currentLang] = experience;
+                setRows({ ...rows, ...temp });
+              }}
+            >
+              <AddIcon className={classes.buttonAddIcon} />
+              <Typography className={classes.addButtonText}>
+                Add Language
+              </Typography>
+            </IconButton>
+          )}
           <Button
             variant="contained"
             className={classes.loginButton}
