@@ -10,6 +10,7 @@ import {
   FormControl,
   IconButton,
 } from "@material-ui/core";
+import Snackbar from "../components/SnackbarComponent";
 import AddIcon from "@material-ui/icons/Add";
 import useStyles from "./LoginSignupStyles";
 import { UserContext } from "../context/userContext";
@@ -62,6 +63,11 @@ const uploadUserExperience = (experiences, dispatch) => {
 };
 const OnboardingExperience = () => {
   const classes = useStyles(); // makeStyles MaterialUI hook from styles.js
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    error: false,
+    message: "",
+  });
   const [rows, setRows] = useState(() => {
     let tempObj = {};
     availableLanguages.forEach((lang) => {
@@ -143,11 +149,14 @@ const OnboardingExperience = () => {
             className={classes.loginButton}
             type="submit"
             onClick={() => {
-              console.log(isExperienceEmpty(rows));
               if (!isExperienceEmpty(rows)) {
                 uploadUserExperience(rows, dispatch);
               } else {
-                alert("Add at least one Language");
+                setSnackbar({
+                  open: true,
+                  error: true,
+                  message: "Please add at least one language.",
+                });
               }
             }}
           >
@@ -155,6 +164,12 @@ const OnboardingExperience = () => {
           </Button>
         </Grid>
       </OnboardingContainer>
+      <Snackbar
+        open={snackbar.open}
+        message={snackbar.message}
+        setOpen={setSnackbar}
+        error={snackbar.error}
+      />
     </>
   );
 };

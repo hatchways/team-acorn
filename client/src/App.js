@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
 import { UserProvider } from "./context/userContext";
 import { theme } from "./themes/theme";
 import ReviewsPage from "./pages/Reviews";

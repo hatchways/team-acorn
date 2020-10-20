@@ -15,7 +15,6 @@ import OnboardingContainer from "../components/OnboardingContainer";
 import { useHistory } from "react-router-dom";
 // Snackbar
 import Snackbar from "../components/SnackbarComponent";
-import { UserContext } from "../App";
 
 const SignUp = () => {
   const userContext = useContext(UserContext);
