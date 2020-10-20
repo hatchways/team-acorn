@@ -34,7 +34,7 @@ const OnboardingContainer = (props) => {
   const classes = useStyles();
   return (
     <div className={classes.container}>
-      <Paper elevation="10" className={classes.paper}>
+      <Paper elevation={10} className={classes.paper}>
         {props.children}
       </Paper>
     </div>

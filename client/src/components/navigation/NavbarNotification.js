@@ -36,7 +36,7 @@ const NavbarNotification = () => {
       }}
     >
       <NotificationsNoneIcon className={classes.icon} />
-      <div class={classes.newNotification}></div>
+      <div className={classes.newNotification}></div>
     </Button>
   );
 };

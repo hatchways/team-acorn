@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+// MUI imports
 import {
   Grid,
   Typography,
@@ -9,11 +10,25 @@ import {
 } from "@material-ui/core";
 import useStyles from "./LoginSignupStyles";
 import OnboardingContainer from "../components/OnboardingContainer";
+// Router imports
 import { useHistory } from "react-router-dom";
+// Snackbar
+import Snackbar from "../components/SnackbarComponent";
+import { UserContext } from "../App";
 
 const SignUp = () => {
   const classes = useStyles(); // makeStyles MaterialUI hook from styles.js
-  const history = useHistory();
+  const history = useHistory(); // useHistory hook from router-dom
+  const context = useContext(UserContext);
+
+  // Local states..
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    error: false,
+    message: "",
+  });
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -22,6 +37,8 @@ const SignUp = () => {
   });
 
   const [error, setError] = useState(false);
+
+  //  Event Handler functions
 
   const handleFormInput = (e) => {
     const { value, name } = e.target;
@@ -62,23 +79,31 @@ const SignUp = () => {
         .then((data) => {
           if (data.error) {
             // handle error if we recieve error from server
+            setSnackbar({
+              open: true,
+              message: data.error,
+              error: true,
+            });
           } else {
-            // clear form
-            setForm({ email: "", password: "", name: "", confirmPassword: "" });
             // Saving token in localStorage
-            localStorage.setItem("Token", data.token);
-            // Redirect user to Home page..
+            localStorage.setItem("token", data.access_token);
+            // Updating context
+            context.setIsLogged(true);
+            // Redirect user to onboard page..
             history.push("/onboard");
           }
         })
         .catch((err) => console.log(err));
-      alert(
-        `name: ${form.name}\n email: ${form.email} \n password: ${form.password}\n re-password: ${form.password}`
-      );
     }
   };
   return (
     <>
+      <Snackbar
+        open={snackbar.open}
+        message={snackbar.message}
+        setOpen={setSnackbar}
+        error={snackbar.error}
+      />
       <OnboardingContainer>
         <form
           action=""

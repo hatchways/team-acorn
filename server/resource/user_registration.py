@@ -17,9 +17,9 @@ class UserRegistration(Resource):
         data = parser.parse_args()
 
         if UserModel.find_by_email(data['email']):
-            return {'message': 'User {} already exists'.format(data['email'])}, 400
+            return {'error': 'User {} already exists'.format(data['email'])}, 400
         elif len(data['password']) < 6:
-            return {'message': 'Password must be greater then 6 characters'}, 400
+            return {'error': 'Password must be greater then 6 characters'}, 400
         
 
         new_user = UserModel(
@@ -38,4 +38,4 @@ class UserRegistration(Resource):
                 'access_token': access_token
             }, 201
         except:
-            return{'message': 'Something went wrong'}, 500
+            return{'error': 'Something went wrong'}, 500
