@@ -1,7 +1,4 @@
 from flask_restful import Resource, reqparse
-from flask_jwt_extended import (
-    create_access_token, jwt_required, get_jwt_identity)
-import datetime
 from server.models.user_model import UserModel
 
 
@@ -17,9 +14,9 @@ class UserRegistration(Resource):
         data = parser.parse_args()
 
         if UserModel.find_by_email(data['email']):
-            return {'message': 'User {} already exists'.format(data['email'])}, 400
+            return {'error': 'User {} already exists'.format(data['email'])}, 400
         elif len(data['password']) < 6:
-            return {'message': 'Password must be greater then 6 characters'}, 400
+            return {'error': 'Password must be greater then 6 characters'}, 400
         
 
         new_user = UserModel(
@@ -30,12 +27,8 @@ class UserRegistration(Resource):
 
         try:
             new_user.save_to_db()
-            expires = datetime.timedelta(days=1)
-            access_token = create_access_token(
-                identity=UserModel.get_id(data['email']), expires_delta=expires)
             return{
                 'message': 'User {} was created'.format(data['email']),
-                'access_token': access_token
             }, 201
         except:
-            return{'message': 'Something went wrong'}, 500
+            return{'error': 'Something went wrong'}, 500
