@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+// MUI imports
 import {
   Grid,
   Typography,
@@ -10,15 +11,36 @@ import {
 } from "@material-ui/core";
 import useStyles from "./LoginSignupStyles";
 import OnboardingContainer from "../components/OnboardingContainer";
-import { useHistory } from "react-router-dom";
+// Router imports
+import { useHistory, useLocation } from "react-router-dom";
+// Snackbar
+import Snackbar from "../components/SnackbarComponent";
+import { UserContext } from "../App";
 
 const SignIn = () => {
   const classes = useStyles(); // makeStyles MaterialUI hook from styles.js
-  const history = useHistory();
+  const history = useHistory(); // useHistory hook from router-dom
+  const location = useLocation(); // useLocation hook from router-dom
+  const context = useContext(UserContext);
+
+  useEffect(() => {
+    if (location.state) setSnackbar(location.state);
+    window.history.replaceState(null, document.title, "/signin");
+    // eslint-disable-next-line
+  }, []);
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    error: false,
+    message: "",
+  });
+
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+
+  //  Event Handler functions
 
   const handleFormInput = (e) => {
     const { value, name } = e.target;
@@ -30,8 +52,7 @@ const SignIn = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    alert("handleLogin triggered");
-    fetch("/signin", {
+    fetch("/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -45,12 +66,23 @@ const SignIn = () => {
       .then((data) => {
         if (data.error) {
           // handle error if we recieve error from server
+          // clear form
+          setForm({ email: "", password: "" });
+          // Display snackbar
+          setSnackbar({
+            open: true,
+            message: data.error,
+            error: true,
+          });
         } else {
           // clear form
           setForm({ email: "", password: "" });
           // Saving token in localStorage
-          localStorage.setItem("Token", data.token);
-          // Redirect user to Home page..
+          localStorage.setItem("token", data.access_token);
+          // Updating context
+          console.log(context);
+          context.setIsLogged(true);
+          // Redirect user to onboard page..
           history.push("/onboard");
         }
       })
@@ -59,6 +91,12 @@ const SignIn = () => {
 
   return (
     <>
+      <Snackbar
+        open={snackbar.open}
+        message={snackbar.message}
+        setOpen={setSnackbar}
+        error={snackbar.error}
+      />
       <OnboardingContainer>
         <form action="" onSubmit={handleLogin} method="POST" autoComplete="off">
           <Grid container direction="column">

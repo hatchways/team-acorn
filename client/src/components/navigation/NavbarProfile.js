@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import { UserContext } from "../../App";
 
 const PROFILE_IMG_URL =
   "https://www.dovercourt.org/wp-content/uploads/2019/11/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg";
@@ -29,19 +30,29 @@ const useStyles = makeStyles((theme) => ({
 const NavbarProfile = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
+  const context = useContext(UserContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleClose = (option) => {
+    if (option === "logout") {
+      localStorage.removeItem("token");
+      context.setIsLogged(false);
+      setAnchorEl(null);
+    } else {
+      setAnchorEl(null);
+    }
   };
 
   return (
-    <div class={classes.profileContainer}>
-      <img src={PROFILE_IMG_URL} class={classes.profileImage} />
+    <div className={classes.profileContainer}>
+      <img
+        src={PROFILE_IMG_URL}
+        className={classes.profileImage}
+        alt="Profile Pic"
+      />
       <Button
         onClick={handleClick}
         classes={{
@@ -59,7 +70,7 @@ const NavbarProfile = () => {
       >
         <MenuItem onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem onClick={() => handleClose("logout")}>Logout</MenuItem>
       </Menu>
     </div>
   );

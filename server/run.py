@@ -40,8 +40,10 @@ from server.resource.user_login import UserLogin
 from server.resource.user_registration import UserRegistration
 from server.models import revoked_token_model
 from server.resource.user_experience import UserExperience
+from server.resource.user_get import UserGet
 
 api.add_resource(UserRegistration, '/registration')
 api.add_resource(UserLogin, '/login')
 api.add_resource(UserLogoutAccess, '/logout/access')
 api.add_resource(UserExperience, '/experience')
+api.add_resource(UserGet, '/user')

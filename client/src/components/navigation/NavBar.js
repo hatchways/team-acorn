@@ -1,7 +1,6 @@
 import React from "react";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import { NavLink } from "react-router-dom";
 
 import NavbarLink from "./NavbarLink";
 import NavbarNotification from "./NavbarNotification";
@@ -38,7 +37,7 @@ const NavBar = () => {
   const classes = useStyles(theme);
 
   return (
-    <div class={classes.navbarContainer}>
+    <div className={classes.navbarContainer}>
       <NavbarLink path={"/reviews"} text={"Reviews"} />
       <NavbarLink path={"/balance"} text={"Balance"} />
       <NavbarNotification />

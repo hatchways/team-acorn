@@ -25,7 +25,7 @@ const NavbarLink = ({ path, text, children }) => {
   const classes = useStyles(theme);
 
   return (
-    <NavLink exact to={path} class={classes.navlinkButton}>
+    <NavLink exact to={path} className={classes.navlinkButton}>
       {children && children}
       {!children && (
         <Button
