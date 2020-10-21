@@ -62,13 +62,7 @@ class UserModel(db.Model):
                     qualified_users.append(user)
 
         # sort based on number of reviews
-        for i in range(len(qualified_users)):
-            min_idx = i
-            for j in range(i+1, len(qualified_users)):
-                if int(qualified_users[min_idx].reviews) > int(qualified_users[j].reviews):
-                    min_idx = j
-
-            qualified_users[i], qualified_users[min_idx] = qualified_users[min_idx], qualified_users[i]
+        qualified_users.sort(key=lambda user: user.reviews)
 
         for user in qualified_users:
             qualified_user_ids.append(user.id)

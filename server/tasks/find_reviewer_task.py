@@ -15,7 +15,9 @@ def find_reviewer(review_id):
     review = ReviewModel.get_review(review_id)
     reviewee = UserModel.get_user(review.reviewee_id)
 
-    if int(reviewee.experience.get(review.language)) < 3:
+    if review.language not in reviewee.experience:
+        level = 1
+    elif int(reviewee.experience.get(review.language)) < 3:
         level = int(reviewee.experience.get(review.language)) + 1
     else:
         level = 3
