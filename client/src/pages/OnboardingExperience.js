@@ -33,15 +33,14 @@ const uploadUserExperience = (experiences, dispatch) => {
     const exp = experiences[lang];
     if (exp != null) outObj[lang] = experienceOptions[exp];
   });
-
   fetch("/experience", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + localStorage.getItem("Token"),
+      Authorization: "Bearer " + localStorage.getItem("token"),
     },
     body: JSON.stringify({
-      experience: experiences,
+      experience: outObj,
     }),
   })
     .then((response) => response.json())
@@ -51,15 +50,13 @@ const uploadUserExperience = (experiences, dispatch) => {
       } else {
         dispatch({
           type: "sotreUserExperience",
-          payload: experiences,
+          payload: outObj,
         });
-
         // Redirect user to Home page..
         // history.push("/onboard");
       }
     })
     .catch((err) => console.log(err));
-  alert();
 };
 const OnboardingExperience = () => {
   const classes = useStyles(); // makeStyles MaterialUI hook from styles.js
@@ -78,7 +75,6 @@ const OnboardingExperience = () => {
   const experience = experienceLabelList[0];
   const userContext = useContext(UserContext);
   const { dispatch } = userContext;
-
   const upadateRow = (rowObj) => {
     setRows({ ...rows, ...rowObj });
   };

@@ -15,13 +15,14 @@ import OnboardingContainer from "../components/OnboardingContainer";
 import { useHistory, useLocation } from "react-router-dom";
 // Snackbar
 import Snackbar from "../components/SnackbarComponent";
-import { UserContext } from "../App";
+import { UserContext } from "../context/userContext";
 
 const SignIn = () => {
+  const userContext = useContext(UserContext);
+  const { dispatch } = userContext;
   const classes = useStyles(); // makeStyles MaterialUI hook from styles.js
   const history = useHistory(); // useHistory hook from router-dom
   const location = useLocation(); // useLocation hook from router-dom
-  const context = useContext(UserContext);
 
   useEffect(() => {
     if (location.state) setSnackbar(location.state);
@@ -79,11 +80,6 @@ const SignIn = () => {
           setForm({ email: "", password: "" });
           // Saving token in localStorage
           localStorage.setItem("token", data.access_token);
-          // Updating context
-          console.log(context);
-          context.setIsLogged(true);
-          // Redirect user to onboard page..
-          history.push("/onboard");
         }
       })
       .catch((err) => console.log(err));
