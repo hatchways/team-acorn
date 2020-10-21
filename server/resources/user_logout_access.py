@@ -12,4 +12,4 @@ class UserLogoutAccess(Resource):
             revoked_token.add()
             return {'message': 'Access token has been revoked'}
         except:
-            return {'message': 'Something went wrong'}, 500
+            return {'error': 'Something went wrong'}, 500

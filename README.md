@@ -6,6 +6,14 @@
 2. Install the dependencies with `pipenv install`. This also createa a virtual environment, if there isn't one already
 4. run `pipenv shell`
 3. Activate the virtual environment and start the app with `FLASK_APP=run.py FLASK_DEBUG=1 flask run`
+4. proceed to run worker instructions. 
+
+## Starting the worker for tasks:
+0. update pipenv `pipenv update`
+1. Open new terminal and go to the server folder. 
+2. run `pipenv shell`
+3. cd back to team-acorn directory `cd ..`
+4. run worker `rq worker --with-scheduler`
 
 ## Setup Local Postgres Database (for linux machines)
 
@@ -27,4 +35,3 @@
 - `TABLE tableName;` - if connected to a database, list rows inside the table tableName
 - `\q` - exit out of psql command line
 
-### Current features implemented for issue 15

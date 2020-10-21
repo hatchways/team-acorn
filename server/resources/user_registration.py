@@ -24,7 +24,8 @@ class UserRegistration(Resource):
         new_user = UserModel(
             full_name=data['name'],
             email=data['email'],
-            password=UserModel.generate_hash(data['password'])
+            password=UserModel.generate_hash(data['password']),
+            reviews = 0
         )
 
         try:

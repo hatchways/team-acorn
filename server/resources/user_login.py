@@ -18,8 +18,9 @@ class UserLogin(Resource):
         data = parser.parse_args()
         current_email = UserModel.find_by_email(data['email'])
 
+        user = UserModel.get_user(UserModel.get_id(data['email']))
         if not current_email:
-            return {'message': 'Wrong credentials'}
+            return {'error': 'Wrong credentials'}
 
         if UserModel.verify_hash(data['password'], current_email.password):
             expires = datetime.timedelta(days=1)
@@ -27,7 +28,11 @@ class UserLogin(Resource):
                 identity=UserModel.get_id(data['email']), expires_delta=expires)
             return {
                 'message': 'Logged in as {}'.format(current_email.email),
-                'access_token': access_token
-            }
+                'access_token': access_token,
+                'full_name': user.full_name,
+                'email':user.email,
+                'experience': user.experience
+
+            },200
         else:
-            return {'message': 'Wrong credentials'}, 400
+            return {'error': 'Wrong credentials'}, 400

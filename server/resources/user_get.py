@@ -1,5 +1,5 @@
-from flask_restful import Resource
-from flask_jwt_extended import (jwt_required, get_jwt_identity)
+from server.extensions import Resource
+from server.extensions import (jwt_required, get_jwt_identity)
 from server.models.user_model import UserModel
 import json
 
@@ -19,4 +19,4 @@ class UserGet(Resource):
         try:
             return json, 201
         except:
-            return{'message': 'Something went wrong'}, 500
+            return{'error': 'Something went wrong'}, 500
