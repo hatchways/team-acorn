@@ -8,15 +8,17 @@ import {
   Link,
   Button,
 } from "@material-ui/core";
+import { UserContext } from "../context/userContext";
 import useStyles from "./LoginSignupStyles";
 import OnboardingContainer from "../components/OnboardingContainer";
 // Router imports
 import { useHistory } from "react-router-dom";
 // Snackbar
 import Snackbar from "../components/SnackbarComponent";
-import { UserContext } from "../App";
 
 const SignUp = () => {
+  const userContext = useContext(UserContext);
+  const { dispatch } = userContext;
   const classes = useStyles(); // makeStyles MaterialUI hook from styles.js
   const history = useHistory(); // useHistory hook from router-dom
   const context = useContext(UserContext);
@@ -73,6 +75,7 @@ const SignUp = () => {
           email: form.email,
           password: form.password,
           name: form.name,
+          experience: {},
         }),
       })
         .then((response) => response.json())
@@ -85,6 +88,18 @@ const SignUp = () => {
               error: true,
             });
           } else {
+            dispatch({
+              type: "storeUserInfo",
+              payload: {
+                email: form.email,
+                password: form.password,
+                name: form.name,
+                experience: {},
+              },
+            });
+            // clear form
+            setForm({ email: "", password: "", name: "", confirmPassword: "" });
+            // Redirect user to Home page..
             // Saving token in localStorage
             localStorage.setItem("token", data.access_token);
             // Updating context

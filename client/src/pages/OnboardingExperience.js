@@ -1,82 +1,175 @@
-import React, { useState, useMemo } from "react";
-import OnboardingContainer from "../components/OnboardingContainer";
-import { Grid, Typography, TextField, Button } from "@material-ui/core";
+import React, { useState, useMemo, useContext } from "react";
+import {
+  Grid,
+  Typography,
+  Paper,
+  Button,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  IconButton,
+} from "@material-ui/core";
+import Snackbar from "../components/SnackbarComponent";
+import AddIcon from "@material-ui/icons/Add";
 import useStyles from "./LoginSignupStyles";
+import { UserContext } from "../context/userContext";
+import OnboardingContainer from "../components/OnboardingContainer";
+import ExperienceRow from "../components/ExperienceRow";
 
 // Signup experience level dropdown options
-const experienceOptions = [
-  { value: "Beginner", label: "Beginner" },
-  { value: "Junior", label: "Junior" },
-  { value: "Intermediate", label: "Intermediate" },
-  { value: "Senior", label: "Senior" },
-];
+const experienceOptions = {
+  Beginner: 0,
+  Junior: 1,
+  Intermediate: 2,
+  Senior: 3,
+};
+const experienceLabelList = Object.keys(experienceOptions);
+let availableLanguages = ["JavaScript", "Java", "C++", "C#", "C", "Python"];
 
+const uploadUserExperience = (experiences, dispatch) => {
+  let outObj = {};
+  Object.keys(experiences).forEach((lang) => {
+    const exp = experiences[lang];
+    if (exp != null) outObj[lang] = experienceOptions[exp];
+  });
+
+  fetch("/experience", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("Token"),
+    },
+    body: JSON.stringify({
+      experience: experiences,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.error) {
+        // handle error if we recieve error from server
+      } else {
+        dispatch({
+          type: "storeUserExperience",
+          payload: experiences,
+        });
+
+        // Redirect user to Home page..
+        // history.push("/onboard");
+      }
+    })
+    .catch((err) => console.log(err));
+  alert();
+};
 const OnboardingExperience = () => {
   const classes = useStyles(); // makeStyles MaterialUI hook from styles.js
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    error: false,
+    message: "",
+  });
+  const [rows, setRows] = useState(() => {
+    let tempObj = {};
+    availableLanguages.forEach((lang) => {
+      tempObj[lang] = null;
+    });
+    return tempObj;
+  });
+  const experience = experienceLabelList[0];
+  const userContext = useContext(UserContext);
+  const { dispatch } = userContext;
 
-  const [form, setForm] = useState({ experience: experienceOptions[0].value });
-
-  const experience_list = useMemo(
-    () =>
-      experienceOptions.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      )),
-    []
-  ); // memoization of options to save some computations on re-render
-
-  const handleFormInput = (e) => {
-    const { value, name } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const upadateRow = (rowObj) => {
+    setRows({ ...rows, ...rowObj });
   };
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    alert(`experience: ${form.experience}`);
-    return false;
-    // Implement API call to send data to flask backend :: reminder
+  const isExperienceEmpty = (rows) => {
+    let isEmpty = true;
+    for (var key in rows) {
+      const value = rows[key];
+      if (value) {
+        isEmpty = false;
+        break;
+      }
+    }
+    return isEmpty;
   };
-
   return (
     <>
       <OnboardingContainer>
-        <form action="" onSubmit={handleLogin} method="POST" autoComplete="off">
-          <Grid container direction="column">
-            <Typography
-              className={classes.mainHeading}
-              variant="h4"
-              align="center"
-              display="block"
-            >
-              Your experience:
-            </Typography>
-            <TextField
-              select
-              value={form.experience}
-              name="experience"
-              onChange={handleFormInput}
-              variant="outlined"
-              SelectProps={{
-                native: true,
+        <Grid container direction="column">
+          <Typography
+            className={classes.mainHeading}
+            variant="h4"
+            align="center"
+            display="block"
+          >
+            Your experience:
+          </Typography>
+          {Object.keys(rows).map((languageRow) => {
+            if (rows[languageRow] != null) {
+              return (
+                <ExperienceRow
+                  key={languageRow}
+                  language={languageRow}
+                  experience={rows[languageRow]}
+                  experienceOptions={experienceLabelList}
+                  upadateRow={upadateRow}
+                  deleteRow={() => {
+                    availableLanguages.push(languageRow);
+                  }}
+                  languages={[
+                    languageRow,
+                    ...Object.keys(rows).filter((lang) => {
+                      return rows[lang] == null;
+                    }),
+                  ]}
+                />
+              );
+            }
+          })}
+          {availableLanguages.length != 0 && (
+            <IconButton
+              disableRipple
+              classes={{ root: classes.buttonAddRoot }}
+              onClick={() => {
+                let currentLang = availableLanguages.splice(0, 1);
+                let temp = {};
+                temp[currentLang] = experience;
+                setRows({ ...rows, ...temp });
               }}
-              className={classes.input}
             >
-              {experience_list}
-            </TextField>
-            <Button
-              variant="contained"
-              className={classes.loginButton}
-              type="submit"
-            >
-              Get Started
-            </Button>
-          </Grid>
-        </form>
+              <AddIcon className={classes.buttonAddIcon} />
+              <Typography className={classes.addButtonText}>
+                Add Language
+              </Typography>
+            </IconButton>
+          )}
+          <Button
+            variant="contained"
+            className={classes.loginButton}
+            type="submit"
+            onClick={() => {
+              if (!isExperienceEmpty(rows)) {
+                uploadUserExperience(rows, dispatch);
+              } else {
+                setSnackbar({
+                  open: true,
+                  error: true,
+                  message: "Please add at least one language.",
+                });
+              }
+            }}
+          >
+            Get Started
+          </Button>
+        </Grid>
       </OnboardingContainer>
+      <Snackbar
+        open={snackbar.open}
+        message={snackbar.message}
+        setOpen={setSnackbar}
+        error={snackbar.error}
+      />
     </>
   );
 };
