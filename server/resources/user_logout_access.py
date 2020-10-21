@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from flask_jwt_extended import (jwt_required, get_raw_jwt)
-from server.models.revoked_token_model import RevokedTokenModel
+from models.revoked_token_model import RevokedTokenModel
 
 
 class UserLogoutAccess(Resource):

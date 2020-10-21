@@ -1,4 +1,4 @@
-from server.extensions import db
+from extensions import db
 from passlib.hash import pbkdf2_sha256 as sha256
 
 
@@ -9,9 +9,8 @@ class UserModel(db.Model):
     full_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
-    experience = db.Column(db.JSON, nullable = True)
-    reviews = db.Column(db.Integer, nullable = False)
-
+    experience = db.Column(db.JSON, nullable=True)
+    reviews = db.Column(db.Integer, nullable=False)
 
     def save_to_db(self):
         db.session.add(self)
@@ -47,16 +46,16 @@ class UserModel(db.Model):
         user.experience = exp
         db.session.commit()
 
-    @classmethod 
-    def search_experience(cls,lang_levels, reviewee_id):
-        # search users the are above certain experience level, return list of 
+    @classmethod
+    def search_experience(cls, lang_levels, reviewee_id):
+        # search users the are above certain experience level, return list of
         # users that match the requirements
         req_language = list(lang_levels)[0]
         req_level = int(lang_levels[req_language])
         users = cls.query.all()
         qualified_user_ids = []
         qualified_users = []
-        
+
         for user in users:
             if ((user.experience is not None) and (user.id != reviewee_id)):
                 if (req_language in user.experience) and (int(user.experience.get(req_language)) >= req_level):
@@ -68,27 +67,26 @@ class UserModel(db.Model):
             for j in range(i+1, len(qualified_users)):
                 if int(qualified_users[min_idx].reviews) > int(qualified_users[j].reviews):
                     min_idx = j
-            
+
             qualified_users[i], qualified_users[min_idx] = qualified_users[min_idx], qualified_users[i]
-            
+
         for user in qualified_users:
             qualified_user_ids.append(user.id)
 
         return qualified_user_ids
 
     @classmethod
-    def add_review(cls,id):
+    def add_review(cls, id):
         user = cls.query.get(id)
         user.reviews += 1
         db.session.commit()
 
     @classmethod
-    def remove_review(cls,id):
+    def remove_review(cls, id):
         user = cls.query.get(id)
         if(user.reviews > 0):
             user.reviews -= 1
             db.session.commit()
-
 
     @classmethod
     def delete_all(cls):
@@ -104,6 +102,5 @@ class UserModel(db.Model):
         users = UserModel.query.all()
         for user in users:
             user.reviews = 0
-        
+
         db.session.commit()
-        

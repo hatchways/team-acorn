@@ -1,4 +1,5 @@
-from server.extensions import db
+from extensions import db
+
 
 class ReviewModel(db.Model):
     __tablename__ = 'review'
@@ -8,7 +9,7 @@ class ReviewModel(db.Model):
     reviewee_id = db.Column(db.Integer, nullable=False)
     title = db.Column(db.String(30), nullable=False)
     status = db.Column(db.String(20), nullable=False)
-    language = db.Column(db.String(20), nullable = False)
+    language = db.Column(db.String(20), nullable=False)
     messages = db.Column(db.JSON, nullable=True)
 
     def save_to_db(self):
@@ -27,12 +28,11 @@ class ReviewModel(db.Model):
         review.status = status
         db.session.commit()
 
-
     @classmethod
     def close_review(cls):
-        #TO-DO
+        # TO-DO
         pass
-    
+
     @classmethod
     def get_review(cls, id):
         review = cls.query.get(id)

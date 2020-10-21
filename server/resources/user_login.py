@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import create_access_token
-from server.models.user_model import UserModel
+from models.user_model import UserModel
 import datetime
 
 
