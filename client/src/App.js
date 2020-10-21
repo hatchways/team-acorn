@@ -71,7 +71,6 @@ function App() {
   }
 }
 const DefaultStack = () => {
-  console.log("IN DEFAULT");
   return (
     <Switch>
       <Route exact path="/signup" component={SignUp} />

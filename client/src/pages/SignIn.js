@@ -76,10 +76,14 @@ const SignIn = () => {
             error: true,
           });
         } else {
+          localStorage.setItem("token", data.user.access_token);
+          dispatch({
+            type: "storeUserInfo",
+            payload: { ...data.user, ...{ name: data.user.full_name } },
+          });
           // clear form
           setForm({ email: "", password: "" });
           // Saving token in localStorage
-          localStorage.setItem("token", data.access_token);
         }
       })
       .catch((err) => console.log(err));
