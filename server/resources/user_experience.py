@@ -19,5 +19,5 @@ class UserExperience(Resource):
             UserModel.update_experience(get_jwt_identity(), exp)
             return{'message': 'Experience updated'}, 200
         except:
-            return{'message': 'Something went wrong'}, 500
+            return{'error': 'Something went wrong'}, 500
 
