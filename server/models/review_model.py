@@ -39,6 +39,15 @@ class ReviewModel(db.Model):
         return review
 
     @classmethod
+    def check_review_exists(cls, reviewee_id):
+        # checks if a user has already opened a review
+        review = cls.query.filter(ReviewModel.reviewee_id == reviewee_id).all()
+        if(review == None):
+            return False
+        else:
+            return True
+
+    @classmethod
     def delete_all(cls):
         try:
             num_rows_deleted = db.session.query(cls).delete()
