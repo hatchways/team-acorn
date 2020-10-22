@@ -52,14 +52,15 @@ class UserModel(db.Model):
         # users that match the requirements
         req_language = list(lang_levels)[0]
         req_level = int(lang_levels[req_language])
-        users = cls.query.all()
+        users = cls.query.filter(UserModel.experience != None).filter(
+            UserModel.id != reviewee_id).all()
+
         qualified_user_ids = []
         qualified_users = []
 
         for user in users:
-            if ((user.experience is not None) and (user.id != reviewee_id)):
-                if (req_language in user.experience) and (int(user.experience.get(req_language)) >= req_level):
-                    qualified_users.append(user)
+            if (req_language in user.experience) and (int(user.experience.get(req_language)) >= req_level):
+                qualified_users.append(user)
 
         # sort based on number of reviews
         qualified_users.sort(key=lambda user: user.reviews)
