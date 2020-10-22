@@ -81,9 +81,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "black",
     color: "white",
     padding: "1rem",
-    overflow: "auto auto",
-    maxHeight: 250,
-    overflowX: "auto",
   },
   input: {
     width: "100%",
