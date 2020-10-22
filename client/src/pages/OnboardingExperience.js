@@ -49,8 +49,8 @@ const uploadUserExperience = (experiences, dispatch) => {
         // handle error if we recieve error from server
       } else {
         dispatch({
-          type: "sotreUserExperience",
-          payload: outObj,
+          type: "storeUserExperience",
+          payload: experiences,
         });
         // Redirect user to Home page..
         // history.push("/onboard");
@@ -101,11 +101,11 @@ const OnboardingExperience = () => {
           >
             Your experience:
           </Typography>
-          {Object.keys(rows).map((languageRow, i) => {
+          {Object.keys(rows).map((languageRow) => {
             if (rows[languageRow] != null) {
               return (
                 <ExperienceRow
-                  key={i}
+                  key={languageRow}
                   language={languageRow}
                   experience={rows[languageRow]}
                   experienceOptions={experienceLabelList}
