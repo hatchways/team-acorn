@@ -1,12 +1,11 @@
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
-
 from models.review_model import ReviewModel
+from models.message_model import MessageModel
 from tasks.find_reviewer_task import find_reviewer
 from extensions import queue
 
-
-import time
+from datetime import datetime
 import json
 
 
@@ -35,12 +34,19 @@ class RequestNew(Resource):
             reviewer_id=None,
             title=data["title"],
             status="pending",
-            messages={1: data["code"]},
             language=data["language"]
         )
 
         try:
             new_review.save_to_db()
+
+            new_message = MessageModel(
+                review_id=new_review.id,
+                content=data["code"],
+                owner_id=new_review.reviewee_id,
+                timestamp=datetime.now()
+            )
+            new_message.save_to_db()
 
             job = queue.enqueue(find_reviewer, new_review.id)
 

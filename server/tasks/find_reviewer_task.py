@@ -1,5 +1,4 @@
 from datetime import timedelta
-import os
 from models.user_model import UserModel
 from models.review_model import ReviewModel
 from extensions import queue, create_app
@@ -35,7 +34,6 @@ def find_reviewer(review_id):
     if(len(qualified_users_id) == 0):
         # no qualified_users found, create new job and requeue
         job = queue.enqueue_in(timedelta(seconds=10), find_reviewer, review_id)
-        pass
     elif(len(qualified_users_id) >= 1):
         # assign first user in list qualified_users_id as list comes sorted
         ReviewModel.assign_reviewee(review_id, qualified_users_id[0])
