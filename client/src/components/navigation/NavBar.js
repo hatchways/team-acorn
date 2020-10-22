@@ -1,6 +1,6 @@
 import React from "react";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+import UploadCodeDialog from "../UploadCodeDialog";
 
 import NavbarLink from "./NavbarLink";
 import NavbarNotification from "./NavbarNotification";
@@ -15,21 +15,6 @@ const useStyles = makeStyles((theme) => ({
     height: 60,
     padding: "0 20px",
   },
-  buttonRoot: {
-    background: "transparent",
-    height: 40,
-    borderRadius: 50,
-    border: 1,
-    borderColor: theme.turquoise,
-    borderStyle: "solid",
-    margin: 25,
-    padding: "0 15px",
-  },
-  buttonLabel: {
-    ...theme.typography,
-    textTransform: "capitalize",
-    color: theme.turquoise,
-  },
 }));
 
 const NavBar = () => {
@@ -41,16 +26,7 @@ const NavBar = () => {
       <NavbarLink path={"/reviews"} text={"Reviews"} />
       <NavbarLink path={"/balance"} text={"Balance"} />
       <NavbarNotification />
-      <NavbarLink path={"/upload"}>
-        <Button
-          classes={{
-            root: classes.buttonRoot,
-            label: classes.buttonLabel,
-          }}
-        >
-          Upload Code
-        </Button>
-      </NavbarLink>
+      <UploadCodeDialog />
       <NavbarProfile />
     </div>
   );

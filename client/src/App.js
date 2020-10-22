@@ -1,11 +1,9 @@
 import React, { createContext, useState, useEffect } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
-import { UserProvider } from "./context/userContext";
 import { theme } from "./themes/theme";
 import ReviewsPage from "./pages/Reviews";
 import BalancePage from "./pages/Balance";
-import UploadCodePage from "./pages/UplodeCode";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import OnboardingExperience from "./pages/OnboardingExperience";
@@ -15,7 +13,6 @@ import NavBar from "./components/navigation/NavBar";
 export const UserContext = createContext(null);
 
 function App() {
-  const [user, setUser] = useState(false);
   // const [user, setUser] = useState(localStorage.getItem("Token") != null);
   //Need To Fetch user Data and setUser Here. User info will be avalable in all children of Context.Provider
   // raw context created for testing intergration of FE/BE
@@ -72,7 +69,6 @@ const AuthStack = () => (
       <Route path="/onboard" component={OnboardingExperience} />
       <Route path="/reviews" component={ReviewsPage} />
       <Route path="/balance" component={BalancePage} />
-      <Route path="/upload" component={UploadCodePage} />
       <Route path="*" component={OnboardingExperience} />
     </Switch>
   </>
