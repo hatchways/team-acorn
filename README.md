@@ -12,11 +12,21 @@
    `set FLASK_APP=run.py`
    `set FLASK_DEBUG=1`
    `flask run`
+6. run `pipenv shell`
+7. Activate the virtual environment and start the app with `FLASK_APP=run.py FLASK_DEBUG=1 flask run`
+8. proceed to run worker instructions.
 
-## Setup Local Postgres Database (for linux machines)
+## Starting the worker for tasks: (for linux machines)
+
+0. Open new terminal and go to the server folder.
+1. run `pipenv shell`
+2. update pipenv `pipenv update`
+3. run worker `rq worker --with-scheduler`
+
+## Setup Local Postgres Database: (for linux machines)
 
 1. Update `sudo apt-get update`
-2. Install PostgreSQL 10.4 `sudo apt-get install postgresql-10.4`
+2. Install PostgreSQL `sudo apt-get install postgresql`
 3. Create postgres user `sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"`
 4. Start PostgresSQL server `sudo service postgresql start`
 5. Login to server `sudo -i -u postgres`
@@ -24,7 +34,7 @@
 7. Create databases, `create database team_acorn;`, `create database team_acorn_test;`
 8. To stop server `sudo service postgresql stop`
 
-## Setup Local Postgres Database (for Windows machines)
+## Setup Local Postgres Database: (for Windows machines)
 
 1. install latest version of Postgres with default options from https://www.postgresql.org/download/.
 2. Run it and Choose USER= postgres
@@ -55,3 +65,5 @@
 5. That's it.
 
 # Note: Server port will be 5000 & Client port will be 3000 (Most of the time, unless these ports are being used by some other apps.)
+
+=======

@@ -2,7 +2,7 @@ from flask_restful import Resource, reqparse
 from flask_jwt_extended import (
     create_access_token, jwt_required, get_jwt_identity)
 import datetime
-from server.models.user_model import UserModel
+from models.user_model import UserModel
 
 
 class UserRegistration(Resource):
@@ -20,12 +20,12 @@ class UserRegistration(Resource):
             return {'error': 'User {} already exists'.format(data['email'])}, 400
         elif len(data['password']) < 6:
             return {'error': 'Password must be greater then 6 characters'}, 400
-        
 
         new_user = UserModel(
             full_name=data['name'],
             email=data['email'],
-            password=UserModel.generate_hash(data['password'])
+            password=UserModel.generate_hash(data['password']),
+            reviews=0
         )
 
         try:

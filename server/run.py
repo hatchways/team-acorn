@@ -2,30 +2,52 @@
 # to save without auto-formatting on vs code, `CTRL + K + SHIFT + S`
 
 from flask import Flask
-from flask_restful import Api
-from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import JWTManager
 import os
 
-app = Flask(__name__)
-api = Api(app)
+from models import revoked_token_model
+from resources.user_logout_access import UserLogoutAccess
+from resources.user_login import UserLogin
+from resources.user_registration import UserRegistration
+from resources.request_new import RequestNew
+from resources.user_experience import UserExperience
+from resources.user_get import UserGet
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
-db = SQLAlchemy(app)
+# Testing routes, remove before production
+from resources.reset_review import ResetReview
+from resources.reset_user import ResetUser
+from resources.reset_user_review_count import ResetUserReviewCount
+#######################################
+
+from extensions import db, api, jwt, create_app
+
+
+def create_api(app):
+    api.add_resource(UserRegistration, '/registration')
+    api.add_resource(UserLogin, '/login')
+    api.add_resource(UserLogoutAccess, '/logout/access')
+    api.add_resource(RequestNew, '/new_request')
+    api.add_resource(UserExperience, '/experience')
+    api.add_resource(UserGet, '/user')
+
+    # Routes for testing, remove when in production
+    api.add_resource(ResetUser, "/reset_users")
+    api.add_resource(ResetReview, "/reset_reviews")
+    api.add_resource(ResetUserReviewCount, "/reset_user_review_count")
+    ############################################
+
+    api.init_app(app)
+
+    return api
+
+
+app = create_app()
+api = create_api(app)
+
 
 @app.before_first_request
 def create_tables():
     db.create_all()
 
-app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
-jwt = JWTManager(app)
-
-# enable blacklisting in configuration
-app.config['JWT_BLACKLIST_ENABLED'] = True
-# specify what kind of token to check, access
-app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access']
 
 @jwt.token_in_blacklist_loader
 def check_if_token_in_blacklist(decrypted_token):
@@ -33,17 +55,3 @@ def check_if_token_in_blacklist(decrypted_token):
     # function will return True or False depending if the passed token is blacklisted
     jti = decrypted_token['jti']
     return revoked_token_model.RevokedTokenModel.is_jti_blacklisted(jti)
-
-
-from server.resource.user_logout_access import UserLogoutAccess
-from server.resource.user_login import UserLogin
-from server.resource.user_registration import UserRegistration
-from server.models import revoked_token_model
-from server.resource.user_experience import UserExperience
-from server.resource.user_get import UserGet
-
-api.add_resource(UserRegistration, '/registration')
-api.add_resource(UserLogin, '/login')
-api.add_resource(UserLogoutAccess, '/logout/access')
-api.add_resource(UserExperience, '/experience')
-api.add_resource(UserGet, '/user')
