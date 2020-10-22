@@ -8,7 +8,7 @@ import NavbarProfile from "./NavbarProfile";
 
 const useStyles = makeStyles((theme) => ({
   navbarContainer: {
-    backgroundColor: theme.darkPurple,
+    backgroundColor: "#6E3ADB",
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "center",

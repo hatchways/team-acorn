@@ -9,6 +9,7 @@ import {
   CircularProgress,
   Backdrop,
 } from "@material-ui/core";
+import CloseIcon from "@material-ui/icons/Close";
 import Editor from "for-editor";
 import { modes } from "../utils/Constants";
 import Snackbar from "./SnackbarComponent";
@@ -49,11 +50,10 @@ const useStyles = makeStyles((theme) => ({
   },
   closeButton: {
     color: theme.turquoise,
-    fontSize: 20,
     fontWeight: 700,
     cursor: "pointer",
     position: "absolute",
-    top: 5,
+    top: 30,
     right: 25,
     "&:hover": {
       color: "tomato",
@@ -181,6 +181,7 @@ const UploadCodeDialog = () => {
       setBackdrop(true);
       // Some API calls to server to upload code and comment.
       // simulating a 2 sec delay for loading
+      console.log({ code, title });
       setTimeout(() => {
         setBackdrop(false);
         handleClose();
@@ -213,9 +214,13 @@ const UploadCodeDialog = () => {
           },
         }}
       >
-        <div className={classes.closeButton} onClick={handleClose}>
+        <CloseIcon
+          className={classes.closeButton}
+          onClick={handleClose}
+          fontSize="large"
+        >
           X
-        </div>
+        </CloseIcon>
         <Snackbar
           open={snackbar.open}
           message={snackbar.message}

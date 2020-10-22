@@ -19,11 +19,11 @@ export const theme = createMuiTheme({
           backgroundColor: "transparent",
         },
       },
-      MuiInput: {
-        input: {
-          "&:active": {
-            backgroundColor: "transparent",
-          },
+    },
+    MuiInput: {
+      input: {
+        "&:active": {
+          backgroundColor: "transparent",
         },
       },
     },

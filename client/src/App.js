@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
-import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { theme } from "./themes/theme";
 import ReviewsPage from "./pages/Reviews";
 import BalancePage from "./pages/Balance";
@@ -18,7 +18,7 @@ function App() {
   // raw context created for testing intergration of FE/BE
   // Future will be in seperate file with reducers
   const [isLogged, setIsLogged] = useState(false);
-  const history = useHistory();
+
   useEffect(() => {
     fetch("/user", {
       method: "get",
@@ -31,7 +31,6 @@ function App() {
       .then((data) => {
         if (data.user && !data.error) {
           setIsLogged(true);
-          history.push("/");
         } else {
           // clears the localstorage token if token is invalid or expires
           localStorage.removeItem("token");
