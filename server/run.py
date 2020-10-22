@@ -4,6 +4,8 @@
 from flask import Flask
 import os
 
+import utils.socketConfig
+
 from models import revoked_token_model
 from resources.user_logout_access import UserLogoutAccess
 from resources.user_login import UserLogin
@@ -18,8 +20,7 @@ from resources.reset_user import ResetUser
 from resources.reset_user_review_count import ResetUserReviewCount
 #######################################
 
-from extensions import db, api, jwt, create_app
-
+from extensions import db, api, jwt, create_app, socketio
 
 def create_api(app):
     api.add_resource(UserRegistration, '/registration')

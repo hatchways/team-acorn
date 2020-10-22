@@ -1,8 +1,11 @@
-import openSocket from "socket.io-client";
-const socket = openSocket("http://localhost:5000");
+import socketIOClient from "socket.io-client";
+const socket = socketIOClient("http://localhost:5000");
 
-function subscribeToNotifications(callback, userId) {
+function subscribeToNotifications({ callback, userEmail }) {
+  console.log("SUBSCRIBING");
   socket.on("notification", (data) => callback(data));
-  socket.emit("subscribeToNotifications", userId);
+  socket.on("message", (data) => {});
+  socket.emit("subscribeToNotifications", userEmail);
 }
-export { subscribeToTimer };
+
+export { subscribeToNotifications };

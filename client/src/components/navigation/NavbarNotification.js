@@ -1,7 +1,8 @@
-import React from "react";
-import { makeStyles, useTheme, UserContext } from "@material-ui/core/styles";
+import React, { useContext, useEffect } from "react";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import Button from "@material-ui/core/Button";
+import { subscribeToNotifications } from "../../utils/SocketConfig";
 import { UserContext } from "../../context/userContext";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,7 +29,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NavbarNotification = () => {
-  const { hasNewNotification } = UserContext(UserContext).state;
+  const userContext = useContext(UserContext);
+  const { dispatch } = userContext;
+  const { email } = userContext.state;
+
+  useEffect(() => {
+    subscribeToNotifications({
+      callback: dispatch,
+      userEmail: email,
+    });
+  }, []);
+
+  const { hasNewNotification } = useContext(UserContext).state;
   const theme = useTheme();
   const classes = useStyles(theme);
   return (
