@@ -16,15 +16,14 @@
 7. Activate the virtual environment and start the app with `FLASK_APP=run.py FLASK_DEBUG=1 flask run`
 8. proceed to run worker instructions.
 
-## Starting the worker for tasks:
+## Starting the worker for tasks: (for linux machines)
 
-0. update pipenv `pipenv update`
-1. Open new terminal and go to the server folder.
-2. run `pipenv shell`
-3. cd back to team-acorn directory `cd ..`
-4. run worker `rq worker --with-scheduler`
+0. Open new terminal and go to the server folder.
+1. run `pipenv shell`
+2. update pipenv `pipenv update`
+3. run worker `rq worker --with-scheduler`
 
-## Setup Local Postgres Database (for linux machines)
+## Setup Local Postgres Database: (for linux machines)
 
 1. Update `sudo apt-get update`
 2. Install PostgreSQL `sudo apt-get install postgresql`
@@ -35,7 +34,7 @@
 7. Create databases, `create database team_acorn;`, `create database team_acorn_test;`
 8. To stop server `sudo service postgresql stop`
 
-## Setup Local Postgres Database (for Windows machines)
+## Setup Local Postgres Database: (for Windows machines)
 
 1. install latest version of Postgres with default options from https://www.postgresql.org/download/.
 2. Run it and Choose USER= postgres
