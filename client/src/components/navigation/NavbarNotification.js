@@ -1,7 +1,8 @@
 import React from "react";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles, useTheme, UserContext } from "@material-ui/core/styles";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import Button from "@material-ui/core/Button";
+import { UserContext } from "../../context/userContext";
 
 const useStyles = makeStyles((theme) => ({
   buttonRoot: {
@@ -27,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NavbarNotification = () => {
+  const { hasNewNotification } = UserContext(UserContext).state;
   const theme = useTheme();
   const classes = useStyles(theme);
   return (
@@ -36,7 +38,7 @@ const NavbarNotification = () => {
       }}
     >
       <NotificationsNoneIcon className={classes.icon} />
-      <div className={classes.newNotification}></div>
+      {hasNewNotification && <div className={classes.newNotification} />}
     </Button>
   );
 };

@@ -1,6 +1,6 @@
 import React, { createContext, useReducer } from "react";
 
-const initialState = {};
+const initialState = { hasNewNotification: false };
 const UserContext = createContext(initialState);
 
 const { Provider } = UserContext;
@@ -16,6 +16,9 @@ const UserProvider = ({ children }) => {
       }
       case "logout": {
         return { ...initialState };
+      }
+      case "setHasNewNotification": {
+        return { ...state, ...{ hasNewNotification: action.payload } };
       }
       default:
         throw new Error();
