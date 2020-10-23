@@ -268,7 +268,7 @@ const UploadCodeDialog = ({ open, setOpen, form, setForm }) => {
               <TextField
                 select
                 value={language}
-                name="mode"
+                name="language"
                 onChange={handleCodeForm}
                 variant="outlined"
                 className={classes.input}
