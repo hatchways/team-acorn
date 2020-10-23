@@ -1,7 +1,7 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
-import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
-import { UserProvider } from "./context/userContext";
+import { Route, Switch, Redirect } from "react-router-dom";
+import { UserContext } from "./context/userContext";
 import { theme } from "./themes/theme";
 import ReviewsPage from "./pages/Reviews";
 import BalancePage from "./pages/Balance";
@@ -12,70 +12,95 @@ import OnboardingExperience from "./pages/OnboardingExperience";
 
 import NavBar from "./components/navigation/NavBar";
 
-export const UserContext = createContext(null);
-
-function App() {
-  const [user, setUser] = useState(false);
-  // const [user, setUser] = useState(localStorage.getItem("Token") != null);
-  //Need To Fetch user Data and setUser Here. User info will be avalable in all children of Context.Provider
-  // raw context created for testing intergration of FE/BE
-  // Future will be in seperate file with reducers
-  const [isLogged, setIsLogged] = useState(false);
-  const history = useHistory();
-  useEffect(() => {
+const fetchUserData = ({ token, dispatch, setIsFetchingUser }) => {
+  if (token) {
     fetch("/user", {
       method: "get",
       headers: {
         "Content-Type": "application/json",
-        authorization: "Bearer " + localStorage.getItem("token"),
+        authorization: "Bearer " + token,
       },
     })
       .then((data) => data.json())
       .then((data) => {
         if (data.user && !data.error) {
-          setIsLogged(true);
-          history.push("/");
+          dispatch({
+            type: "storeUserInfo",
+            payload: { ...data.user, ...{ name: data.user.full_name } },
+          });
         } else {
+          dispatch({
+            type: "storeUserInfo",
+            payload: {},
+          });
           // clears the localstorage token if token is invalid or expires
           localStorage.removeItem("token");
         }
+        setIsFetchingUser(false);
       })
       .catch((er) => console.log(er));
     // eslint-disable-next-line
+  } else {
+    setIsFetchingUser(false);
+  }
+};
+function App() {
+  const userContext = useContext(UserContext);
+  const { dispatch } = userContext;
+  const [isFetchingUser, setIsFetchingUser] = useState(true);
+  const userData = userContext.state;
+  const token = localStorage.getItem("token");
+  useEffect(() => {
+    fetchUserData({ token, dispatch, setIsFetchingUser });
   }, []);
 
-  return (
-    <MuiThemeProvider theme={theme}>
-      <BrowserRouter>
+  if (!isFetchingUser) {
+    return (
+      <MuiThemeProvider theme={theme}>
         <Switch>
-          <UserContext.Provider value={{ isLogged, setIsLogged }}>
-            {isLogged ? <AuthStack /> : <DefaultStack />}
-          </UserContext.Provider>
+          {token ? (
+            <AuthStack experience={userData.experience} />
+          ) : (
+            <DefaultStack />
+          )}
         </Switch>
-      </BrowserRouter>
-    </MuiThemeProvider>
-  );
+      </MuiThemeProvider>
+    );
+  } else {
+    return null;
+  }
 }
-const DefaultStack = () => (
-  <Switch>
-    <Route exact path="/" component={SignUp} />
-    <Route exact path="/signup" component={SignUp} />
-    <Route path="/signin" component={SignIn} />
-    <Route path="*" component={SignUp} />
-  </Switch>
-);
-
-const AuthStack = () => (
-  <>
-    <NavBar />
+const DefaultStack = () => {
+  return (
     <Switch>
-      <Route path="/onboard" component={OnboardingExperience} />
-      <Route path="/reviews" component={ReviewsPage} />
-      <Route path="/balance" component={BalancePage} />
-      <Route path="/upload" component={UploadCodePage} />
-      <Route path="*" component={OnboardingExperience} />
+      <Route exact path="/signup" component={SignUp} />
+      <Route exact path="/signin" component={SignIn} />
+      <Route exact path="/" component={SignUp} />
+      <Route path="*" component={SignUp} />
     </Switch>
-  </>
-);
+  );
+};
+
+const AuthStack = ({ experience }) => {
+  return (
+    <Switch>
+      {experience && <NavBar />}
+      <Route exact path="/onboard" component={OnboardingExperience} />
+      <Route exact path="/reviews" component={ReviewsPage} />
+      <Route exact path="/balance" component={BalancePage} />
+      <Route exact path="/upload" component={UploadCodePage} />
+      <Route
+        path="/"
+        render={() => {
+          return !experience ? (
+            <Redirect to="/onboard" />
+          ) : (
+            <Redirect to="/reviews" />
+          );
+        }}
+      />
+    </Switch>
+  );
+};
 
 export default App;

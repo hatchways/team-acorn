@@ -24,6 +24,7 @@ class UserLogin(Resource):
 
         if UserModel.verify_hash(data['password'], current_email.password):
             expires = datetime.timedelta(days=1)
+            user_id = UserModel.get_id(data['email'])
             access_token = create_access_token(
                 identity=UserModel.get_id(data['email']), expires_delta=expires)
             return {
