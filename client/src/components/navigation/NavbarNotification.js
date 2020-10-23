@@ -31,12 +31,12 @@ const useStyles = makeStyles((theme) => ({
 const NavbarNotification = () => {
   const userContext = useContext(UserContext);
   const { dispatch } = userContext;
-  const { email } = userContext.state;
+  const { userId } = userContext.state;
 
   useEffect(() => {
     subscribeToNotifications({
       callback: dispatch,
-      userEmail: email,
+      userId: userId,
     });
   }, []);
 

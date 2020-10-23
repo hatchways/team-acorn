@@ -30,10 +30,10 @@ class UserLogin(Resource):
             return {
                 'message': 'Logged in as {}'.format(current_email.email),
                 'access_token': access_token,
-                'user_id': user.id,
                 'full_name': user.full_name,
                 'email': user.email,
-                'experience': user.experience
+                'experience': user.experience,
+                "userId": user.id,
 
             }, 200
         else:

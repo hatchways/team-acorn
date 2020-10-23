@@ -2,7 +2,7 @@ from datetime import timedelta
 from models.user_model import UserModel
 from models.review_model import ReviewModel
 from extensions import queue, create_app
-
+from utils.socketConfig import sendNotification
 
 def find_reviewer(review_id):
     # Takes in id of reviewee. If the user satisfies the requirements, assign
@@ -39,5 +39,5 @@ def find_reviewer(review_id):
         ReviewModel.assign_reviewee(review_id, qualified_users_id[0])
         ReviewModel.update_status(review_id, "assigned")
         UserModel.add_review(qualified_users_id[0])
-
-        # TO-DO send notification to reviewee
+        sendNotification(review_id)
+        sendNotification(qualified_users_id[0])
