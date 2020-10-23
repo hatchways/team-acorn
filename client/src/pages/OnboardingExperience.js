@@ -1,15 +1,5 @@
-import React, { useState, useMemo, useContext } from "react";
-import {
-  Grid,
-  Typography,
-  Paper,
-  Button,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  IconButton,
-} from "@material-ui/core";
+import React, { useState, useContext } from "react";
+import { Grid, Typography, Button, IconButton } from "@material-ui/core";
 import Snackbar from "../components/SnackbarComponent";
 import AddIcon from "@material-ui/icons/Add";
 import useStyles from "./LoginSignupStyles";
@@ -122,8 +112,9 @@ const OnboardingExperience = () => {
                 />
               );
             }
+            return null;
           })}
-          {availableLanguages.length != 0 && (
+          {availableLanguages.length !== 0 && (
             <IconButton
               disableRipple
               classes={{ root: classes.buttonAddRoot }}

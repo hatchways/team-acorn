@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { UserContext } from "./context/userContext";
@@ -52,6 +52,7 @@ function App() {
   const token = localStorage.getItem("token");
   useEffect(() => {
     fetchUserData({ token, dispatch, setIsFetchingUser });
+    // eslint-disable-next-line
   }, []);
 
   if (!isFetchingUser) {
