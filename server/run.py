@@ -13,6 +13,7 @@ from resources.user_registration import UserRegistration
 from resources.request_new import RequestNew
 from resources.user_experience import UserExperience
 from resources.user_get import UserGet
+from resources.review_respond import ReviewRespond
 
 # Testing routes, remove before production
 from resources.reset_review import ResetReview
@@ -29,6 +30,7 @@ def create_api(app):
     api.add_resource(RequestNew, '/new_request')
     api.add_resource(UserExperience, '/experience')
     api.add_resource(UserGet, '/user')
+    api.add_resource(ReviewRespond, '/review_respond')
 
     # Routes for testing, remove when in production
     api.add_resource(ResetUser, "/reset_users")

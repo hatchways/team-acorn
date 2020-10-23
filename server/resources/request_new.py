@@ -13,8 +13,10 @@ import json
 class RequestNew(Resource):
     @jwt_required
     def post(self):
-        # create review obj, add it to db
-        # create task to find user for request
+
+        # check if user already as a review in progress
+        user_id = get_jwt_identity()
+
         parser = reqparse.RequestParser()
         parser.add_argument(
             "title", help="This field cannot be blank", required=True)
