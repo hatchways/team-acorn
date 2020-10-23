@@ -11,7 +11,7 @@ const UserProvider = ({ children }) => {
       case "storeUserInfo": {
         return { ...action.payload };
       }
-      case "sotreUserExperience": {
+      case "storeUserExperience": {
         return { ...state, ...{ experience: action.payload } };
       }
       case "logout": {
