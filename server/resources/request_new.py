@@ -15,10 +15,6 @@ class RequestNew(Resource):
 
         # check if user already as a review in progress
         user_id = get_jwt_identity()
-        if(ReviewModel.check_review_exists(user_id)):
-            return{
-                'error': "A review created by this user already exists"
-            }, 400
 
         parser = reqparse.RequestParser()
         parser.add_argument(

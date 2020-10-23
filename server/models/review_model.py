@@ -2,7 +2,7 @@ from extensions import db
 
 
 class ReviewModel(db.Model):
-    __tablename__ = 'review'
+    __tablename__ = 'reviews'
 
     id = db.Column(db.Integer, primary_key=True)
     reviewer_id = db.Column(db.Integer, nullable=True)
@@ -43,15 +43,6 @@ class ReviewModel(db.Model):
     def get_review_from_reviewee(cls, id):
         review = cls.query.filter(ReviewModel.reviewee_id == id).one()
         return review
-
-    @classmethod
-    def check_review_exists(cls, reviewee_id):
-        # checks if a user has already opened a review
-        review = cls.query.filter(ReviewModel.reviewee_id == reviewee_id).all()
-        if(len(review) == 0):
-            return False
-        else:
-            return True
 
     @classmethod
     def delete_all(cls):
