@@ -16,9 +16,10 @@ from resources.user_get import UserGet
 from resources.review_respond import ReviewRespond
 
 # Testing routes, remove before production
-from resources.reset_review import ResetReview
-from resources.reset_user import ResetUser
-from resources.reset_user_review_count import ResetUserReviewCount
+from resources.test_resources.reset_review import ResetReview
+from resources.test_resources.reset_user import ResetUser
+from resources.test_resources.reset_user_review_count import ResetUserReviewCount
+from resources.test_resources.reset_messages import ResetMessages
 #######################################
 
 from extensions import db, api, jwt, create_app, socketio
@@ -36,6 +37,7 @@ def create_api(app):
     api.add_resource(ResetUser, "/reset_users")
     api.add_resource(ResetReview, "/reset_reviews")
     api.add_resource(ResetUserReviewCount, "/reset_user_review_count")
+    api.add_resource(ResetMessages, "/reset_messages")
     ############################################
 
     api.init_app(app)

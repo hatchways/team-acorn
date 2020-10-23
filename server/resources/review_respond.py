@@ -1,31 +1,23 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
-
 from models.review_model import ReviewModel
+from extensions import queue, create_app
+from tasks.find_reviewer_task import find_reviewer
+from datetime import timedelta
 
 
 class ReviewRespond(Resource):
     @jwt_required
     def post(self):
-        # get arguments
-        parser = reqparse.RequestParser()
-        parser.add_argument(
-            "review_id", help="This field cannot be blank", required=True)
-        data = parser.parse_args()
-
-        review_id = int(data["review_id"])
+        if ReviewModel.check_review_exists(get_jwt_identity()) == False:
+            return {'error': "You do not have a Review request open."}
 
         # get review
         user_id = get_jwt_identity()
-        review = ReviewModel.get_review(review_id)
-
-        if(review == None):
-            return {'error': "Review with id [{}] does not exist".format(review_id)}, 400
-        elif(review.reviewee_id != user_id):
-            return {'error': "You are not authorized to alter this review"}, 400
+        review = ReviewModel.get_review_from_reviewee(user_id)
 
         # update review status to in_review
-        ReviewModel.update_status(review_id, "in_review")
+        ReviewModel.update_status(review.id, "in_review")
 
         # send notification
         # TO-DO
@@ -36,14 +28,22 @@ class ReviewRespond(Resource):
 
     @jwt_required
     def delete(self):
+        # api route to reject an assigned reviewer
+
         # get review
+        user_id = get_jwt_identity()
+        review = ReviewModel.get_review_from_reviewee(user_id)
 
         # update review status back to pending
+        ReviewModel.update_status(review.id, "pending")
 
         # requeue task to find reviewer
+        job = queue.enqueue_in(timedelta(seconds=10),
+                               find_reviewer, review.id)
 
         # send notification
+        # TO-DO
 
         return {
-            'message': "delete route works"
+            'message': "Reviewer rejected. Requeuing task to find reviewer"
         }, 200

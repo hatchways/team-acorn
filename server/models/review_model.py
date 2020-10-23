@@ -2,7 +2,7 @@ from extensions import db
 
 
 class ReviewModel(db.Model):
-    __tablename__ = 'review'
+    __tablename__ = 'reviews'
 
     id = db.Column(db.Integer, primary_key=True)
     reviewer_id = db.Column(db.Integer, nullable=True)
@@ -10,7 +10,6 @@ class ReviewModel(db.Model):
     title = db.Column(db.String(30), nullable=False)
     status = db.Column(db.String(20), nullable=False)
     language = db.Column(db.String(20), nullable=False)
-    messages = db.Column(db.JSON, nullable=True)
 
     def save_to_db(self):
         db.session.add(self)
@@ -25,6 +24,8 @@ class ReviewModel(db.Model):
     @classmethod
     def update_status(cls, review_id, status):
         review = ReviewModel.get_review(review_id)
+        if(status == "pending"):
+            review.reviewer_id = None
         review.status = status
         db.session.commit()
 
@@ -39,13 +40,9 @@ class ReviewModel(db.Model):
         return review
 
     @classmethod
-    def check_review_exists(cls, reviewee_id):
-        # checks if a user has already opened a review
-        review = cls.query.filter(ReviewModel.reviewee_id == reviewee_id).all()
-        if(review == None):
-            return False
-        else:
-            return True
+    def get_review_from_reviewee(cls, id):
+        review = cls.query.filter(ReviewModel.reviewee_id == id).one()
+        return review
 
     @classmethod
     def delete_all(cls):
