@@ -6,6 +6,7 @@ import useStyles from "./LoginSignupStyles";
 import { UserContext } from "../context/userContext";
 import OnboardingContainer from "../components/OnboardingContainer";
 import ExperienceRow from "../components/ExperienceRow";
+import { languages } from "../utils/Constants";
 
 // Signup experience level dropdown options
 const experienceOptions = {
@@ -15,7 +16,6 @@ const experienceOptions = {
   Senior: 3,
 };
 const experienceLabelList = Object.keys(experienceOptions);
-let availableLanguages = ["JavaScript", "Java", "C++", "C#", "C", "Python"];
 
 const uploadUserExperience = (experiences, dispatch) => {
   let outObj = {};
@@ -57,7 +57,7 @@ const OnboardingExperience = () => {
   });
   const [rows, setRows] = useState(() => {
     let tempObj = {};
-    availableLanguages.forEach((lang) => {
+    languages.forEach((lang) => {
       tempObj[lang] = null;
     });
     return tempObj;
@@ -101,7 +101,7 @@ const OnboardingExperience = () => {
                   experienceOptions={experienceLabelList}
                   upadateRow={upadateRow}
                   deleteRow={() => {
-                    availableLanguages.push(languageRow);
+                    languages.push(languageRow);
                   }}
                   languages={[
                     languageRow,
@@ -114,12 +114,12 @@ const OnboardingExperience = () => {
             }
             return null;
           })}
-          {availableLanguages.length !== 0 && (
+          {languages.length !== 0 && (
             <IconButton
               disableRipple
               classes={{ root: classes.buttonAddRoot }}
               onClick={() => {
-                let currentLang = availableLanguages.splice(0, 1);
+                let currentLang = languages.splice(0, 1);
                 let temp = {};
                 temp[currentLang] = experience;
                 setRows({ ...rows, ...temp });
