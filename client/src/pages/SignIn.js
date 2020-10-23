@@ -76,10 +76,10 @@ const SignIn = () => {
             error: true,
           });
         } else {
-          localStorage.setItem("token", data.user.access_token);
+          localStorage.setItem("token", data.access_token);
           dispatch({
             type: "storeUserInfo",
-            payload: { ...data.user, ...{ name: data.user.full_name } },
+            payload: { ...data, ...{ name: data.full_name } },
           });
           // clear form
           setForm({ email: "", password: "" });
