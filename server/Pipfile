@@ -6,13 +6,17 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-flask = "*"
-flask-restful = "*"
-flask-jwt-extended = "*"
-passlib = "*"
-flask-sqlalchemy = "*"
-psycopg2-binary = "*"
-python-dotenv = "*"
+flask = "==1.1.2"
+flask-restful = "==0.3.8"
+flask-jwt-extended = "==3.24.1"
+passlib = "==1.7.4"
+flask-sqlalchemy = "==2.4.4"
+psycopg2-binary = "==2.8.6"
+python-dotenv = "==0.14.0"
+pylint-flask = "==0.6"
+redis = "==3.5.3"
+rq = "==1.5.2"
+flask-socketio = "==4.6.0"
 
 [requires]
 python_version = "3.7"
