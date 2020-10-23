@@ -10,6 +10,8 @@ class ReviewModel(db.Model):
     title = db.Column(db.String(30), nullable=False)
     status = db.Column(db.String(20), nullable=False)
     language = db.Column(db.String(20), nullable=False)
+    code = db.Column(db.Text, nullable=False)
+    message = db.Column(db.Integer, nullable=True)
 
     def save_to_db(self):
         db.session.add(self)
@@ -30,6 +32,12 @@ class ReviewModel(db.Model):
         db.session.commit()
 
     @classmethod
+    def link_message_id(cls, review_id):
+        review = ReviewModel.get_review(review_id)
+        review.message = review_id
+        db.session.commit()
+
+    @classmethod
     def close_review(cls):
         # TO-DO
         pass
@@ -40,9 +48,12 @@ class ReviewModel(db.Model):
         return review
 
     @classmethod
-    def get_review_from_reviewee(cls, id):
-        review = cls.query.filter(ReviewModel.reviewee_id == id).one()
-        return review
+    def check_participation(cls, user_id, review_id):
+        review = cls.query.get(review_id)
+        if(user_id != review.reviewee_id and user_id != review.reviewer_id):
+            return False
+        else:
+            return True
 
     @classmethod
     def delete_all(cls):

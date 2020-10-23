@@ -30,19 +30,15 @@ class RequestNew(Resource):
             reviewer_id=None,
             title=data["title"],
             status="pending",
-            language=data["language"]
+            language=data["language"],
+            code=data["code"],
+            message=None
         )
 
         try:
             new_review.save_to_db()
 
-            new_message = MessageModel(
-                review_id=new_review.id,
-                content=data["code"],
-                owner_id=new_review.reviewee_id,
-                timestamp=datetime.now()
-            )
-            new_message.save_to_db()
+            ReviewModel.link_message_id(new_review.id)
 
             job = queue.enqueue(find_reviewer, new_review.id)
 
