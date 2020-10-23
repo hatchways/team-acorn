@@ -12,4 +12,20 @@ export const theme = createMuiTheme({
   purple: "#6E3ADB",
   turquoise: "#43DDC1",
   yellow: "#F7B500",
+  overrides: {
+    MuiSelect: {
+      select: {
+        "&:focus": {
+          backgroundColor: "transparent",
+        },
+      },
+    },
+    MuiInput: {
+      input: {
+        "&:active": {
+          backgroundColor: "transparent",
+        },
+      },
+    },
+  },
 });
