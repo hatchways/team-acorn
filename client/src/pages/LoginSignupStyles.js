@@ -113,6 +113,35 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     borderWidth: 0,
   },
+  balance: {
+    color: "#6E3ADB",
+    fontWeight: 700,
+    marginTop: "-2rem",
+    marginBottom: "2rem",
+  },
+  topup: {
+    fontWeight: 700,
+    margin: "1rem",
+  },
+  topupButton: {
+    color: "#6E3ADB",
+    backgroundColor: "#E3EAFC",
+    cursor: "pointer",
+    borderRadius: 10,
+    width: "2rem",
+    height: "2rem",
+    textAlign: "center",
+    display: "flex",
+    justifyContent: "center",
+    fontSize: 20,
+    fontWeight: 700,
+    marginTop: "0.5rem",
+    "&:hover": {
+      color: "#E3EAFC",
+      backgroundColor: "#6E3ADB",
+    },
+    userSelect: "none",
+  },
 }));
 
 export default useStyles;

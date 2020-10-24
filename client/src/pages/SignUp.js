@@ -19,7 +19,6 @@ import Snackbar from "../components/SnackbarComponent";
 const SignUp = () => {
   const userContext = useContext(UserContext);
   const { dispatch } = userContext;
-  const userData = userContext.state;
   const classes = useStyles(); // makeStyles MaterialUI hook from styles.js
   const history = useHistory(); // useHistory hook from router-dom
   // Local states..

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+import UploadCodeDialog from "../UploadCodeDialog";
 
 import NavbarLink from "./NavbarLink";
 import NavbarNotification from "./NavbarNotification";
@@ -36,21 +36,34 @@ const NavBar = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
+  const [open, setOpen] = React.useState(false);
+  const [form, setForm] = React.useState({
+    title: "",
+    code: "",
+    language: "javascript",
+  });
+
+  useEffect(() => {
+    if (open === true) {
+      setForm({
+        title: "",
+        code: "",
+        language: "javascript",
+      });
+    }
+  }, [open]);
+
   return (
     <div className={classes.navbarContainer}>
       <NavbarLink path={"/reviews"} text={"Reviews"} />
       <NavbarLink path={"/balance"} text={"Balance"} />
       <NavbarNotification />
-      <NavbarLink path={"/upload"}>
-        <Button
-          classes={{
-            root: classes.buttonRoot,
-            label: classes.buttonLabel,
-          }}
-        >
-          Upload Code
-        </Button>
-      </NavbarLink>
+      <UploadCodeDialog
+        form={form}
+        setForm={setForm}
+        open={open}
+        setOpen={setOpen}
+      />
       <NavbarProfile />
     </div>
   );

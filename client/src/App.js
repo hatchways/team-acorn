@@ -1,11 +1,10 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { UserContext } from "./context/userContext";
 import { theme } from "./themes/theme";
 import ReviewsPage from "./pages/Reviews";
 import BalancePage from "./pages/Balance";
-import UploadCodePage from "./pages/UplodeCode";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import OnboardingExperience from "./pages/OnboardingExperience";
@@ -52,6 +51,7 @@ function App() {
   const token = localStorage.getItem("token");
   useEffect(() => {
     fetchUserData({ token, dispatch, setIsFetchingUser });
+    // eslint-disable-next-line
   }, []);
 
   if (!isFetchingUser) {
@@ -83,23 +83,25 @@ const DefaultStack = () => {
 
 const AuthStack = ({ experience }) => {
   return (
-    <Switch>
+    <>
       {experience && <NavBar />}
-      <Route exact path="/onboard" component={OnboardingExperience} />
-      <Route exact path="/reviews" component={ReviewsPage} />
-      <Route exact path="/balance" component={BalancePage} />
-      <Route exact path="/upload" component={UploadCodePage} />
-      <Route
-        path="/"
-        render={() => {
-          return !experience ? (
-            <Redirect to="/onboard" />
-          ) : (
-            <Redirect to="/reviews" />
-          );
-        }}
-      />
-    </Switch>
+      <Switch>
+        <Route exact path="/onboard" component={OnboardingExperience} />
+        <Route exact path="/reviews" component={ReviewsPage} />
+        <Route exact path="/balance" component={BalancePage} />
+        <Route
+          exact
+          path="/"
+          render={() => {
+            return !experience ? (
+              <Redirect to="/onboard" />
+            ) : (
+              <Redirect to="/reviews" />
+            );
+          }}
+        />
+      </Switch>
+    </>
   );
 };
 
