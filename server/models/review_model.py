@@ -11,7 +11,6 @@ class ReviewModel(db.Model):
     status = db.Column(db.String(20), nullable=False)
     language = db.Column(db.String(20), nullable=False)
     code = db.Column(db.Text, nullable=False)
-    message = db.Column(db.Integer, nullable=True)
 
     def save_to_db(self):
         db.session.add(self)
@@ -31,11 +30,11 @@ class ReviewModel(db.Model):
         review.status = status
         db.session.commit()
 
-    @classmethod
-    def link_message_id(cls, review_id):
-        review = ReviewModel.get_review(review_id)
-        review.message = review_id
-        db.session.commit()
+    # @classmethod
+    # def link_message_id(cls, review_id):
+    #     review = ReviewModel.get_review(review_id)
+    #     review.message = review_id
+    #     db.session.commit()
 
     @classmethod
     def close_review(cls):

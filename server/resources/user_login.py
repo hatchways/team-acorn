@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import create_access_token
 from models.user_model import UserModel
+from models.experience_model import ExperienceModel
 import datetime
 
 
@@ -22,6 +23,8 @@ class UserLogin(Resource):
         if not current_email:
             return {'error': 'Invalid email or password'}
 
+        user_experience = ExperienceModel.get_user_experience(user.id)
+
         if UserModel.verify_hash(data['password'], current_email.password):
             expires = datetime.timedelta(days=1)
             access_token = create_access_token(
@@ -32,8 +35,7 @@ class UserLogin(Resource):
                 'user_id': user.id,
                 'full_name': user.full_name,
                 'email': user.email,
-                'experience': user.experience
-
+                'experience': user_experience
             }, 200
         else:
             return {'error': 'Invalid email or password'}, 400

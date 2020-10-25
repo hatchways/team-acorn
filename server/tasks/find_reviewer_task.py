@@ -1,6 +1,7 @@
 from datetime import timedelta
 from models.user_model import UserModel
 from models.review_model import ReviewModel
+from models.experience_model import ExperienceModel
 from extensions import queue, create_app
 
 
@@ -14,10 +15,13 @@ def find_reviewer(review_id):
     review = ReviewModel.get_review(review_id)
     reviewee = UserModel.get_user(review.reviewee_id)
 
-    if review.language not in reviewee.experience:
+    reviewee_exp = ExperienceModel.get_user_experience(reviewee.id)
+    print(reviewee_exp)
+
+    if review.language not in reviewee_exp:
         level = 1
-    elif int(reviewee.experience.get(review.language)) < 3:
-        level = int(reviewee.experience.get(review.language)) + 1
+    elif int(reviewee_exp.get(review.language)) < 3:
+        level = int(reviewee_exp.get(review.language)) + 1
     else:
         level = 3
 

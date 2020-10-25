@@ -31,14 +31,13 @@ class RequestNew(Resource):
             title=data["title"],
             status="pending",
             language=data["language"],
-            code=data["code"],
-            message=None
+            code=data["code"]
         )
 
         try:
             new_review.save_to_db()
 
-            ReviewModel.link_message_id(new_review.id)
+            # ReviewModel.link_message_id(new_review.id)
 
             job = queue.enqueue(find_reviewer, new_review.id)
 
