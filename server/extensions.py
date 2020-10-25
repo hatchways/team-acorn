@@ -4,7 +4,7 @@ from flask_restful import Api, Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
 import redis
-from rq import Queue, Retry
+from rq import Queue, Retry, Worker
 
 
 def register_extensions(app):
