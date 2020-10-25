@@ -5,9 +5,9 @@ function subscribeToNotifications({ callback, userId }) {
   console.log("SUBSCRIBING");
   socket.on("notification", (data) => {
     alert(data);
-    callback(data);
+    console.log(data);
+    // callback(data);
   });
-  socket.on("message", (data) => {});
   socket.emit("subscribeToNotifications", userId);
 }
 

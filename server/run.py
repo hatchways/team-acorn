@@ -1,6 +1,9 @@
 # to avoid circular import, must save with import views, models, resources at bottom
 # to save without auto-formatting on vs code, `CTRL + K + SHIFT + S`
 
+import eventlet
+eventlet.monkey_patch()
+
 from flask import Flask
 import os
 
@@ -60,3 +63,6 @@ def check_if_token_in_blacklist(decrypted_token):
     # function will return True or False depending if the passed token is blacklisted
     jti = decrypted_token['jti']
     return revoked_token_model.RevokedTokenModel.is_jti_blacklisted(jti)
+
+
+socketio.run(app, debug=True)

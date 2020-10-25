@@ -16,7 +16,7 @@ api = Api(app)
 def register_extensions(app):
     db.init_app(app)
     jwt.init_app(app)
-    socketio.init_app(app, cors_allowed_origins="*")
+    socketio.init_app(app,async_mode='eventlet', cors_allowed_origins="*",message_queue='redis://localhost:6379/0')
 
 
 def create_app():

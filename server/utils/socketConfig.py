@@ -1,13 +1,15 @@
+from extensions import app, socketio
+from flask_socketio import send, emit, join_room, leave_room, SocketIO
 
-from extensions import socketio
-from flask_socketio import emit, join_room, leave_room
-
+@socketio.on('connect')
+def connected():
+    emit('message', "You have connected")
 
 @socketio.on('subscribeToNotifications')
 def joined(user_id):
-    print("message")
     join_room(user_id)
-    emit('message', "You have subscribed", room=user_id)
+    # socketio.emit('notification', {'msg': "You have subscribed", "id":user_id})
 
-def sendNotification(user_id):
-    emit('notification', "recieved Notification", room=user_id)
+def sendNotification(user_id,review_id):
+    print(user_id)
+    socketio.emit('notification', {'msg': "Reviewer has been assigned", "reviewId": review_id}, room=user_id)
