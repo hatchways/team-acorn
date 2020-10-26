@@ -123,15 +123,15 @@ function formatTime(timeCreated) {
 
   if (diff > periods.month) {
     // it was at least a month ago
-    return Math.floor(diff / periods.month) + "m";
+    return Math.floor(diff / periods.month) + "month ago";
   } else if (diff > periods.week) {
-    return Math.floor(diff / periods.week) + "w";
+    return Math.floor(diff / periods.week) + "week ago";
   } else if (diff > periods.day) {
-    return Math.floor(diff / periods.day) + "d";
+    return Math.floor(diff / periods.day) + "day ago";
   } else if (diff > periods.hour) {
-    return Math.floor(diff / periods.hour) + "h";
+    return Math.floor(diff / periods.hour) + "hour ago";
   } else if (diff > periods.minute) {
-    return Math.floor(diff / periods.minute) + "m";
+    return Math.floor(diff / periods.minute) + "min ago";
   }
   return "Just now";
 }
