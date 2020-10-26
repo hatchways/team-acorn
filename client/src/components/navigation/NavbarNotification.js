@@ -96,8 +96,8 @@ const NavbarNotification = () => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        {notifications.map((notification) => (
-          <div className={classes.notificationContainer}>
+        {notifications.map((notification, i) => (
+          <div className={classes.notificationContainer} key={i}>
             <div>{notification.message}</div>
             <div className={classes.notificationTime}>
               {formatTime(notification.timeStamp)}
