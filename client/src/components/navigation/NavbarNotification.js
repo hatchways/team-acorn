@@ -81,6 +81,7 @@ const NavbarNotification = () => {
           root: classes.buttonRoot,
         }}
         onClick={handleClick}
+        // disabled={notifications.length == 0}
       >
         <NotificationsNoneIcon className={classes.icon} />
         {hasNewNotification && <div className={classes.newNotification} />}
@@ -96,10 +97,9 @@ const NavbarNotification = () => {
         onClose={handleClose}
       >
         {notifications.map((notification) => (
-          <div class={classes.notificationContainer}>
-            {/* {formatTime(notification.timeStamp)} */}
+          <div className={classes.notificationContainer}>
             <div>{notification.message}</div>
-            <div class={classes.notificationTime}>
+            <div className={classes.notificationTime}>
               {formatTime(notification.timeStamp)}
             </div>
           </div>
@@ -109,6 +109,7 @@ const NavbarNotification = () => {
   );
 };
 
+//Time conversion function taken from StackOverflow
 var periods = {
   month: 30 * 24 * 60 * 60 * 1000,
   week: 7 * 24 * 60 * 60 * 1000,
