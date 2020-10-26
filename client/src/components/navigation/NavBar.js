@@ -50,9 +50,6 @@ const NavBar = () => {
     error: false,
     message: hasNewNotification.message,
   });
-
-  console.log(hasNewNotification);
-  console.log(snackbarNotification);
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     title: "",
