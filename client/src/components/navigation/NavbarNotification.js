@@ -32,6 +32,7 @@ const NavbarNotification = () => {
   const userContext = useContext(UserContext);
   const { dispatch } = userContext;
   const { userId } = userContext.state;
+  const { hasNewNotification } = userContext.state;
 
   useEffect(() => {
     subscribeToNotifications({
@@ -39,8 +40,6 @@ const NavbarNotification = () => {
       userId: userId,
     });
   }, []);
-
-  const { hasNewNotification } = useContext(UserContext).state;
   const theme = useTheme();
   const classes = useStyles(theme);
   return (

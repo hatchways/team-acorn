@@ -9,7 +9,7 @@ const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer((state, action) => {
     switch (action.type) {
       case "storeUserInfo": {
-        return { ...action.payload };
+        return { ...state, ...action.payload };
       }
       case "storeUserExperience": {
         return { ...state, ...state.user, ...{ experience: action.payload } };
