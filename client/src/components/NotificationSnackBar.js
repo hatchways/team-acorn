@@ -34,7 +34,8 @@ const NotificationSnackBar = ({ open, message, error, setOpen, classes }) => {
         onClose={handleClose}
         classes={classes}
         onClick={() => {
-          history.push("/reviwes");
+          // In the future will redirect to a speific review id pdage
+          history.push("/reviews");
         }}
       >
         <SnackbarContent message={message} style={styles} />

@@ -2,7 +2,7 @@ from datetime import timedelta
 from models.user_model import UserModel
 from models.review_model import ReviewModel
 from extensions import queue, create_app, socketio
-from utils.socketConfig import sendNotification
+from utils.socket_config import sendNotification
 
 
 

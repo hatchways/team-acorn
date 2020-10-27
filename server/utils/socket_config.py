@@ -8,7 +8,6 @@ def connected():
 @socketio.on('subscribeToNotifications')
 def joined(user_id):
     join_room(user_id)
-    # socketio.emit('notification', {'msg': "You have subscribed", "id":user_id})
 
 def sendNotification(user_id,review_id):
     print(user_id)

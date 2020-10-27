@@ -110,7 +110,7 @@ const NavbarNotification = () => {
 };
 
 //Time conversion function taken from StackOverflow
-var periods = {
+const periods = {
   month: 30 * 24 * 60 * 60 * 1000,
   week: 7 * 24 * 60 * 60 * 1000,
   day: 24 * 60 * 60 * 1000,
@@ -118,7 +118,7 @@ var periods = {
   minute: 60 * 1000,
 };
 
-function formatTime(timeCreated) {
+const formatTime = (timeCreated) => {
   var diff = Date.now() - timeCreated;
 
   if (diff > periods.month) {
@@ -134,5 +134,6 @@ function formatTime(timeCreated) {
     return Math.floor(diff / periods.minute) + "min ago";
   }
   return "Just now";
-}
+};
+
 export default NavbarNotification;

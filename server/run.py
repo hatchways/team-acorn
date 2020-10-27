@@ -7,7 +7,7 @@ eventlet.monkey_patch()
 from flask import Flask
 import os
 
-import utils.socketConfig
+import utils.socket_config
 
 from models import revoked_token_model
 from resources.user_logout_access import UserLogoutAccess
