@@ -48,11 +48,12 @@ function App() {
   const { dispatch } = userContext;
   const [isFetchingUser, setIsFetchingUser] = useState(true);
   const userData = userContext.state;
+  const { update_info } = userContext.state;
   const token = localStorage.getItem("token");
   useEffect(() => {
     fetchUserData({ token, dispatch, setIsFetchingUser });
     // eslint-disable-next-line
-  }, [isFetchingUser]);
+  }, [isFetchingUser, update_info]);
 
   if (!isFetchingUser) {
     return (
