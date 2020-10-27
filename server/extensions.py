@@ -1,3 +1,4 @@
+import logging
 from flask import Flask
 import os
 from flask_restful import Api, Resource, reqparse
@@ -5,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
 import redis
 from rq import Queue, Retry, Worker
+import sys
 
 
 def register_extensions(app):
@@ -27,6 +29,8 @@ def create_app():
     return app
 
 
+# logging.basicConfig()
+# logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 db = SQLAlchemy()
 api = Api()
 jwt = JWTManager()

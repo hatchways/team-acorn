@@ -22,7 +22,7 @@ class SendMessage(Resource):
         review = ReviewModel.get_review(data["review_id"])
 
         if(user_id != review.reviewer_id and user_id != review.reviewee_id):
-            return {"error": "You are not permitted to send messages to this review"}
+            return {"error": "You are not permitted to send messages to this review"}, 403
         elif(review.status != "in_review"):
             return {"error": "A party has not accepted the request yet"}
 

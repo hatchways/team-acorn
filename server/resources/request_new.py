@@ -13,7 +13,6 @@ class RequestNew(Resource):
     @jwt_required
     def post(self):
 
-        # check if user already as a review in progress
         user_id = get_jwt_identity()
 
         parser = reqparse.RequestParser()
@@ -36,8 +35,6 @@ class RequestNew(Resource):
 
         try:
             new_review.save_to_db()
-
-            # ReviewModel.link_message_id(new_review.id)
 
             job = queue.enqueue(find_reviewer, new_review.id)
 

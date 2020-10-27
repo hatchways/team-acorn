@@ -1,4 +1,6 @@
-from extensions import db
+from extensions import db, sys
+from models.message_model import MessageModel
+from models.blacklist_model import BlacklistModel
 
 
 class ReviewModel(db.Model):
@@ -6,11 +8,16 @@ class ReviewModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     reviewer_id = db.Column(db.Integer, nullable=True)
-    reviewee_id = db.Column(db.Integer, nullable=False)
+    reviewee_id = db.Column(
+        db.Integer, db.ForeignKey("users.id"), nullable=False)
     title = db.Column(db.String(30), nullable=False)
     status = db.Column(db.String(20), nullable=False)
     language = db.Column(db.String(20), nullable=False)
     code = db.Column(db.Text, nullable=False)
+    blacklisted_users = db.relationship(
+        "BlacklistModel", cascade="all, delete-orphan", backref="review", lazy=True)
+    messages = db.relationship(
+        "MessageModel", cascade="all, delete-orphan", backref="review", lazy=True)
 
     def save_to_db(self):
         db.session.add(self)
@@ -30,16 +37,12 @@ class ReviewModel(db.Model):
         review.status = status
         db.session.commit()
 
-    # @classmethod
-    # def link_message_id(cls, review_id):
-    #     review = ReviewModel.get_review(review_id)
-    #     review.message = review_id
-    #     db.session.commit()
-
     @classmethod
-    def close_review(cls):
-        # TO-DO
-        pass
+    def close_review(cls, id):
+        # deleting the review will also delete all associated messages
+        review = cls.query.get(id)
+        db.session.delete(review)
+        db.session.commit()
 
     @classmethod
     def get_review(cls, id):
@@ -47,18 +50,14 @@ class ReviewModel(db.Model):
         return review
 
     @classmethod
-    def check_participation(cls, user_id, review_id):
-        review = cls.query.get(review_id)
-        if(user_id != review.reviewee_id and user_id != review.reviewer_id):
-            return False
-        else:
-            return True
-
-    @classmethod
     def delete_all(cls):
         try:
-            num_rows_deleted = db.session.query(cls).delete()
+            reviews = db.session.query(cls).all()
+            length = len(reviews)
+            for rev in reviews:
+                db.session.delete(rev)
             db.session.commit()
-            return {'message': '{} row(s) deleted'.format(num_rows_deleted)}
+            return {'message': '{} row(s) deleted'.format(length)}
         except:
-            return {'message': 'Something went wrong'}
+            print("Unexpected error:", sys.exc_info()[0])
+            return {'message': 'Something went wrong'}, 500
