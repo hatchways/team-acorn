@@ -13,16 +13,18 @@ class SendMessage(Resource):
 
         parser = reqparse.RequestParser()
         parser.add_argument(
-            "review_id", help="This field cannot be blank", require=True)
+            "review_id", help="This field cannot be blank", required=True)
         parser.add_argument(
-            "message", help="This field cannot be blank", require=True)
+            "message", help="This field cannot be blank", required=True)
 
         data = parser.parse_args()
 
         review = ReviewModel.get_review(data["review_id"])
 
-        if(user_id != review.reviewer_id) or (user_id != review.reviewee_id):
+        if(user_id != review.reviewer_id and user_id != review.reviewee_id):
             return {"error": "You are not permitted to send messages to this review"}
+        elif(review.status != "in_review"):
+            return {"error": "A party has not accepted the request yet"}
 
         new_message = MessageModel(
             review_id=review.id,
@@ -30,6 +32,17 @@ class SendMessage(Resource):
             owner_id=user_id,
             timestamp=datetime.now()
         )
+
+        new_message.save_to_db()
+
+        # send notification
+        # TO-DO
+        if(user_id == review.reviewee_id):
+            # if owner of this message is id of reviewee, send notification to reviewer
+            pass
+        elif(user_id == review.reviewer_id):
+            # if owner of this message is id of reviwer, send notification to reviewee
+            pass
 
         return{
             "message": "Message sent"
