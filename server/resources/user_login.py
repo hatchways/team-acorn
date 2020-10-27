@@ -1,8 +1,6 @@
-from flask_restful import Resource, reqparse
-from flask_jwt_extended import create_access_token
+from extensions import datetime, Resource, reqparse, create_access_token
 from models.user_model import UserModel
 from models.experience_model import ExperienceModel
-import datetime
 
 
 class UserLogin(Resource):

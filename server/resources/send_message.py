@@ -1,8 +1,6 @@
-from flask_restful import Resource, reqparse
-from flask_jwt_extended import (jwt_required, get_jwt_identity)
+from extensions import Resource, reqparse, jwt_required, get_jwt_identity, datetime
 from models.review_model import ReviewModel
 from models.message_model import MessageModel
-from datetime import datetime
 
 
 class SendMessage(Resource):

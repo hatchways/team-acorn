@@ -1,9 +1,7 @@
-from flask_restful import Resource, reqparse
-from flask_jwt_extended import (jwt_required, get_jwt_identity)
+from extensions import Resource, reqparse, jwt_required, get_jwt_identity, queue
 from models.review_model import ReviewModel
 from models.user_model import UserModel
 from models.blacklist_model import BlacklistModel
-from extensions import queue, create_app
 from tasks.find_reviewer_task import find_reviewer
 from datetime import timedelta
 
