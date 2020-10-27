@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-
+import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -34,17 +34,26 @@ const NavbarProfile = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const history = useHistory();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = (option) => {
-    if (option === "logout") {
-      localStorage.removeItem("token");
-      dispatch({ type: "logout" });
-      setAnchorEl(null);
-    } else {
-      setAnchorEl(null);
+    switch (option) {
+      case "logout": {
+        localStorage.removeItem("token");
+        dispatch({ type: "logout" });
+        setAnchorEl(null);
+        break;
+      }
+      case "profile": {
+        history.push("/profile");
+      }
+      default: {
+        setAnchorEl(null);
+        break;
+      }
     }
   };
 
@@ -70,7 +79,7 @@ const NavbarProfile = () => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <MenuItem onClick={() => handleClose("profile")}>My Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>
         <MenuItem onClick={() => handleClose("logout")}>Logout</MenuItem>
       </Menu>
