@@ -17,7 +17,6 @@ class UserModel(db.Model):
         "ReviewModel", cascade="save-update", backref="review", lazy=True, primaryjoin="UserModel.id==ReviewModel.reviewee_id")
     experience = db.relationship(
         "ExperienceModel", cascade="all, delete-orphan", backref="review", lazy=True)
-    # balance = db.Column(db.Integer, nullable=False)
 
     def save_to_db(self):
         db.session.add(self)
