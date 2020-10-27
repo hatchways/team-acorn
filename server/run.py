@@ -1,6 +1,3 @@
-# to avoid circular import, must save with import views, models, resources at bottom
-# to save without auto-formatting on vs code, `CTRL + K + SHIFT + S`
-
 from flask import Flask
 import os
 
@@ -11,11 +8,16 @@ from resources.user_registration import UserRegistration
 from resources.request_new import RequestNew
 from resources.user_experience import UserExperience
 from resources.user_get import UserGet
+from resources.review_respond import ReviewRespond
+from resources.send_message import SendMessage
+from resources.user_get import UserGet
+from resources.review_get import ReviewGet
 
 # Testing routes, remove before production
-from resources.reset_review import ResetReview
-from resources.reset_user import ResetUser
-from resources.reset_user_review_count import ResetUserReviewCount
+from resources.test_resources.reset_review import ResetReview
+from resources.test_resources.reset_user import ResetUser
+from resources.test_resources.reset_user_review_count import ResetUserReviewCount
+from resources.test_resources.reset_messages import ResetMessages
 #######################################
 
 from extensions import db, api, jwt, create_app
@@ -28,11 +30,15 @@ def create_api(app):
     api.add_resource(RequestNew, '/new_request')
     api.add_resource(UserExperience, '/experience')
     api.add_resource(UserGet, '/user')
+    api.add_resource(ReviewRespond, '/review_respond')
+    api.add_resource(SendMessage, '/send_message')
+    api.add_resource(ReviewGet, '/review')
 
     # Routes for testing, remove when in production
     api.add_resource(ResetUser, "/reset_users")
     api.add_resource(ResetReview, "/reset_reviews")
     api.add_resource(ResetUserReviewCount, "/reset_user_review_count")
+    api.add_resource(ResetMessages, "/reset_messages")
     ############################################
 
     api.init_app(app)

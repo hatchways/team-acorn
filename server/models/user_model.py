@@ -11,6 +11,7 @@ class UserModel(db.Model):
     password = db.Column(db.String(120), nullable=False)
     experience = db.Column(db.JSON, nullable=True)
     reviews = db.Column(db.Integer, nullable=False)
+    #balance = db.Column(db.Integer, nullable=False)
 
     def save_to_db(self):
         db.session.add(self)
