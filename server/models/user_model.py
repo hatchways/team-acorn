@@ -14,7 +14,7 @@ class UserModel(db.Model):
     password = db.Column(db.String(120), nullable=False)
     review_count = db.Column(db.Integer, nullable=False)
     reviews = db.relationship(
-        "ReviewModel", cascade="save-update", backref="review", lazy=True)
+        "ReviewModel", cascade="save-update", backref="review", lazy=True, primaryjoin="UserModel.id==ReviewModel.reviewee_id")
     experience = db.relationship(
         "ExperienceModel", cascade="all, delete-orphan", backref="review", lazy=True)
     # balance = db.Column(db.Integer, nullable=False)
