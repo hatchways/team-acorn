@@ -35,7 +35,6 @@ const useStyles = makeStyles((theme) => ({
 const NavBar = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
-
   const [open, setOpen] = React.useState(false);
   const [form, setForm] = React.useState({
     title: "",

@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Grid, Typography, Button, Divider } from "@material-ui/core";
 import OnboardingContainer from "../components/LoginSignupContainer";
 import useStyles from "../pages/LoginSignupStyles";
 import Snackbar from "../components/SnackbarComponent";
+import CheckoutForm from "../components/CheckoutForm";
+import { UserContext } from "../context/userContext";
+
+const stripePublicKey = process.env.REACT_APP_STRIPE_PK;
 
 const BalancePage = () => {
+  const { state: UserData } = useContext(UserContext);
   const classes = useStyles();
-  const [balance, setBalance] = useState(3);
+  const [balance, setBalance] = useState(UserData.balance);
   const [topup, setTopup] = useState(0);
-
+  const [payScreen, setPayScreen] = useState(false); // state to switch UI from balance form to payment form
   // Snackbar state
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -35,9 +40,7 @@ const BalancePage = () => {
         error: true,
       });
     } else {
-      alert("Stripe handling called..");
-      setBalance((prev) => prev + topup);
-      setTopup(0);
+      setPayScreen(true);
     }
   };
 
@@ -71,63 +74,75 @@ const BalancePage = () => {
         error={snackbar.error}
       />
       <OnboardingContainer>
-        <Grid container direction="column">
-          <Typography
-            className={classes.mainHeading}
-            variant="h4"
-            align="center"
-            display="block"
-          >
-            Your balance:
-          </Typography>
-          <Typography
-            className={classes.balance}
-            variant="h5"
-            align="center"
-            display="block"
-          >
-            {balance} credits
-          </Typography>
-          <Divider variant="fullWidth" classes={classes.divider} />
-          <Typography
-            className={classes.topup}
-            variant="h6"
-            align="center"
-            display="block"
-          >
-            Top up:
-          </Typography>
-          <div style={styles.buttonsWrapper}>
-            <div
-              className={classes.topupButton}
-              onClick={() => handleTopup("-")}
-            >
-              -
-            </div>
+        {!payScreen ? (
+          <Grid container direction="column">
             <Typography
-              style={styles.topupCounter}
+              className={classes.mainHeading}
+              variant="h4"
+              align="center"
+              display="block"
+            >
+              Your balance:
+            </Typography>
+            <Typography
+              className={classes.balance}
+              variant="h5"
+              align="center"
+              display="block"
+            >
+              {balance} credits
+            </Typography>
+            <Divider variant="fullWidth" classes={classes.divider} />
+            <Typography
+              className={classes.topup}
               variant="h6"
               align="center"
               display="block"
             >
-              {topup}
+              Top up:
             </Typography>
-            <div
-              className={classes.topupButton}
-              onClick={() => handleTopup("+")}
-            >
-              +
+            <div style={styles.buttonsWrapper}>
+              <div
+                className={classes.topupButton}
+                onClick={() => handleTopup("-")}
+              >
+                -
+              </div>
+              <Typography
+                style={styles.topupCounter}
+                variant="h6"
+                align="center"
+                display="block"
+              >
+                {topup}
+              </Typography>
+              <div
+                className={classes.topupButton}
+                onClick={() => handleTopup("+")}
+              >
+                +
+              </div>
             </div>
-          </div>
-          <Button
-            variant="contained"
-            className={classes.loginButton}
-            style={styles.checkoutButton}
-            onClick={handleCheckout}
-          >
-            Checkout
-          </Button>
-        </Grid>
+            <Button
+              variant="contained"
+              className={classes.loginButton}
+              style={styles.checkoutButton}
+              onClick={handleCheckout}
+              id="checkout-button"
+              role="link"
+            >
+              Checkout
+            </Button>
+          </Grid>
+        ) : (
+          <Grid container direction="column">
+            <CheckoutForm
+              stripePublicKey={stripePublicKey}
+              topup={topup}
+              setBalance={setBalance}
+            />
+          </Grid>
+        )}
       </OnboardingContainer>
     </>
   );

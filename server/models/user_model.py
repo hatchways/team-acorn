@@ -11,6 +11,7 @@ class UserModel(db.Model):
     password = db.Column(db.String(120), nullable=False)
     experience = db.Column(db.JSON, nullable=True)
     reviews = db.Column(db.Integer, nullable=False)
+    balance =  db.Column(db.Integer, nullable=False, default=3)
 
     def save_to_db(self):
         db.session.add(self)
@@ -45,6 +46,17 @@ class UserModel(db.Model):
         user = cls.query.get(id)
         user.experience = exp
         db.session.commit()
+
+    @classmethod
+    def update_balance(cls, id, balance):
+        user = cls.query.get(id)
+        user.balance = balance
+        db.session.commit()
+
+    @classmethod
+    def get_balance(cls, id):
+        user = cls.query.get(id)
+        return user.balance
 
     @classmethod
     def search_experience(cls, lang_levels, reviewee_id):

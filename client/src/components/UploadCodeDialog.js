@@ -103,6 +103,7 @@ const useStyles = makeStyles((theme) => ({
 
 const UploadCodeDialog = ({ open, setOpen, form, setForm }) => {
   const { title, code, language } = form; // destructuring the form object for easy use.
+  const [redirect, setRedirect] = useState(false);
   const classes = useStyles();
   const history = useHistory();
   // backdrop state
@@ -181,6 +182,7 @@ const UploadCodeDialog = ({ open, setOpen, form, setForm }) => {
         }),
       });
       setBackdrop(false);
+      setRedirect(true);
       const data = await response.json();
       if (data.error) {
         console.log(data.error);
@@ -193,8 +195,12 @@ const UploadCodeDialog = ({ open, setOpen, form, setForm }) => {
 
   // side effect to navigate to reviews page
   useEffect(() => {
-    history.push("/reviews");
-  }, [open, history]);
+    if (redirect) {
+      history.push("/reviews");
+      setOpen(false);
+    }
+    //eslint-disable-next-line
+  }, [redirect]);
 
   return (
     <div>
