@@ -50,6 +50,32 @@ class ReviewModel(db.Model):
         return review
 
     @classmethod
+    def get_reviews(cls, id, requester):
+        if(requester == "reviewer"):
+            reviews = cls.query.filter(ReviewModel.reviewer_id == id).all()
+        elif(requester == "reviewee"):
+            reviews = cls.query.filter(ReviewModel.reviewee_id == id).all()
+        else:
+            reviews == None
+
+        if reviews == None:
+            return None
+        else:
+            return {'reviews': list(map(lambda x: ReviewModel.to_json(x), reviews))}
+
+    @classmethod
+    def to_json(cls, x):
+        return {
+            'review_id': x.id,
+            'reviewer_id': x.reviewer_id,
+            'reviewee_id': x.reviewee_id,
+            'title': x.title,
+            'status': x.status,
+            'language': x.language,
+            'code': x.code
+        }
+
+    @classmethod
     def delete_all(cls):
         try:
             reviews = db.session.query(cls).all()
@@ -60,4 +86,4 @@ class ReviewModel(db.Model):
             return {'message': '{} row(s) deleted'.format(length)}
         except:
             print("Unexpected error:", sys.exc_info()[0])
-            return {'message': 'Something went wrong'}, 500
+            return {'error': 'Something went wrong'}, 500

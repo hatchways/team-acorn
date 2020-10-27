@@ -6,6 +6,7 @@ import json
 
 
 class ReviewGet(Resource):
+    # Get reviews that you are reviewing of others
     @jwt_required
     def get(self):
 

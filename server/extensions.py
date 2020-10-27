@@ -29,6 +29,7 @@ def create_app():
     return app
 
 
+# uncomment when want verbose sql logs
 # logging.basicConfig()
 # logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 db = SQLAlchemy()

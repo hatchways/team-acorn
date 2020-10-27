@@ -1,6 +1,7 @@
 from extensions import db, sys
 from models.experience_model import ExperienceModel
 from models.review_model import ReviewModel
+from models.experience_model import ExperienceModel
 from passlib.hash import pbkdf2_sha256 as sha256
 
 
@@ -12,7 +13,10 @@ class UserModel(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     review_count = db.Column(db.Integer, nullable=False)
-    reviews = db.relationship("ReviewModel", cascade="save-update")
+    reviews = db.relationship(
+        "ReviewModel", cascade="save-update", backref="review", lazy=True)
+    experience = db.relationship(
+        "ExperienceModel", cascade="all, delete-orphan", backref="review", lazy=True)
     # balance = db.Column(db.Integer, nullable=False)
 
     def save_to_db(self):

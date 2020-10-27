@@ -12,6 +12,8 @@ from resources.review_respond import ReviewRespond
 from resources.send_message import SendMessage
 from resources.user_get import UserGet
 from resources.review_get import ReviewGet
+from resources.reviewer_reviews_get import ReviewerReviewsGet
+from resources.reviewee_reviews_get import RevieweeReviewsGet
 
 # Testing routes, remove before production
 from resources.test_resources.reset_review import ResetReview
@@ -33,6 +35,8 @@ def create_api(app):
     api.add_resource(ReviewRespond, '/review_respond')
     api.add_resource(SendMessage, '/send_message')
     api.add_resource(ReviewGet, '/review')
+    api.add_resource(ReviewerReviewsGet, '/reviewer_reviews')
+    api.add_resource(RevieweeReviewsGet, '/reviewee_reviews')
 
     # Routes for testing, remove when in production
     api.add_resource(ResetUser, "/reset_users")

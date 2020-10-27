@@ -32,4 +32,4 @@ class MessageModel(db.Model):
             return {'message': '{} row(s) deleted'.format(length)}
         except:
             print("Unexpected error:", sys.exc_info()[0])
-            return {'message': 'Something went wrong'}, 500
+            return {'error': 'Something went wrong'}, 500
