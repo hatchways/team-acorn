@@ -1,5 +1,6 @@
-from extensions import Resource, reqparse, create_access_token, jwt_required, get_jwt_identity, datetime
+from extensions import Resource, reqparse, create_access_token, jwt_required, get_jwt_identity
 from models.user_model import UserModel
+from datetime import timedelta
 
 
 class UserRegistration(Resource):
@@ -27,7 +28,8 @@ class UserRegistration(Resource):
 
         try:
             new_user.save_to_db()
-            expires = datetime.timedelta(days=1)
+            print("saved to db")
+            expires = timedelta(days=1)
             access_token = create_access_token(
                 identity=UserModel.get_id(data['email']), expires_delta=expires)
             return{

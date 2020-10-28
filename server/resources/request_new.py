@@ -2,6 +2,7 @@ from extensions import Resource, reqparse, jwt_required, get_jwt_identity, queue
 from models.review_model import ReviewModel
 from models.message_model import MessageModel
 from tasks.find_reviewer_task import find_reviewer
+from models.language import Language
 from datetime import datetime
 
 
@@ -19,6 +20,9 @@ class RequestNew(Resource):
         parser.add_argument(
             "language", help="This field cannot be blank", required=True)
         data = parser.parse_args()
+
+        if(hasattr(Language, data["language"]) == False):
+            return {"error": "Invalid language given"}, 400
 
         new_review = ReviewModel(
             reviewee_id=get_jwt_identity(),

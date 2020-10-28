@@ -1,6 +1,5 @@
 from extensions import (Resource, jwt_required, get_jwt_identity)
 from models.user_model import UserModel
-from models.ExperienceModel import ExperienceModel
 
 
 class UserGet(Resource):
@@ -8,14 +7,12 @@ class UserGet(Resource):
     def get(self):
 
         user_id = get_jwt_identity()
-        user = UserModel.get_user(user_id)
-        user_experience = ExperienceModel.get_user_experience(user.id)
-
+        user = UserModel.get_user_with_experience(user_id)
         json = {
             "user": {
-                "full_name": user.full_name,
-                "email": user.email,
-                "experience": user_experience,
+                "full_name": user["full_name"],
+                "email": user["email"],
+                "experience": user["experience"],
                 "userId": user_id
             }
         }

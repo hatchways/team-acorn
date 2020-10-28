@@ -14,9 +14,9 @@ class UserModel(db.Model):
     password = db.Column(db.String(120), nullable=False)
     review_count = db.Column(db.Integer, nullable=False)
     reviews = db.relationship(
-        "ReviewModel", cascade="save-update", backref="review", lazy=True, primaryjoin="UserModel.id==ReviewModel.reviewee_id")
+        "ReviewModel", cascade="save-update", backref="reviews", lazy=True, primaryjoin="UserModel.id==ReviewModel.reviewee_id")
     experience = db.relationship(
-        "ExperienceModel", cascade="all, delete-orphan", backref="review", lazy=True)
+        "ExperienceModel", cascade="all, delete-orphan", backref="experience")
 
     def save_to_db(self):
         db.session.add(self)
@@ -28,9 +28,31 @@ class UserModel(db.Model):
         return user.id
 
     @classmethod
-    def get_user(cls, id):
-        user = cls.query.get(id)
+    def get_user(cls, user_id):
+        user = cls.query.get(user_id)
         return user
+
+    @classmethod
+    def get_user_with_experience(cls, user_id):
+        user_with_exp = db.session.query(
+            UserModel, ExperienceModel
+        ).filter(
+            UserModel.id == user_id
+        ).filter(
+            ExperienceModel.user_id == user_id
+        ).all()
+
+        user = user_with_exp[0][0]
+        exp = {}
+        for tup in user_with_exp:
+            exp[tup[1].language] = tup[1].level
+
+        return {
+            "full_name": user.full_name,
+            "email": user.email,
+            "experience": exp,
+            "user_id": user.id
+        }
 
     @classmethod
     def find_by_email(cls, email):
@@ -62,9 +84,7 @@ class UserModel(db.Model):
             ExperienceModel.language == req_language
         ).filter(
             ExperienceModel.level >= req_level
-        ).all()
-
-        qualified_experiences.sort(key=lambda user: user.review_count)
+        ).order_by(UserModel.review_count).all()
 
         return qualified_experiences
 

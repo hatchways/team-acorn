@@ -1,6 +1,7 @@
-from extensions import Resource, reqparse, jwt_required, get_jwt_identity, json
+from extensions import Resource, reqparse, jwt_required, get_jwt_identity, json, sys
 from models.user_model import UserModel
 from models.experience_model import ExperienceModel
+from models.language import Language
 
 
 class UserExperience(Resource):
@@ -14,23 +15,18 @@ class UserExperience(Resource):
         exp = data["experience"].replace("\'", "\"")
         exp = json.loads(exp)
 
-        print(exp)
-
-        for key, value in exp.items():
-            print("key: " + key)
-            print("value: " + value)
-
-        # get user_id
-        user = UserModel.get_user(get_jwt_identity())
-
         try:
             for key, value in exp.items():
+                if(hasattr(Language, key) == False):
+                    return {"error": "Invalid language given"}, 400
+
                 new_exp = ExperienceModel(
-                    user_id=user.id,
-                    language=key,
+                    user_id=get_jwt_identity(),
+                    language=Language(key).value,
                     level=value
                 )
                 new_exp.save_to_db()
             return{'message': 'Experience updated'}, 200
         except:
+            print("Unexpected error:", sys.exc_info()[0])
             return{'error': 'Something went wrong'}, 500

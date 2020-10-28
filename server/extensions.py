@@ -7,7 +7,7 @@ from rq import Queue
 import redis
 import os
 import sys
-import datetime
+from datetime import datetime
 import json
 from flask_socketio import SocketIO
 
