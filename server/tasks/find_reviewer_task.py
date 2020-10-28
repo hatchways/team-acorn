@@ -3,7 +3,8 @@ from models.user_model import UserModel
 from models.review_model import ReviewModel
 from models.experience_model import ExperienceModel
 from models.blacklist_model import BlacklistModel
-from extensions import queue, create_app
+from extensions import queue, create_app, socketio
+from utils.socket_config import sendNotification
 
 
 def find_reviewer(review_id):
@@ -17,7 +18,6 @@ def find_reviewer(review_id):
     reviewee = UserModel.get_user(review.reviewee_id)
 
     reviewee_exp = ExperienceModel.get_user_experience(reviewee.id)
-    print(reviewee_exp)
 
     if review.language not in reviewee_exp:
         level = 1
@@ -52,4 +52,5 @@ def find_reviewer(review_id):
             review_id, qualified_users_with_blacklist[0].id)
         ReviewModel.update_status(review_id, "assigned")
 
-        # TO-DO send notification to reviewee
+        UserModel.add_review(qualified_users_with_blacklist[0].id)
+        sendNotification(review.reviewee_id, review_id)

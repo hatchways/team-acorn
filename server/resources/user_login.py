@@ -25,15 +25,16 @@ class UserLogin(Resource):
 
         if UserModel.verify_hash(data['password'], current_email.password):
             expires = datetime.timedelta(days=1)
+            user_id = UserModel.get_id(data['email'])
             access_token = create_access_token(
                 identity=UserModel.get_id(data['email']), expires_delta=expires)
             return {
                 'message': 'Logged in as {}'.format(current_email.email),
                 'access_token': access_token,
-                'user_id': user.id,
                 'full_name': user.full_name,
                 'email': user.email,
-                'experience': user_experience
+                'experience': user_experience,
+                "userId": user.id,
             }, 200
         else:
             return {'error': 'Invalid email or password'}, 400

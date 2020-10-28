@@ -8,19 +8,19 @@ import {
   Link,
   Button,
 } from "@material-ui/core";
+import { UserContext } from "../context/userContext";
 import useStyles from "./LoginSignupStyles";
 import OnboardingContainer from "../components/OnboardingContainer";
 // Router imports
 import { useHistory } from "react-router-dom";
 // Snackbar
 import Snackbar from "../components/SnackbarComponent";
-import { UserContext } from "../App";
 
 const SignUp = () => {
+  const userContext = useContext(UserContext);
+  const { dispatch } = userContext;
   const classes = useStyles(); // makeStyles MaterialUI hook from styles.js
   const history = useHistory(); // useHistory hook from router-dom
-  const context = useContext(UserContext);
-
   // Local states..
 
   const [snackbar, setSnackbar] = useState({
@@ -71,8 +71,9 @@ const SignUp = () => {
         },
         body: JSON.stringify({
           email: form.email,
-          password: form.password,
           name: form.name,
+          password: form.password,
+          experience: {},
         }),
       })
         .then((response) => response.json())
@@ -85,12 +86,23 @@ const SignUp = () => {
               error: true,
             });
           } else {
+            // clear form
+            setForm({ email: "", password: "", name: "", confirmPassword: "" });
+            // Redirect user to Home page..
             // Saving token in localStorage
             localStorage.setItem("token", data.access_token);
+            dispatch({
+              type: "storeUserInfo",
+              payload: {
+                email: form.email,
+                name: form.name,
+                token: data.access_token,
+              },
+            });
             // Updating context
-            context.setIsLogged(true);
+            // user.setIsLogged(true);
             // Redirect user to onboard page..
-            history.push("/onboard");
+            history.push("/");
           }
         })
         .catch((err) => console.log(err));

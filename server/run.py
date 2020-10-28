@@ -1,5 +1,13 @@
+# to avoid circular import, must save with import views, models, resources at bottom
+# to save without auto-formatting on vs code, `CTRL + K + SHIFT + S`
+
+import eventlet
+eventlet.monkey_patch()
+
 from flask import Flask
 import os
+
+import utils.socket_config
 
 from models import revoked_token_model
 from resources.user_logout_access import UserLogoutAccess
@@ -22,8 +30,7 @@ from resources.test_resources.reset_user_review_count import ResetUserReviewCoun
 from resources.test_resources.reset_messages import ResetMessages
 #######################################
 
-from extensions import db, api, jwt, create_app
-
+from extensions import db, api, jwt, create_app, socketio
 
 def create_api(app):
     api.add_resource(UserRegistration, '/registration')
@@ -65,3 +72,6 @@ def check_if_token_in_blacklist(decrypted_token):
     # function will return True or False depending if the passed token is blacklisted
     jti = decrypted_token['jti']
     return revoked_token_model.RevokedTokenModel.is_jti_blacklisted(jti)
+
+
+socketio.run(app, debug=True)

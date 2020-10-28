@@ -12,16 +12,16 @@ import {
 import useStyles from "./LoginSignupStyles";
 import OnboardingContainer from "../components/OnboardingContainer";
 // Router imports
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 // Snackbar
 import Snackbar from "../components/SnackbarComponent";
-import { UserContext } from "../App";
+import { UserContext } from "../context/userContext";
 
 const SignIn = () => {
+  const userContext = useContext(UserContext);
+  const { dispatch } = userContext;
   const classes = useStyles(); // makeStyles MaterialUI hook from styles.js
-  const history = useHistory(); // useHistory hook from router-dom
   const location = useLocation(); // useLocation hook from router-dom
-  const context = useContext(UserContext);
 
   useEffect(() => {
     if (location.state) setSnackbar(location.state);
@@ -75,15 +75,12 @@ const SignIn = () => {
             error: true,
           });
         } else {
-          // clear form
-          setForm({ email: "", password: "" });
           // Saving token in localStorage
           localStorage.setItem("token", data.access_token);
-          // Updating context
-          console.log(context);
-          context.setIsLogged(true);
-          // Redirect user to onboard page..
-          history.push("/onboard");
+          dispatch({
+            type: "storeUserInfo",
+            payload: { ...data, ...{ name: data.full_name } },
+          });
         }
       })
       .catch((err) => console.log(err));
