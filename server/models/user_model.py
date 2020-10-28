@@ -17,6 +17,7 @@ class UserModel(db.Model):
         "ReviewModel", cascade="save-update", backref="reviews", lazy=True, primaryjoin="UserModel.id==ReviewModel.reviewee_id")
     experience = db.relationship(
         "ExperienceModel", cascade="all, delete-orphan", backref="experience")
+    balance =  db.Column(db.Integer, nullable=False, default=3)
 
     def save_to_db(self):
         db.session.add(self)
@@ -67,6 +68,17 @@ class UserModel(db.Model):
     def verify_hash(password, hash):
         # check given password
         return sha256.verify(password, hash)
+
+    @classmethod
+    def update_balance(cls, id, balance):
+        user = cls.query.get(id)
+        user.balance = balance
+        db.session.commit()
+
+    @classmethod
+    def get_balance(cls, id):
+        user = cls.query.get(id)
+        return user.balance
 
     @classmethod
     def search_experience(cls, lang_levels, reviewee_id):

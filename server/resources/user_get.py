@@ -13,6 +13,7 @@ class UserGet(Resource):
                 "full_name": user["full_name"],
                 "email": user["email"],
                 "experience": user["experience"],
+                "balance": user.balance,
                 "userId": user_id
             }
         }
