@@ -5,11 +5,18 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
 import redis
 from rq import Queue, Retry
+from flask_socketio import SocketIO
 
+
+
+
+app = Flask(__name__)
+api = Api(app)
 
 def register_extensions(app):
     db.init_app(app)
     jwt.init_app(app)
+    socketio.init_app(app,async_mode='eventlet', cors_allowed_origins="*",message_queue='redis://localhost:6379/0')
 
 
 def create_app():
@@ -30,6 +37,7 @@ def create_app():
 db = SQLAlchemy()
 api = Api()
 jwt = JWTManager()
+socketio = SocketIO()
 
 redis = redis.Redis("localhost")
 queue = Queue(connection=redis)

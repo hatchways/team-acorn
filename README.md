@@ -6,15 +6,8 @@
 2. Install the dependencies with `pipenv install`. This also createa a virtual environment, if there isn't one already
 3. Activate the virtual environment `pipenv shell`
 4. Make sure, your Postgres local server is running on local machine. (See below for setup)
-5. start the app in your pipenv shell terminal using following commands:-
-   -> if linux/mac => with `FLASK_APP=run.py FLASK_DEBUG=1 flask run`
-   -> if Windows => run these commands :
-   `set FLASK_APP=run.py`
-   `set FLASK_DEBUG=1`
-   `flask run`
-6. run `pipenv shell`
-7. Activate the virtual environment and start the app with `FLASK_APP=run.py FLASK_DEBUG=1 flask run`
-8. proceed to run worker instructions.
+5. run `pipenv run python run.py` from the server folder
+6. proceed to run worker instructions.
 
 ## Starting the worker for tasks: (for linux machines)
 
