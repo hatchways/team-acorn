@@ -45,6 +45,11 @@
 7. all set and you can close the terminal. But make sure it is running in the background. Check the taskbar icon near wifi icon.
 8. Check below commands to use in PSQL terminal if you want to do some testing (not mandatory though)
 
+## Other importants things to note:
+
+1. You need to add STRIPE_API_SK (secret key to .env file on server side to make payment methods to work) Please consult your team members to get the key.
+2. One PK (public key) needed on client .env side. (That's included in the bundle)
+
 ### Useful commands for postgres command line (will remove later)
 
 - `psql` - open postgres command line

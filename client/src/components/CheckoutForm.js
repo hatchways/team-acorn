@@ -106,7 +106,7 @@ const _SplitFieldsForm = ({ stripe, topup }) => {
           })
             .then((response) => response.json())
             .then((data) => {
-              if (data === "ok") {
+              if (data.message) {
                 history.go(0);
               } else {
                 console.log(data);
