@@ -16,6 +16,7 @@ from resources.user_registration import UserRegistration
 from resources.request_new import RequestNew
 from resources.user_experience import UserExperience
 from resources.user_get import UserGet
+from resources.stripe_checkout import HandlePayment
 from resources.review_respond import ReviewRespond
 from resources.send_message import SendMessage
 from resources.user_get import UserGet
@@ -40,6 +41,7 @@ def create_api(app):
     api.add_resource(ReviewRespond, '/review_respond')
     api.add_resource(SendMessage, '/send_message')
     api.add_resource(ReviewGet, '/review')
+    api.add_resource(HandlePayment, '/charge')
 
     # Routes for testing, remove when in production
     api.add_resource(ResetUser, "/reset_users")

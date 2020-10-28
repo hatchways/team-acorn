@@ -7,7 +7,6 @@ import {
   Typography,
   TextField,
   Grid,
-  Divider,
 } from "@material-ui/core";
 import OnboardingContainer from "../components/LoginSignupContainer";
 import { ReviewsData } from "../utils/Constants";
@@ -66,11 +65,32 @@ const useStyles = makeStyles((theme) => ({
     width: "70%",
     height: "7rem",
     margin: "3rem auto",
-    border: "2px solid #ECF0FA",
+    border: "2px solid #DEE4EF",
     borderRadius: 15,
+    display: "flex",
+    flexDirection: "column",
+    position: "relative",
+    cursor: "pointer",
   },
   focusedItem: {
     border: `2px solid ${theme.turquoise}`,
+  },
+  moreButon: {
+    position: "absolute",
+    right: 7,
+    top: 0,
+    color: "#DEE4EF",
+    fontWeight: 900,
+    fontSize: 20,
+    cursor: "pointer",
+  },
+  title: {
+    margin: "1.35rem 0 0.25rem 2rem",
+    fontWeight: 900,
+  },
+  date: {
+    marginLeft: "2rem",
+    color: "#CDCDCD",
   },
 }));
 
@@ -153,9 +173,13 @@ const ReviewsPage = () => {
                     index === 0 && classes.focusedItem
                   }`}
                 >
-                  <span>...</span>
-                  <Typography>{review.title}</Typography>
-                  <Typography>{review.submitted_date}</Typography>
+                  <span className={classes.moreButon}>...</span>
+                  <Typography variant="h6" className={classes.title}>
+                    {review.title}
+                  </Typography>
+                  <Typography className={classes.date}>
+                    {review.submitted_date}
+                  </Typography>
                 </Grid>
               );
             })}
@@ -163,9 +187,12 @@ const ReviewsPage = () => {
         )}
       </Paper>
       <Paper className={classes.contentBox}>
-        <Typography variant="h4">{selectedReview.title}</Typography>
-        <Typography variant="body1">{selectedReview.submitted_date}</Typography>
-        <Divider />
+        <Typography variant="h4" className={classes.title}>
+          {selectedReview.title}
+        </Typography>
+        <Typography variant="body1" className={classes.date}>
+          {selectedReview.submitted_date}
+        </Typography>
         <Editor
           value={selectedReview.code}
           toolbar={{
@@ -177,7 +204,7 @@ const ReviewsPage = () => {
           onChange={handleEditor}
           preview={true}
           style={{
-            marginTop: "60px",
+            marginTop: "20px",
           }}
         />
       </Paper>
