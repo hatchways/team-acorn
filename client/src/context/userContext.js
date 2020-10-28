@@ -1,6 +1,9 @@
 import React, { createContext, useReducer } from "react";
 
-const initialState = { update_info: false };
+const initialState = {
+  hasNewNotification: false,
+  notifications: [],
+};
 const UserContext = createContext(initialState);
 
 const { Provider } = UserContext;
@@ -12,13 +15,23 @@ const UserProvider = ({ children }) => {
         return { ...state, ...action.payload };
       }
       case "storeUserExperience": {
-        return { ...state, ...{ experience: action.payload } };
+        return { ...state, ...state.user, ...{ experience: action.payload } };
       }
       case "logout": {
         return { ...initialState };
       }
-      case "update_info": {
-        return { ...state, ...{ update_info: !state.update_info } };
+      case "setHasNewNotification": {
+        return {
+          ...state,
+          ...{ hasNewNotification: action.payload },
+          notifications: [...state.notifications, ...[action.payload]],
+        };
+      }
+      case "clearHasNewNotification": {
+        return {
+          ...state,
+          ...{ hasNewNotification: false },
+        };
       }
       default:
         throw new Error();
