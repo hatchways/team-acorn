@@ -13,6 +13,7 @@ import OnboardingContainer from "../components/LoginSignupContainer";
 import CollapsibleSideMenu from "../components/CollapsibleSideMenu";
 import { ReviewsData } from "../utils/Constants";
 import Editor from "for-editor";
+import MessageComponent from "../components/MessageComponent";
 
 const useStyles = makeStyles((theme) => ({
   sidebar: {
@@ -275,6 +276,7 @@ const ReviewsPage = () => {
             marginBottom: "1rem",
           }}
         />
+        <MessageComponent />
       </Paper>
     </OnboardingContainer>
   );

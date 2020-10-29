@@ -12,6 +12,27 @@ export const theme = createMuiTheme({
   purple: "#6E3ADB",
   turquoise: "#43DDC1",
   yellow: "#F7B500",
+  inputPlaceholder: {
+    "&::placeholder": {
+      color: "grey !important",
+      fontWeight: "100 !important",
+      opacity: "1 !important",
+      textAlign: "left !important",
+    },
+    "&::-webkit-input-placeholder": {
+      color: "grey !important",
+      fontWeight: "100 !important",
+      opacity: "1 !important",
+      textAlign: "left !important",
+    },
+
+    "&:-ms-input-placeholder": {
+      color: "grey !important",
+      fontWeight: "100 !important",
+      opacity: "1 !important",
+      textAlign: "left !important",
+    },
+  },
   overrides: {
     MuiSelect: {
       select: {
