@@ -1,9 +1,7 @@
-from flask_restful import Resource, reqparse
-from flask_jwt_extended import (
-    create_access_token, jwt_required, get_jwt_identity)
-import datetime
+from extensions import Resource, reqparse, jwt_required, get_jwt_identity, json, sys
 from models.user_model import UserModel
-import json
+from models.experience_model import ExperienceModel
+from models.language import Language
 
 
 class UserExperience(Resource):
@@ -18,7 +16,17 @@ class UserExperience(Resource):
         exp = json.loads(exp)
 
         try:
-            UserModel.update_experience(get_jwt_identity(), exp)
+            for key, value in exp.items():
+                if(hasattr(Language, key) == False):
+                    return {"error": "Invalid language given"}, 400
+
+                new_exp = ExperienceModel(
+                    user_id=get_jwt_identity(),
+                    language=Language(key).value,
+                    level=value
+                )
+                new_exp.save_to_db()
             return{'message': 'Experience updated'}, 200
         except:
+            print("Unexpected error:", sys.exc_info()[0])
             return{'error': 'Something went wrong'}, 500

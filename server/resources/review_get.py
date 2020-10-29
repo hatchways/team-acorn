@@ -1,11 +1,9 @@
-from flask_restful import Resource, reqparse
-from flask_jwt_extended import (
-    create_access_token, jwt_required, get_jwt_identity)
+from extensions import Resource, reqparse, jwt_required, get_jwt_identity, json
 from models.review_model import ReviewModel
-import json
 
 
 class ReviewGet(Resource):
+    # Get reviews that you are reviewing of others
     @jwt_required
     def get(self):
 
@@ -17,12 +15,11 @@ class ReviewGet(Resource):
         user_id = get_jwt_identity()
 
         review_id = int(data["review_id"])
+        review = ReviewModel.get_review(review_id)
 
         # check if user is participating in the requested review
-        if(ReviewModel.check_participation(user_id, review_id) == False):
-            return {"error": "You are not permitted to get review with review_id {}".format(data["review_id"])}
-
-        review = ReviewModel.get_review(review_id)
+        if(user_id != review.reviewee_id and user_id != review.reviewer_id):
+            return {"error": "You are not permitted to get review with review_id {}".format(data["review_id"])}, 403
 
         json = {
             "review": {
