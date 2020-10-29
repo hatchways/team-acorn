@@ -10,3 +10,7 @@ class Language(Enum):
     c = "c"
     html = "html"
     css = "css"
+    
+    jsx = "javascript"
+    
+    
