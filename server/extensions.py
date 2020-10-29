@@ -1,22 +1,26 @@
+import logging
 from flask import Flask
-import os
 from flask_restful import Api, Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
+from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity, create_access_token, get_raw_jwt
+from rq import Queue
 import redis
-from rq import Queue, Retry
+import os
+import sys
+from datetime import datetime
+import json
 from flask_socketio import SocketIO
-
-
 
 
 app = Flask(__name__)
 api = Api(app)
 
+
 def register_extensions(app):
     db.init_app(app)
     jwt.init_app(app)
-    socketio.init_app(app,async_mode='eventlet', cors_allowed_origins="*",message_queue='redis://localhost:6379/0')
+    socketio.init_app(app, async_mode='eventlet', cors_allowed_origins="*",
+                      message_queue='redis://localhost:6379/0')
 
 
 def create_app():
@@ -34,6 +38,9 @@ def create_app():
     return app
 
 
+# uncomment when want verbose sql logs
+# logging.basicConfig()
+# logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 db = SQLAlchemy()
 api = Api()
 jwt = JWTManager()

@@ -1,11 +1,12 @@
-from extensions import db
+from extensions import db, sys
 
 
 class MessageModel(db.Model):
     __tablename__ = "messages"
 
     id = db.Column(db.Integer, primary_key=True)
-    review_id = db.Column(db.Integer, nullable=False)
+    review_id = db.Column(db.Integer, db.ForeignKey(
+        "reviews.id"), nullable=False)
     content = db.Column(db.Text, nullable=True)
     owner_id = db.Column(db.Integer, nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False)
@@ -14,16 +15,21 @@ class MessageModel(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    @classmethod
+    @ classmethod
     def get_review_messages(cls, review_id):
         messages = cls.query.filter(MessageModel.review_id == review_id).all()
         return messages
 
-    @classmethod
+    # Test Method, delete later
+    @ classmethod
     def delete_all(cls):
         try:
-            num_rows_deleted = db.session.query(cls).delete()
+            messages = db.session.query(cls).all()
+            length = len(messages)
+            for mess in messages:
+                db.session.delete(mess)
             db.session.commit()
-            return {'message': '{} row(s) deleted'.format(num_rows_deleted)}
+            return {'message': '{} row(s) deleted'.format(length)}
         except:
-            return {'message': 'Something went wrong'}
+            print("Unexpected error:", sys.exc_info()[0])
+            return {'error': 'Something went wrong'}, 500

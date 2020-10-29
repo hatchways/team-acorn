@@ -1,17 +1,24 @@
-from extensions import db
+from extensions import db, sys
+from models.message_model import MessageModel
+from models.blacklist_model import BlacklistModel
 
 
 class ReviewModel(db.Model):
     __tablename__ = 'reviews'
 
     id = db.Column(db.Integer, primary_key=True)
-    reviewer_id = db.Column(db.Integer, nullable=True)
-    reviewee_id = db.Column(db.Integer, nullable=False)
+    reviewer_id = db.Column(
+        db.Integer, db.ForeignKey("users.id"), nullable=True)
+    reviewee_id = db.Column(
+        db.Integer, db.ForeignKey("users.id"), nullable=False)
     title = db.Column(db.String(30), nullable=False)
     status = db.Column(db.String(20), nullable=False)
     language = db.Column(db.String(20), nullable=False)
     code = db.Column(db.Text, nullable=False)
-    message = db.Column(db.Integer, nullable=True)
+    blacklisted_users = db.relationship(
+        "BlacklistModel", cascade="all, delete-orphan", backref="review", lazy=True)
+    messages = db.relationship(
+        "MessageModel", cascade="all, delete-orphan", backref="review", lazy=True)
 
     def save_to_db(self):
         db.session.add(self)
@@ -32,15 +39,11 @@ class ReviewModel(db.Model):
         db.session.commit()
 
     @classmethod
-    def link_message_id(cls, review_id):
-        review = ReviewModel.get_review(review_id)
-        review.message = review_id
+    def close_review(cls, id):
+        # deleting the review will also delete all associated messages
+        review = cls.query.get(id)
+        db.session.delete(review)
         db.session.commit()
-
-    @classmethod
-    def close_review(cls):
-        # TO-DO
-        pass
 
     @classmethod
     def get_review(cls, id):
@@ -48,21 +51,43 @@ class ReviewModel(db.Model):
         return review
 
     @classmethod
-    def check_participation(cls, user_id, review_id):
-        review = cls.query.get(review_id)
-        if(user_id != review.reviewee_id and user_id != review.reviewer_id):
-            return False
+    def get_reviews(cls, id, requester):
+        if(requester == "reviewer"):
+            reviews = cls.query.filter(ReviewModel.reviewer_id == id).all()
+        elif(requester == "reviewee"):
+            reviews = cls.query.filter(ReviewModel.reviewee_id == id).all()
         else:
-            return True
+            reviews == None
+
+        if reviews == None:
+            return None
+        else:
+            return {'reviews': list(map(lambda x: ReviewModel.to_json(x), reviews))}
+
+    @classmethod
+    def to_json(cls, x):
+        return {
+            'review_id': x.id,
+            'reviewer_id': x.reviewer_id,
+            'reviewee_id': x.reviewee_id,
+            'title': x.title,
+            'status': x.status,
+            'language': x.language,
+            'code': x.code
+        }
 
     @classmethod
     def delete_all(cls):
         try:
-            num_rows_deleted = db.session.query(cls).delete()
+            reviews = db.session.query(cls).all()
+            length = len(reviews)
+            for rev in reviews:
+                db.session.delete(rev)
             db.session.commit()
-            return {'message': '{} row(s) deleted'.format(num_rows_deleted)}
+            return {'message': '{} row(s) deleted'.format(length)}
         except:
-            return {'message': 'Something went wrong'}
+            print("Unexpected error:", sys.exc_info()[0])
+            return {'error': 'Something went wrong'}, 500
 
     @classmethod
     def get_reviews_from_reviewee_id(cls, reviewee_id):
@@ -71,3 +96,4 @@ class ReviewModel(db.Model):
             return { 'reviews' : reviews}
         except:
             return { 'error': "something went wrong :( "}
+            
