@@ -43,16 +43,23 @@ class UserModel(db.Model):
             ExperienceModel.user_id == user_id
         ).all()
 
-        user = user_with_exp[0][0]
-        exp = {}
-        for tup in user_with_exp:
-            exp[tup[1].language] = tup[1].level
+        if(len(user_with_exp) == 0):
+            # list is empty, most likely because experience hasnt
+            # been set yet, return user with no exp
+            user = db.session.query(UserModel).filter(UserModel.id == user_id).first()
+            exp = None
+        else:
+            user = user_with_exp[0][0]
+            exp = {}
+            for tup in user_with_exp:
+                exp[tup[1].language] = tup[1].level
 
         return {
             "full_name": user.full_name,
             "email": user.email,
             "experience": exp,
-            "user_id": user.id
+            "user_id": user.id,
+            "balance":user.balance
         }
 
     @classmethod

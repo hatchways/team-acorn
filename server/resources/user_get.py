@@ -6,15 +6,14 @@ class UserGet(Resource):
     @jwt_required
     def get(self):
 
-        user_id = get_jwt_identity()
-        user = UserModel.get_user_with_experience(user_id)
+        user = UserModel.get_user_with_experience(get_jwt_identity())
         json = {
             "user": {
                 "full_name": user["full_name"],
                 "email": user["email"],
                 "experience": user["experience"],
-                "balance": user.balance,
-                "userId": user_id
+                "balance": user["balance"],
+                "userId": user["user_id"]
             }
         }
 

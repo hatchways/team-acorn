@@ -43,12 +43,9 @@ def create_api(app):
     api.add_resource(ReviewRespond, '/review_respond')
     api.add_resource(SendMessage, '/send_message')
     api.add_resource(ReviewGet, '/review')
-<<<<<<< HEAD
     api.add_resource(ReviewerReviewsGet, '/reviewer_reviews')
     api.add_resource(RevieweeReviewsGet, '/reviewee_reviews')
-=======
     api.add_resource(HandlePayment, '/charge')
->>>>>>> dev
 
     # Routes for testing, remove when in production
     api.add_resource(ResetUser, "/reset_users")

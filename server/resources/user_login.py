@@ -36,6 +36,7 @@ class UserLogin(Resource):
                 'email': user["email"],
                 'experience': user["experience"],
                 "userId": user["user_id"],
+                "balance": user["balance"]
             }, 200
         else:
             return {'error': 'Invalid email or password'}, 400

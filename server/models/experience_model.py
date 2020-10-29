@@ -12,10 +12,6 @@ class ExperienceModel(db.Model):
     __table_args__ = (db.UniqueConstraint("user_id", "language"),)
 
     def save_to_db(self):
-        print(self)
-        print(self.language)
-        print(self.level)
-
         db.session.add(self)
         db.session.commit()
 
