@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Button,
   useTheme,
   useMediaQuery,
   Paper,
@@ -114,6 +115,29 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "none",
     marginBottom: -70,
   },
+  submitButtonWrapper: {
+    textAlign:"right"
+  },
+  buttonRoot: {
+    height: 40,
+    borderRadius: 50,
+    border: 1,
+    borderColor: theme.turquoise,
+    borderStyle: "solid",
+    margin: 5,
+    padding: "0 15px",
+  },
+  buttonLabelAccept: {
+    ...theme.typography,
+    background: theme.turquoise,
+    backgroundColor: theme.turquoise,
+    color: "#fff",
+  },
+  buttonLabelReject: {
+    ...theme.typography,
+    textTransform: "capitalize",
+    color: theme.error,
+  }
 }));
 
 const ReviewsPage = () => {
@@ -262,6 +286,35 @@ const ReviewsPage = () => {
         <Typography variant="body1" className={classes.date}>
           {selectedReview.submitted_date}
         </Typography>
+
+        <div className={classes.submitButtonWrapper}>
+            {/* use state to only show this when review hasnt been accepted yet */}
+            <Button
+              // style={{display: "flex",margin:"0 0 0 auto"}}
+              classes={{
+                root: classes.buttonRoot,
+                label: classes.buttonLabelAccept,
+              }}
+              variant="contained"
+              className={classes.submitButton}
+              type="submit"
+            >
+              Accept
+            </Button>
+            <Button
+              classes={{
+                root: classes.buttonRoot,
+                label: classes.buttonLabelReject,
+              }}
+              variant="contained"
+              className={classes.submitButton}
+              type="submit"
+            >
+              Reject
+            </Button>
+            
+        </div>
+
         <Divider className={classes.divider} />
         <Editor
           value={selectedReview.code}
