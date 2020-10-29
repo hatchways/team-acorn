@@ -17,7 +17,6 @@ class UserExperience(Resource):
 
         try:
             for key, val in exp.items():
-                print(Language[key.lower()].value)
                 if(key.lower() not in Language.__members__):
                     return {"error": "Invalid language given"}, 400
 
