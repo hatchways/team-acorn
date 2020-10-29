@@ -14,10 +14,12 @@ import OnboardingContainer from "../components/LoginSignupContainer";
 import CollapsibleSideMenu from "../components/CollapsibleSideMenu";
 
 import MenuComponent from "../components/MenuComponent";
-import SendMessageComponent from "../components/SendMessageComponent";
 
 import { ReviewsData } from "../utils/Constants";
 import Editor from "for-editor";
+import MessageComponent from "../components/MessageComponent";
+import CheckIcon from "@material-ui/icons/Check";
+import ClearIcon from "@material-ui/icons/Clear";
 
 const useStyles = makeStyles((theme) => ({
   sidebar: {
@@ -115,29 +117,25 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "none",
     marginBottom: -70,
   },
-  submitButtonWrapper: {
-    textAlign:"right"
+  responseButtonWrapper: {
+    position: "absolute",
+    top: 26,
+    right: 45,
   },
-  buttonRoot: {
-    height: 40,
-    borderRadius: 50,
-    border: 1,
-    borderColor: theme.turquoise,
-    borderStyle: "solid",
-    margin: 5,
-    padding: "0 15px",
-  },
-  buttonLabelAccept: {
-    ...theme.typography,
-    background: theme.turquoise,
+  acceptButton: {
     backgroundColor: theme.turquoise,
     color: "#fff",
+    borderRadius: 25,
+    padding: "0.5rem 1rem",
+    margin: "0 0.5rem",
   },
-  buttonLabelReject: {
-    ...theme.typography,
-    textTransform: "capitalize",
-    color: theme.error,
-  }
+  rejectButton: {
+    backgroundColor: theme.primary,
+    color: "#fff",
+    borderRadius: 25,
+    padding: "0.5rem 1rem",
+    margin: "0 0.5rem",
+  },
 }));
 
 const ReviewsPage = () => {
@@ -157,6 +155,30 @@ const ReviewsPage = () => {
         code: value,
       };
     });
+  };
+
+  const handleResponse = (e, option) => {
+    const id = 3;
+    fetch("/review_respond", {
+      method: option === "accept" ? "POST" : "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        review_id: id,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          // handle error if we recieve error from server
+          alert(data.error);
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -259,7 +281,9 @@ const ReviewsPage = () => {
                         index === 0 && classes.focusedItem
                       }`}
                     >
-                      <span className={classes.moreButon}><MenuComponent></MenuComponent></span>
+                      <span className={classes.moreButon}>
+                        <MenuComponent></MenuComponent>
+                      </span>
                       <Typography
                         variant="h6"
                         className={`${classes.title} ${classes.sidebarItemTitle}`}
@@ -287,32 +311,23 @@ const ReviewsPage = () => {
           {selectedReview.submitted_date}
         </Typography>
 
-        <div className={classes.submitButtonWrapper}>
-            {/* use state to only show this when review hasnt been accepted yet */}
-            <Button
-              // style={{display: "flex",margin:"0 0 0 auto"}}
-              classes={{
-                root: classes.buttonRoot,
-                label: classes.buttonLabelAccept,
-              }}
-              variant="contained"
-              className={classes.submitButton}
-              type="submit"
-            >
-              Accept
-            </Button>
-            <Button
-              classes={{
-                root: classes.buttonRoot,
-                label: classes.buttonLabelReject,
-              }}
-              variant="contained"
-              className={classes.submitButton}
-              type="submit"
-            >
-              Reject
-            </Button>
-            
+        <div className={classes.responseButtonWrapper}>
+          {/* use state to only show this when review hasnt been accepted yet */}
+          <Button
+            variant="contained"
+            className={classes.acceptButton}
+            onClick={(e) => handleResponse(e, "accept")}
+          >
+            <CheckIcon />
+            Accept
+          </Button>
+          <Button
+            variant="contained"
+            className={classes.rejectButton}
+            onClick={(e) => handleResponse(e, "reject")}
+          >
+            <ClearIcon /> Reject
+          </Button>
         </div>
 
         <Divider className={classes.divider} />
@@ -332,9 +347,8 @@ const ReviewsPage = () => {
             marginBottom: "1rem",
           }}
         />
-        <SendMessageComponent></SendMessageComponent>
 
-
+        <MessageComponent />
       </Paper>
     </OnboardingContainer>
   );

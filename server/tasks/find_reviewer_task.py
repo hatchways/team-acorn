@@ -43,10 +43,10 @@ def find_reviewer(review_id):
             print("User with id {} not in blacklist".format(user.id))
             qualified_users_with_blacklist.append(user)
 
-    if(len(qualified_users) == 0):
+    if(len(qualified_users_with_blacklist) == 0):
         # no qualified_users found, create new job and requeue
         job = queue.enqueue_in(timedelta(seconds=10), find_reviewer, review_id)
-    elif(len(qualified_users) >= 1):
+    elif(len(qualified_users_with_blacklist) >= 1):
         # assign first user in list qualified_users_id as list comes sorted
         ReviewModel.assign_reviewee(
             review_id, qualified_users_with_blacklist[0].id)
