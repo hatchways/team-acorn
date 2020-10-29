@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { useTheme, makeStyles } from "@material-ui/core/styles";
+import { useTheme } from "@material-ui/core/styles";
 import { Snackbar, SnackbarContent } from "@material-ui/core";
 
 const NotificationSnackBar = ({ open, message, error, setOpen, classes }) => {
@@ -18,7 +18,6 @@ const NotificationSnackBar = ({ open, message, error, setOpen, classes }) => {
     backgroundColor: "white",
     color: theme.darkPurple,
     fontWeight: "bold",
-    minWidth: 0,
     cursor: "pointer",
   };
 

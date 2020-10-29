@@ -7,15 +7,18 @@ import {
   Typography,
   TextField,
   Grid,
+  Divider,
 } from "@material-ui/core";
 import OnboardingContainer from "../components/LoginSignupContainer";
+import CollapsibleSideMenu from "../components/CollapsibleSideMenu";
 import { ReviewsData } from "../utils/Constants";
 import Editor from "for-editor";
 
 const useStyles = makeStyles((theme) => ({
   sidebar: {
     height: "calc(100vh - 60px)",
-    minWidth: "30%",
+    width: "20%",
+    minWidth: "325px",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
       height: "100px",
@@ -27,19 +30,24 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto",
   },
   contentBox: {
-    minHeight: "calc(100vh - 60px - 2.5vh)",
-    minWidth: "65%",
+    height: "calc(100vh - 60px - 2.5vh)",
+    width: "75%",
+    maxWidth: "calc(95% - 325px)",
+    padding: "5px 50px",
     [theme.breakpoints.down("sm")]: {
       top: "calc(2.5vh + 40px)",
       right: 0,
       width: "100%",
+      maxWidth: "100%",
       minHeight: "calc(100vh - 100px - 2.5vh)",
+      padding: 5,
     },
     backgroundColor: "white",
     position: "absolute",
     right: "2.5%",
     top: "2.5vh",
     overflow: "auto",
+    boxSizing: "border-box",
   },
   smScreenGridContainer: {
     paddingTop: "0.7rem",
@@ -62,9 +70,9 @@ const useStyles = makeStyles((theme) => ({
     width: "70%",
   },
   regScreenGridReviewItem: {
-    width: "70%",
+    width: "100%",
     height: "7rem",
-    margin: "3rem auto",
+    margin: "1rem",
     border: "2px solid #DEE4EF",
     borderRadius: 15,
     display: "flex",
@@ -85,12 +93,22 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
   },
   title: {
-    margin: "1.35rem 0 0.25rem 2rem",
+    margin: "1.35rem 0 0.25rem 0",
     fontWeight: 900,
   },
   date: {
-    marginLeft: "2rem",
     color: "#CDCDCD",
+  },
+  sidebarItemTitle: {
+    marginLeft: "1rem",
+  },
+  divider: {
+    margin: "1rem 0",
+  },
+  forPreview: {
+    border: "none",
+    boxShadow: "none",
+    marginBottom: -70,
   },
 }));
 
@@ -98,6 +116,7 @@ const ReviewsPage = () => {
   const classes = useStyles();
   const theme = useTheme();
   const isScreenSmall = useMediaQuery(theme.breakpoints.down("sm"));
+  // eslint-disable-next-line
   const [reviews, setReviews] = useState(ReviewsData);
   const [selectedReview, setSelectedReview] = useState(
     reviews.length > 0 ? reviews[0] : null
@@ -154,35 +173,81 @@ const ReviewsPage = () => {
           </>
         ) : (
           <>
-            <Grid item xs={6} className={classes.regScreenGridItem}>
-              <Typography variant="h5" className={classes.sidebarHeader}>
-                Reviews{" "}
-                <span className={classes.sidebarReviewsCount}>
-                  {" "}
-                  ({reviews.length})
-                </span>
-              </Typography>
-            </Grid>
-            {reviews.map((review, index) => {
-              return (
-                <Grid
-                  key={review.title}
-                  item
-                  xs={6}
-                  className={`${classes.regScreenGridReviewItem} ${
-                    index === 0 && classes.focusedItem
-                  }`}
-                >
-                  <span className={classes.moreButon}>...</span>
-                  <Typography variant="h6" className={classes.title}>
-                    {review.title}
-                  </Typography>
-                  <Typography className={classes.date}>
-                    {review.submitted_date}
-                  </Typography>
-                </Grid>
-              );
-            })}
+            <CollapsibleSideMenu
+              defaultExpanded={true}
+              summary={
+                <Typography variant="h5" className={classes.sidebarHeader}>
+                  Reviews{" "}
+                  <span className={classes.sidebarReviewsCount}>
+                    {" "}
+                    ({reviews.length})
+                  </span>
+                </Typography>
+              }
+            >
+              <Grid container={true} justify="flex-start">
+                {reviews.map((review, index) => {
+                  return (
+                    <Grid
+                      key={review.title}
+                      className={`${classes.regScreenGridReviewItem} ${
+                        index === 0 && classes.focusedItem
+                      }`}
+                    >
+                      <span className={classes.moreButon}>...</span>
+                      <Typography
+                        variant="h6"
+                        className={`${classes.title} ${classes.sidebarItemTitle}`}
+                      >
+                        {review.title}
+                      </Typography>
+                      <Typography
+                        className={`${classes.date} ${classes.sidebarItemTitle}`}
+                      >
+                        {review.submitted_date}
+                      </Typography>
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </CollapsibleSideMenu>
+            <CollapsibleSideMenu
+              summary={
+                <Typography variant="h5" className={classes.sidebarHeader}>
+                  Reviewing{" "}
+                  <span className={classes.sidebarReviewsCount}>
+                    {" "}
+                    ({reviews.length})
+                  </span>
+                </Typography>
+              }
+            >
+              <Grid container={true} justify="flex-start">
+                {reviews.map((review, index) => {
+                  return (
+                    <Grid
+                      key={review.title}
+                      className={`${classes.regScreenGridReviewItem} ${
+                        index === 0 && classes.focusedItem
+                      }`}
+                    >
+                      <span className={classes.moreButon}>...</span>
+                      <Typography
+                        variant="h6"
+                        className={`${classes.title} ${classes.sidebarItemTitle}`}
+                      >
+                        {review.title}
+                      </Typography>
+                      <Typography
+                        className={`${classes.date} ${classes.sidebarItemTitle}`}
+                      >
+                        {review.submitted_date}
+                      </Typography>
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </CollapsibleSideMenu>
           </>
         )}
       </Paper>
@@ -193,6 +258,7 @@ const ReviewsPage = () => {
         <Typography variant="body1" className={classes.date}>
           {selectedReview.submitted_date}
         </Typography>
+        <Divider className={classes.divider} />
         <Editor
           value={selectedReview.code}
           toolbar={{
@@ -200,11 +266,13 @@ const ReviewsPage = () => {
           }}
           language="en"
           placeholder=" "
-          height="250px"
+          height="300px"
           onChange={handleEditor}
           preview={true}
           style={{
-            marginTop: "20px",
+            border: "none",
+            boxShadow: "none",
+            marginBottom: "1rem",
           }}
         />
       </Paper>

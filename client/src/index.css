@@ -75,3 +75,37 @@ a:active {
 .StripeElement--webkit-autofill {
   background-color: #fefde5 !important;
 }
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  width: 7px;
+  box-shadow: none;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #cad4df;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #79807e;
+}
+
+.for-toolbar {
+  border: none !important;
+}
+
+.for-preview {
+  padding: 0 !important;
+}
+
+.for-markdown-preview > pre {
+  background: #f6f8fa !important;
+}

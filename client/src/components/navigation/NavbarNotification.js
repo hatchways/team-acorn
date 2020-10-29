@@ -57,6 +57,7 @@ const NavbarNotification = () => {
       callback: dispatch,
       userId: userId,
     });
+    // eslint-disable-next-line
   }, []);
   const theme = useTheme();
   const classes = useStyles(theme);

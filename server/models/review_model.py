@@ -88,3 +88,4 @@ class ReviewModel(db.Model):
         except:
             print("Unexpected error:", sys.exc_info()[0])
             return {'error': 'Something went wrong'}, 500
+            
