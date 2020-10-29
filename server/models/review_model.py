@@ -72,8 +72,7 @@ class ReviewModel(db.Model):
             'reviewee_id': x.reviewee_id,
             'title': x.title,
             'status': x.status,
-            'language': x.language,
-            'code': x.code
+            'language': x.language
         }
 
     @classmethod
