@@ -79,7 +79,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     position: "relative",
     cursor: "pointer",
-    "&:nth-child(3n)": {},
   },
   focusedItem: {
     border: `2px solid ${theme.turquoise}`,

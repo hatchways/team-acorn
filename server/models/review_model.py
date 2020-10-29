@@ -88,12 +88,4 @@ class ReviewModel(db.Model):
         except:
             print("Unexpected error:", sys.exc_info()[0])
             return {'error': 'Something went wrong'}, 500
-
-    @classmethod
-    def get_reviews_from_reviewee_id(cls, reviewee_id):
-        try:
-            reviews = cls.query.filter(reviewee_id=reviewee_id).all()
-            return { 'reviews' : reviews}
-        except:
-            return { 'error': "something went wrong :( "}
             
