@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Button,
   useTheme,
   useMediaQuery,
   Paper,
@@ -11,9 +12,14 @@ import {
 } from "@material-ui/core";
 import OnboardingContainer from "../components/LoginSignupContainer";
 import CollapsibleSideMenu from "../components/CollapsibleSideMenu";
+
+import MenuComponent from "../components/MenuComponent";
+
 import { ReviewsData } from "../utils/Constants";
 import Editor from "for-editor";
 import MessageComponent from "../components/MessageComponent";
+import CheckIcon from "@material-ui/icons/Check";
+import ClearIcon from "@material-ui/icons/Clear";
 
 const useStyles = makeStyles((theme) => ({
   sidebar: {
@@ -111,6 +117,25 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "none",
     marginBottom: -70,
   },
+  responseButtonWrapper: {
+    position: "absolute",
+    top: 26,
+    right: 45,
+  },
+  acceptButton: {
+    backgroundColor: theme.turquoise,
+    color: "#fff",
+    borderRadius: 25,
+    padding: "0.5rem 1rem",
+    margin: "0 0.5rem",
+  },
+  rejectButton: {
+    backgroundColor: theme.primary,
+    color: "#fff",
+    borderRadius: 25,
+    padding: "0.5rem 1rem",
+    margin: "0 0.5rem",
+  },
 }));
 
 const ReviewsPage = () => {
@@ -130,6 +155,30 @@ const ReviewsPage = () => {
         code: value,
       };
     });
+  };
+
+  const handleResponse = (e, option) => {
+    const id = 3;
+    fetch("/review_respond", {
+      method: option === "accept" ? "POST" : "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        review_id: id,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          // handle error if we recieve error from server
+          alert(data.error);
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -195,7 +244,7 @@ const ReviewsPage = () => {
                         index === 0 && classes.focusedItem
                       }`}
                     >
-                      <span className={classes.moreButon}>...</span>
+                      <span className={classes.moreButon}></span>
                       <Typography
                         variant="h6"
                         className={`${classes.title} ${classes.sidebarItemTitle}`}
@@ -232,7 +281,9 @@ const ReviewsPage = () => {
                         index === 0 && classes.focusedItem
                       }`}
                     >
-                      <span className={classes.moreButon}>...</span>
+                      <span className={classes.moreButon}>
+                        <MenuComponent></MenuComponent>
+                      </span>
                       <Typography
                         variant="h6"
                         className={`${classes.title} ${classes.sidebarItemTitle}`}
@@ -259,6 +310,26 @@ const ReviewsPage = () => {
         <Typography variant="body1" className={classes.date}>
           {selectedReview.submitted_date}
         </Typography>
+
+        <div className={classes.responseButtonWrapper}>
+          {/* use state to only show this when review hasnt been accepted yet */}
+          <Button
+            variant="contained"
+            className={classes.acceptButton}
+            onClick={(e) => handleResponse(e, "accept")}
+          >
+            <CheckIcon />
+            Accept
+          </Button>
+          <Button
+            variant="contained"
+            className={classes.rejectButton}
+            onClick={(e) => handleResponse(e, "reject")}
+          >
+            <ClearIcon /> Reject
+          </Button>
+        </div>
+
         <Divider className={classes.divider} />
         <Editor
           value={selectedReview.code}
@@ -276,6 +347,7 @@ const ReviewsPage = () => {
             marginBottom: "1rem",
           }}
         />
+
         <MessageComponent />
       </Paper>
     </OnboardingContainer>

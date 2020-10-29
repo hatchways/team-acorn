@@ -42,11 +42,14 @@ class UserModel(db.Model):
         ).filter(
             ExperienceModel.user_id == user_id
         ).all()
-
+        print(len(user_with_exp))
+        print(user_with_exp)
         if(len(user_with_exp) == 0):
             # list is empty, most likely because experience hasnt
             # been set yet, return user with no exp
             user = db.session.query(UserModel).filter(UserModel.id == user_id).first()
+            print(user)
+            print(user_id)
             exp = None
         else:
             user = user_with_exp[0][0]
@@ -54,6 +57,7 @@ class UserModel(db.Model):
             for tup in user_with_exp:
                 exp[tup[1].language] = tup[1].level
 
+        print(user)
         return {
             "full_name": user.full_name,
             "email": user.email,
