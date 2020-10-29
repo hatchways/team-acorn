@@ -11,6 +11,10 @@ import {
 } from "@material-ui/core";
 import OnboardingContainer from "../components/LoginSignupContainer";
 import CollapsibleSideMenu from "../components/CollapsibleSideMenu";
+
+import MenuComponent from "../components/MenuComponent";
+import SendMessageComponent from "../components/SendMessageComponent";
+
 import { ReviewsData } from "../utils/Constants";
 import Editor from "for-editor";
 
@@ -194,7 +198,7 @@ const ReviewsPage = () => {
                         index === 0 && classes.focusedItem
                       }`}
                     >
-                      <span className={classes.moreButon}>...</span>
+                      <span className={classes.moreButon}></span>
                       <Typography
                         variant="h6"
                         className={`${classes.title} ${classes.sidebarItemTitle}`}
@@ -231,7 +235,7 @@ const ReviewsPage = () => {
                         index === 0 && classes.focusedItem
                       }`}
                     >
-                      <span className={classes.moreButon}>...</span>
+                      <span className={classes.moreButon}><MenuComponent></MenuComponent></span>
                       <Typography
                         variant="h6"
                         className={`${classes.title} ${classes.sidebarItemTitle}`}
@@ -275,6 +279,9 @@ const ReviewsPage = () => {
             marginBottom: "1rem",
           }}
         />
+        <SendMessageComponent></SendMessageComponent>
+
+
       </Paper>
     </OnboardingContainer>
   );
