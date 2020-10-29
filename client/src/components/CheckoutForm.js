@@ -31,50 +31,37 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   input: {
-    width: "50%",
-    marginLeft: "7.1rem",
+    width: "70%",
+    margin: "0 15%",
+  },
+  expiryInput: {
+    width: "60%",
+    margin: "0 30%",
   },
   label: {
     display: "flex",
     color: "#000",
     fontWeight: 700,
     padding: "5px",
-    marginLeft: "7.1rem",
+    marginLeft: "15%",
+  },
+  expiryLabel: {
+    display: "flex",
+    color: "#000",
+    fontWeight: 700,
+    padding: "5px",
+    marginLeft: "30%",
   },
   cvvLabel: {
     display: "flex",
     color: "#000",
     fontWeight: 700,
     padding: "5px",
-    marginLeft: "0.8rem",
+    marginLeft: "10%",
   },
   cvvInput: {
-    width: "50%",
-    marginLeft: "1rem",
-  },
-  [theme.breakpoints.down("xs")]: {
-    input: {
-      width: "45%",
-      marginLeft: "5rem",
-    },
-    label: {
-      display: "flex",
-      color: "#000",
-      fontWeight: 700,
-      padding: "5px",
-      marginLeft: "4.8rem",
-    },
-    cvvLabel: {
-      display: "flex",
-      color: "#000",
-      fontWeight: 700,
-      padding: "5px",
-      marginLeft: "0.8rem",
-    },
-    cvvInput: {
-      width: "45%",
-      marginLeft: "1.2rem",
-    },
+    width: "60%",
+    marginLeft: "10%",
   },
 }));
 
@@ -133,12 +120,15 @@ const _SplitFieldsForm = ({ stripe, topup }) => {
             Checkout
           </Typography>
           <label className={classes.label}>Card number</label>
-          <CardNumberElement onChange={handleChange} />
+          <CardNumberElement
+            className={classes.input}
+            onChange={handleChange}
+          />
           <Grid container>
             <Grid item container xs={6} direction="column">
-              <label className={classes.label}>Expiry date</label>
+              <label className={classes.expiryLabel}>Expiry date</label>
               <CardExpiryElement
-                className={classes.input}
+                className={classes.expiryInput}
                 onChange={handleChange}
               />
             </Grid>

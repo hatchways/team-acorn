@@ -6,11 +6,12 @@ import NavbarNotification from "./NavbarNotification";
 import NavbarProfile from "./NavbarProfile";
 import NotificationSnackBar from "../NotificationSnackBar";
 import { UserContext } from "../../context/userContext";
+import { Link } from "react-router-dom";
 
 const navBarHeight = 60;
 const useStyles = makeStyles((theme) => ({
   navbarContainer: {
-    backgroundColor: theme.darkPurple,
+    backgroundColor: theme.purple,
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "center",
@@ -36,17 +37,21 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     top: navBarHeight + 5,
   },
+  logo: {
+    display: "flex",
+    marginRight: "auto",
+    marginLeft: "1rem",
+  },
 }));
 
 const NavBar = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const userContext = useContext(UserContext);
-  const { dispatch } = userContext;
   const { hasNewNotification } = userContext.state;
 
   const [snackbarNotification, setSnackbarNotification] = useState({
-    open: hasNewNotification != false,
+    open: hasNewNotification !== false,
     error: false,
     message: hasNewNotification.message,
   });
@@ -59,7 +64,7 @@ const NavBar = () => {
 
   useEffect(() => {
     setSnackbarNotification({
-      open: hasNewNotification != false,
+      open: hasNewNotification !== false,
       error: false,
       message: hasNewNotification.message,
     });
@@ -84,6 +89,9 @@ const NavBar = () => {
         classes={{ anchorOriginTopRight: classes.anchorOriginTopRight }}
       />
       <div className={classes.navbarContainer}>
+        <Link className={classes.logo} to="/">
+          <img src="https://i.ibb.co/kQRn784/logo.png" alt="logo" height="40" />
+        </Link>
         <NavbarLink path={"/reviews"} text={"Reviews"} />
         <NavbarLink path={"/balance"} text={"Balance"} />
         <NavbarNotification />

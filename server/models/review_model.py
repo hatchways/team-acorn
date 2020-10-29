@@ -63,3 +63,11 @@ class ReviewModel(db.Model):
             return {'message': '{} row(s) deleted'.format(num_rows_deleted)}
         except:
             return {'message': 'Something went wrong'}
+
+    @classmethod
+    def get_reviews_from_reviewee_id(cls, reviewee_id):
+        try:
+            reviews = cls.query.filter(reviewee_id=reviewee_id).all()
+            return { 'reviews' : reviews}
+        except:
+            return { 'error': "something went wrong :( "}
