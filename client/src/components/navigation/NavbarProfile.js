@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
   profileImage: {
     borderRadius: 50,
-    widht: 40,
+    width: 40,
     height: 40,
   },
 }));

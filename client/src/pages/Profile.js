@@ -3,6 +3,7 @@ import { useTheme, makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import ImageUploader from "react-images-upload";
 import { UserContext } from "../context/userContext";
+import images from "../images";
 
 const PROFILE_IMG_URL =
   "https://www.dovercourt.org/wp-content/uploads/2019/11/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg";
@@ -40,9 +41,10 @@ const useStyles = makeStyles((theme) => ({
     width: 80,
     height: 80,
     borderRadius: 50,
-    borderWidth: 4,
+    borderWidth: 3,
+    borderStyle: "solid",
     borderColor: "white",
-    cursor: "pointer",
+    boxShadow: "10px 9px 48px -16px rgba(0,0,0,0.75);",
   },
   profileName: {
     fontWeight: "bold",
@@ -85,6 +87,22 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
   },
+  langContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  langImg: {
+    position: "relative",
+    width: "auto",
+    height: 70,
+  },
+  langLvl: {
+    marginTop: 5,
+    fontWeight: "bold",
+    fontSize: 13,
+  },
 }));
 
 const uploadImg = (img, userId, dispatch) => {
@@ -116,7 +134,7 @@ const ProfilePage = () => {
 
   const userContext = useContext(UserContext);
   const { dispatch } = userContext;
-  const { image, userId } = userContext.state;
+  const { image, userId, experience } = userContext.state;
 
   const onDrop = (_, base64) => {
     uploadImg(base64[0], userId, dispatch);
@@ -126,14 +144,14 @@ const ProfilePage = () => {
     <div className={classes.container}>
       <div className={classes.profileContainer}>
         <img src={image} className={classes.profileImage} />
-        <ImageUploader
+        {/* <ImageUploader
           withIcon={true}
           buttonText="Choose image"
           onChange={onDrop}
           imgExtension={[".png"]}
           maxFileSize={5242880}
           singleImage={true}
-        />
+        /> */}
 
         <Typography className={classes.profileName}>John Doe</Typography>
         <Typography className={classes.title}>
@@ -145,6 +163,18 @@ const ProfilePage = () => {
           <Stat name={"raiting"} number={0.8} classes={classes} />
         </div>
         <Typography className={classes.profileName}>Experience</Typography>
+        <div className={classes.statsContainer}>
+          {Object.keys(experience).map((name) => {
+            return (
+              <div className={classes.langContainer}>
+                <img className={classes.langImg} src={selectImg(name)} />
+                <Typography className={classes.langLvl}>
+                  {selectLevel(experience[name])}
+                </Typography>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
@@ -159,4 +189,33 @@ const Stat = ({ number, name, classes }) => {
   );
 };
 
+const selectImg = (name) => {
+  switch (name) {
+    case "javascript":
+      return images.jsImg;
+    case "c++":
+      return images.cplusplusImg;
+    case "csharp":
+      return images.csharpImg;
+    case "java":
+      return images.javaImg;
+    case "python":
+      return images.pythonImg;
+    case "c":
+      return images.cImg;
+  }
+};
+
+const selectLevel = (lvl) => {
+  switch (lvl) {
+    case 0:
+      return "Beginner";
+    case 1:
+      return "Junior";
+    case 2:
+      return "Intermediate";
+    case 3:
+      return "Senior";
+  }
+};
 export default ProfilePage;
