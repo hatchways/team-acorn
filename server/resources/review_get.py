@@ -15,21 +15,27 @@ class ReviewGet(Resource):
         user_id = get_jwt_identity()
 
         review_id = int(data["review_id"])
-        review = ReviewModel.get_review(review_id)
+        review_with_messages = ReviewModel.get_review(review_id)
+        print(review_with_messages)
+        messages = review_with_messages["messages"]
+        review = review_with_messages["review"]
 
+        print(review)
+        
         # check if user is participating in the requested review
-        if(user_id != review.reviewee_id and user_id != review.reviewer_id):
+        if(user_id != review["reviewee_id"] and user_id != review["reviewer_id"]):
             return {"error": "You are not permitted to get review with review_id {}".format(data["review_id"])}, 403
 
+        
         json = {
             "review": {
-                "reviewer_id": review.reviewer_id,
-                "reviewee_id": review.reviewee_id,
-                "title": review.title,
-                "status": review.status,
-                "language": review.language,
-                "code": review.code,
-                "message": review.message,
+                "reviewer_id": review["reviewer_id"],
+                "reviewee_id": review["reviewee_id"],
+                "title": review["title"],
+                "status": review["status"],
+                "language": review["language"],
+                "code": review["code"],
+                "messages": messages,
             }
         }
 

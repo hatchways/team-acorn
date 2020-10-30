@@ -17,10 +17,34 @@ export default function MultilineTextFields() {
   const handleChange = (event) => {
     setValue(event.target.value);
   };
+
   const handleSubmit = (event) => {
+    const id = 3; //placeholder id
     event.preventDefault();
     console.log("inside handleSubmit");
     console.log(value);
+
+    fetch("/send_message", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        review_id: id,
+        message: value,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          // handle error if we recieve error from server
+          alert(data.error);
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch((err) => console.log(err));
   };
   return (
     <form

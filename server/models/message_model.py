@@ -18,7 +18,17 @@ class MessageModel(db.Model):
     @ classmethod
     def get_review_messages(cls, review_id):
         messages = cls.query.filter(MessageModel.review_id == review_id).all()
-        return messages
+        return list(map(lambda x: MessageModel.to_json(x), messages))
+
+    @classmethod
+    def to_json(cls, x):
+        return {
+            'message_id': x.id,
+            'review_id': x.review_id,
+            'content': x.content,
+            'owner_id': x.owner_id,
+            'timestamp': str(x.timestamp)
+        }
 
     # Test Method, delete later
     @ classmethod

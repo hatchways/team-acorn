@@ -32,7 +32,7 @@ class ReviewModel(db.Model):
 
     @classmethod
     def update_status(cls, review_id, status):
-        review = ReviewModel.get_review(review_id)
+        review = cls.query.get(review_id)
         if(status == "pending"):
             review.reviewer_id = None
         review.status = status
@@ -48,7 +48,8 @@ class ReviewModel(db.Model):
     @classmethod
     def get_review(cls, id):
         review = cls.query.get(id)
-        return review
+        messages = MessageModel.get_review_messages(id)
+        return {"review":ReviewModel.to_json(review, False), "messages": messages}
 
     @classmethod
     def get_reviews(cls, id, requester):
@@ -62,18 +63,30 @@ class ReviewModel(db.Model):
         if reviews == None:
             return None
         else:
-            return {'reviews': list(map(lambda x: ReviewModel.to_json(x), reviews))}
+            return {'reviews': list(map(lambda x: ReviewModel.to_json(x, True), reviews))}
 
     @classmethod
-    def to_json(cls, x):
-        return {
-            'review_id': x.id,
-            'reviewer_id': x.reviewer_id,
-            'reviewee_id': x.reviewee_id,
-            'title': x.title,
-            'status': x.status,
-            'language': x.language
-        }
+    def to_json(cls, x, preview):
+        if(preview == True):
+            return {
+                'review_id': x.id,
+                'reviewer_id': x.reviewer_id,
+                'reviewee_id': x.reviewee_id,
+                'title': x.title,
+                'status': x.status,
+                'language': x.language
+            }
+        else:
+            return {
+                'review_id': x.id,
+                'reviewer_id': x.reviewer_id,
+                'reviewee_id': x.reviewee_id,
+                'title': x.title,
+                'status': x.status,
+                'code': x.code,
+                'language': x.language
+            }
+
 
     @classmethod
     def delete_all(cls):

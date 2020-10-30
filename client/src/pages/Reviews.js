@@ -12,9 +12,7 @@ import {
 } from "@material-ui/core";
 import OnboardingContainer from "../components/LoginSignupContainer";
 import CollapsibleSideMenu from "../components/CollapsibleSideMenu";
-
 import MenuComponent from "../components/MenuComponent";
-
 import { ReviewsData } from "../utils/Constants";
 import Editor from "for-editor";
 import MessageComponent from "../components/MessageComponent";
@@ -158,7 +156,7 @@ const ReviewsPage = () => {
   };
 
   const handleResponse = (e, option) => {
-    const id = 3;
+    const id = 3; //placholder id
     fetch("/review_respond", {
       method: option === "accept" ? "POST" : "DELETE",
       headers: {
@@ -312,7 +310,7 @@ const ReviewsPage = () => {
         </Typography>
 
         <div className={classes.responseButtonWrapper}>
-          {/* use state to only show this when review hasnt been accepted yet */}
+          {/*only show this when review hasnt been accepted yet */}
           <Button
             variant="contained"
             className={classes.acceptButton}
