@@ -32,7 +32,8 @@ class UserLogin(Resource):
                 'access_token': access_token,
                 'full_name': user.full_name,
                 'email': user.email,
-                'experience': user.experience
+                'experience': user.experience,
+                'userId': user.id
 
             }, 200
         else:

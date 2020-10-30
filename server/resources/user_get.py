@@ -17,7 +17,9 @@ class UserGet(Resource):
             "user": {
                 "full_name": user.full_name,
                 "email": user.email,
-                "experience": user.experience
+                "experience": user.experience,
+                "image": user.image,
+                "userId": user.id
             }
         }
 

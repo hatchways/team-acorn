@@ -11,6 +11,8 @@ class UserModel(db.Model):
     password = db.Column(db.String(120), nullable=False)
     experience = db.Column(db.JSON, nullable=True)
     reviews = db.Column(db.Integer, nullable=False)
+    image = db.Column(db.String(), nullable=True)
+
 
     def save_to_db(self):
         db.session.add(self)
@@ -99,3 +101,14 @@ class UserModel(db.Model):
             user.reviews = 0
 
         db.session.commit()
+
+    @classmethod
+    def update_profile_img(cls, id, url):
+        user = cls.query.get(id)
+        user.image = url
+        db.session.commit()
+
+    @classmethod
+    def get_profile_img(cls, id):
+        user = cls.query.get(id)
+        return user.image

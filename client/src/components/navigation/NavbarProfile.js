@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
 const NavbarProfile = () => {
   const userContext = useContext(UserContext);
   const { dispatch } = userContext;
+  const { image } = userContext.state;
   const theme = useTheme();
   const classes = useStyles(theme);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -59,11 +60,7 @@ const NavbarProfile = () => {
 
   return (
     <div className={classes.profileContainer}>
-      <img
-        src={PROFILE_IMG_URL}
-        className={classes.profileImage}
-        alt="Profile Pic"
-      />
+      <img src={image} className={classes.profileImage} alt="Profile Pic" />
       <Button
         onClick={handleClick}
         classes={{

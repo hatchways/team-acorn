@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
-import { ReactTinyLink } from "react-tiny-link";
+import ImageUploader from "react-images-upload";
+import { UserContext } from "../context/userContext";
 
 const PROFILE_IMG_URL =
   "https://www.dovercourt.org/wp-content/uploads/2019/11/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg";
@@ -86,14 +87,54 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const uploadImg = (img, userId, dispatch) => {
+  img = img.split(",")[1];
+  fetch("/user/profile_img", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + localStorage.getItem("token"),
+    },
+    body: JSON.stringify({
+      img: img,
+      id: userId,
+    }),
+  })
+    .then((data) => data.json())
+    .then((data) => {
+      if (data.img && !data.error) {
+        dispatch({ type: "updateProfileImage", payload: data.img });
+      } else {
+      }
+    })
+    .catch((er) => console.log(er));
+};
+
 const ProfilePage = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
+  const userContext = useContext(UserContext);
+  const { dispatch } = userContext;
+  const { image, userId } = userContext.state;
+
+  const onDrop = (_, base64) => {
+    uploadImg(base64[0], userId, dispatch);
+  };
+
   return (
     <div className={classes.container}>
       <div className={classes.profileContainer}>
-        <img src={PROFILE_IMG_URL} className={classes.profileImage} />
+        <img src={image} className={classes.profileImage} />
+        <ImageUploader
+          withIcon={true}
+          buttonText="Choose image"
+          onChange={onDrop}
+          imgExtension={[".png"]}
+          maxFileSize={5242880}
+          singleImage={true}
+        />
+
         <Typography className={classes.profileName}>John Doe</Typography>
         <Typography className={classes.title}>
           Senior Developer at Google

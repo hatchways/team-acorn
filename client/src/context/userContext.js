@@ -14,6 +14,9 @@ const UserProvider = ({ children }) => {
       case "storeUserExperience": {
         return { ...state, ...{ experience: action.payload } };
       }
+      case "updateProfileImage": {
+        return { ...state, ...{ image: action.payload } };
+      }
       case "logout": {
         return { ...initialState };
       }

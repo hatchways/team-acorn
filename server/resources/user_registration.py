@@ -31,11 +31,12 @@ class UserRegistration(Resource):
         try:
             new_user.save_to_db()
             expires = datetime.timedelta(days=1)
-            access_token = create_access_token(
-                identity=UserModel.get_id(data['email']), expires_delta=expires)
+            identity=UserModel.get_id(data['email'])
+            access_token = create_access_token(identity, expires_delta=expires)
             return{
                 'message': 'User {} was created'.format(data['email']),
-                'access_token': access_token
+                'access_token': access_token,
+                'userId': identity
             }, 201
         except:
             return{'error': 'Something went wrong'}, 500
