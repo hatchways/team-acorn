@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
-import ImageUploader from "react-images-upload";
+import { Typography, Backdrop } from "@material-ui/core";
 import { UserContext } from "../context/userContext";
+import ProfileEdit from "../components/ProfileEdit";
+import EditIcon from "@material-ui/icons/Edit";
 import images from "../images";
 
 const PROFILE_IMG_URL =
@@ -103,30 +104,16 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     fontSize: 13,
   },
+  editIcon: {
+    position: "absolute",
+    right: 10,
+    top: 10,
+    width: 30,
+    height: 30,
+    color: theme.darkPurple,
+    cursor: "pointer",
+  },
 }));
-
-const uploadImg = (img, userId, dispatch) => {
-  img = img.split(",")[1];
-  fetch("/user/profile_img", {
-    method: "post",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + localStorage.getItem("token"),
-    },
-    body: JSON.stringify({
-      img: img,
-      id: userId,
-    }),
-  })
-    .then((data) => data.json())
-    .then((data) => {
-      if (data.img && !data.error) {
-        dispatch({ type: "updateProfileImage", payload: data.img });
-      } else {
-      }
-    })
-    .catch((er) => console.log(er));
-};
 
 const ProfilePage = () => {
   const theme = useTheme();
@@ -134,49 +121,52 @@ const ProfilePage = () => {
 
   const userContext = useContext(UserContext);
   const { dispatch } = userContext;
-  const { image, userId, experience } = userContext.state;
-
-  const onDrop = (_, base64) => {
-    uploadImg(base64[0], userId, dispatch);
-  };
+  const { image, userId, experience, name } = userContext.state;
+  const [showEdit, setShowEdit] = useState(false);
 
   return (
-    <div className={classes.container}>
-      <div className={classes.profileContainer}>
-        <img src={image} className={classes.profileImage} />
-        {/* <ImageUploader
-          withIcon={true}
-          buttonText="Choose image"
-          onChange={onDrop}
-          imgExtension={[".png"]}
-          maxFileSize={5242880}
-          singleImage={true}
-        /> */}
-
-        <Typography className={classes.profileName}>John Doe</Typography>
-        <Typography className={classes.title}>
-          Senior Developer at Google
-        </Typography>
-        <div className={classes.statsContainer}>
-          <Stat name={"years of experience"} number={5} classes={classes} />
-          <Stat name={"reviews"} number={24} classes={classes} />
-          <Stat name={"raiting"} number={0.8} classes={classes} />
-        </div>
-        <Typography className={classes.profileName}>Experience</Typography>
-        <div className={classes.statsContainer}>
-          {Object.keys(experience).map((name) => {
-            return (
-              <div className={classes.langContainer}>
-                <img className={classes.langImg} src={selectImg(name)} />
-                <Typography className={classes.langLvl}>
-                  {selectLevel(experience[name])}
-                </Typography>
-              </div>
-            );
-          })}
+    <>
+      {showEdit && (
+        <ProfileEdit
+          dispatch={dispatch}
+          showEdit={true}
+          setShowEdit={setShowEdit}
+        />
+      )}
+      <div className={classes.container}>
+        <div className={classes.profileContainer}>
+          <EditIcon
+            className={classes.editIcon}
+            onClick={() => {
+              setShowEdit(true);
+            }}
+          />
+          <img src={image} className={classes.profileImage} />
+          <Typography className={classes.profileName}>{name}</Typography>
+          <Typography className={classes.title}>
+            Senior Developer at Google
+          </Typography>
+          <div className={classes.statsContainer}>
+            <Stat name={"years of experience"} number={5} classes={classes} />
+            <Stat name={"reviews"} number={24} classes={classes} />
+            <Stat name={"raiting"} number={0.8} classes={classes} />
+          </div>
+          <Typography className={classes.profileName}>Experience</Typography>
+          <div className={classes.statsContainer}>
+            {Object.keys(experience).map((name) => {
+              return (
+                <div className={classes.langContainer}>
+                  <img className={classes.langImg} src={selectImg(name)} />
+                  <Typography className={classes.langLvl}>
+                    {selectLevel(experience[name])}
+                  </Typography>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
