@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useContext } from "react";
 import Button from "@material-ui/core/Button";
 import {
   Dialog,
@@ -14,6 +14,7 @@ import Editor from "for-editor";
 import { languages } from "../utils/Constants";
 import Snackbar from "./SnackbarComponent";
 import { useHistory } from "react-router-dom";
+import { UserContext } from "../context/userContext";
 
 const useStyles = makeStyles((theme) => ({
   buttonRoot: {
@@ -106,6 +107,7 @@ const UploadCodeDialog = ({ open, setOpen, form, setForm }) => {
   const [redirect, setRedirect] = useState(false);
   const classes = useStyles();
   const history = useHistory();
+  const { dispatch } = useContext(UserContext);
   // backdrop state
   const [backdrop, setBackdrop] = React.useState(false);
 
@@ -187,7 +189,9 @@ const UploadCodeDialog = ({ open, setOpen, form, setForm }) => {
       if (data.error) {
         console.log(data.error);
       } else {
-        console.log(data.message);
+        dispatch({
+          type: "update",
+        });
         setOpen(false);
       }
     }

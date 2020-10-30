@@ -29,7 +29,7 @@ class ReviewGet(Resource):
                 "status": review.status,
                 "language": review.language,
                 "code": review.code,
-                "message": review.message,
+                "timestamp":str(review.timestamp)
             }
         }
 

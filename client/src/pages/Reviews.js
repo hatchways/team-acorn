@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Button,
   useTheme,
@@ -12,14 +12,13 @@ import {
 } from "@material-ui/core";
 import OnboardingContainer from "../components/LoginSignupContainer";
 import CollapsibleSideMenu from "../components/CollapsibleSideMenu";
-
 import MenuComponent from "../components/MenuComponent";
-
 import { ReviewsData } from "../utils/Constants";
 import Editor from "for-editor";
 import MessageComponent from "../components/MessageComponent";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
+import { UserContext } from "../context/userContext";
 
 const useStyles = makeStyles((theme) => ({
   sidebar: {
@@ -143,6 +142,13 @@ const ReviewsPage = () => {
   const theme = useTheme();
   const isScreenSmall = useMediaQuery(theme.breakpoints.down("sm"));
   // eslint-disable-next-line
+  const { state, dispatch } = useContext(UserContext);
+  const {
+    reviewee_reviews: my_requests,
+    reviewer_reviews: my_reviews,
+    update,
+  } = state;
+  console.log(my_requests);
   const [reviews, setReviews] = useState(ReviewsData);
   const [selectedReview, setSelectedReview] = useState(
     reviews.length > 0 ? reviews[0] : null
@@ -156,6 +162,38 @@ const ReviewsPage = () => {
       };
     });
   };
+
+  const fetchReview = (e) => {
+    e.stopPropagation();
+    const review_id = e.target.id;
+    console.log(review_id);
+  };
+
+  useEffect(() => {}, []);
+
+  useEffect(() => {
+    fetch("/reviewer_reviews", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          // handle error if we recieve error from server
+          alert(data.error);
+        } else {
+          dispatch({
+            type: "review",
+            payload: data,
+          });
+        }
+      })
+      .catch((err) => console.log(err));
+    //eslint-disable-next-line
+  }, [update]);
 
   const handleResponse = (e, option) => {
     const id = 3;
@@ -175,7 +213,7 @@ const ReviewsPage = () => {
           // handle error if we recieve error from server
           alert(data.error);
         } else {
-          alert(data.message);
+          setReviews(data);
         }
       })
       .catch((err) => console.log(err));
@@ -230,31 +268,37 @@ const ReviewsPage = () => {
                   Reviews{" "}
                   <span className={classes.sidebarReviewsCount}>
                     {" "}
-                    ({reviews.length})
+                    ({my_requests.length})
                   </span>
                 </Typography>
               }
             >
               <Grid container={true} justify="flex-start">
-                {reviews.map((review, index) => {
+                {[...my_requests].map((review, index) => {
                   return (
                     <Grid
-                      key={review.title}
+                      key={review.review_id}
+                      id={review.review_id}
+                      onClick={fetchReview}
                       className={`${classes.regScreenGridReviewItem} ${
                         index === 0 && classes.focusedItem
                       }`}
                     >
-                      <span className={classes.moreButon}></span>
+                      <span id={review.review_id} className={classes.moreButon}>
+                        ...
+                      </span>
                       <Typography
                         variant="h6"
+                        id={review.review_id}
                         className={`${classes.title} ${classes.sidebarItemTitle}`}
                       >
                         {review.title}
                       </Typography>
                       <Typography
+                        id={review.review_id}
                         className={`${classes.date} ${classes.sidebarItemTitle}`}
                       >
-                        {review.submitted_date}
+                        {new Date(review.timestamp).toDateString()}
                       </Typography>
                     </Grid>
                   );
@@ -267,33 +311,37 @@ const ReviewsPage = () => {
                   Reviewing{" "}
                   <span className={classes.sidebarReviewsCount}>
                     {" "}
-                    ({reviews.length})
+                    ({my_reviews.length})
                   </span>
                 </Typography>
               }
             >
               <Grid container={true} justify="flex-start">
-                {reviews.map((review, index) => {
+                {[...my_reviews].map((review, index) => {
                   return (
                     <Grid
-                      key={review.title}
+                      key={review.review_id}
+                      id={review.review_id}
+                      onClick={fetchReview}
                       className={`${classes.regScreenGridReviewItem} ${
                         index === 0 && classes.focusedItem
                       }`}
                     >
-                      <span className={classes.moreButon}>
-                        <MenuComponent></MenuComponent>
+                      <span id={review.review_id} className={classes.moreButon}>
+                        ...
                       </span>
                       <Typography
                         variant="h6"
+                        id={review.review_id}
                         className={`${classes.title} ${classes.sidebarItemTitle}`}
                       >
                         {review.title}
                       </Typography>
                       <Typography
+                        id={review.review_id}
                         className={`${classes.date} ${classes.sidebarItemTitle}`}
                       >
-                        {review.submitted_date}
+                        {new Date(review.timestamp).toDateString()}
                       </Typography>
                     </Grid>
                   );
