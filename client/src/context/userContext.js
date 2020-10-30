@@ -3,6 +3,9 @@ import React, { createContext, useReducer } from "react";
 const initialState = {
   hasNewNotification: false,
   notifications: [],
+  reviewee_reviews: "",
+  reviewer_reviews: "",
+  update: false,
 };
 const UserContext = createContext(initialState);
 
@@ -31,6 +34,18 @@ const UserProvider = ({ children }) => {
         return {
           ...state,
           ...{ hasNewNotification: false },
+        };
+      }
+      case "review": {
+        return {
+          ...state,
+          ...action.payload,
+        };
+      }
+      case "update": {
+        return {
+          ...state,
+          update: !state.update,
         };
       }
       default:

@@ -8,13 +8,16 @@ class ReviewerReviewsGet(Resource):
     def get(self):
         user_id = get_jwt_identity()
 
-        reviews = ReviewModel.get_reviews(user_id, "reviewer")
+        reviews_from_reviewer = ReviewModel.get_reviews(user_id, "reviewer")
+
+        reviews_from_reviewee = ReviewModel.get_reviews(user_id, "reviewee")
 
         # check if user is participating in the requested review
-        if(len(reviews["reviews"]) == 0):
-            return {"error": "User with id {} has no reviews assigned to them.".format(user_id)}, 400
+        # if(len(reviews_from_reviewer["reviews"]) == 0):
+        #     return 
+        # elif(len(reviews_from_reviewee))
 
         try:
-            return reviews, 201
+            return {"reviewee_reviews": reviews_from_reviewee, "reviewer_reviews": reviews_from_reviewer}, 201
         except:
             return{'error': 'Something went wrong'}, 500

@@ -15,6 +15,7 @@ class ReviewModel(db.Model):
     status = db.Column(db.String(20), nullable=False)
     language = db.Column(db.String(20), nullable=False)
     code = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False)
     blacklisted_users = db.relationship(
         "BlacklistModel", cascade="all, delete-orphan", backref="review", lazy=True)
     messages = db.relationship(
@@ -62,7 +63,7 @@ class ReviewModel(db.Model):
         if reviews == None:
             return None
         else:
-            return {'reviews': list(map(lambda x: ReviewModel.to_json(x), reviews))}
+            return list(map(lambda x: ReviewModel.to_json(x), reviews))
 
     @classmethod
     def to_json(cls, x):
@@ -70,9 +71,10 @@ class ReviewModel(db.Model):
             'review_id': x.id,
             'reviewer_id': x.reviewer_id,
             'reviewee_id': x.reviewee_id,
-            'title': x.title,
+            'title': x.title.capitalize(),
             'status': x.status,
-            'language': x.language
+            'language': x.language,
+            'timestamp': str(x.timestamp)
         }
 
     @classmethod
