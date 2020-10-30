@@ -14,30 +14,30 @@ def find_reviewer(review_id):
     app.app_context().push()
 
     # get specific review object
-    review = ReviewModel.get_review(review_id)
-    reviewee = UserModel.get_user(review.reviewee_id)
+    review = ReviewModel.get_review(review_id)["review"]
+    reviewee = UserModel.get_user(review["reviewee_id"])
 
     reviewee_exp = ExperienceModel.get_user_experience(reviewee.id)
 
-    if review.language not in reviewee_exp:
+    if review["language"] not in reviewee_exp:
         level = 1
-    elif int(reviewee_exp.get(review.language)) < 3:
-        level = int(reviewee_exp.get(review.language)) + 1
+    elif int(reviewee_exp.get(review["language"])) < 3:
+        level = int(reviewee_exp.get(review["language"])) + 1
     else:
         level = 3
 
-    dict_lang_level = {review.language: level}
+    dict_lang_level = {review["language"]: level}
 
     # run UserModel.search_experience method to return list of user_ids
     # that meet language experience requirement
     # list is sorted, user with least amount of reviews in the beginning
     qualified_users = UserModel.search_experience(
-        dict_lang_level, review.reviewee_id)
+        dict_lang_level, review["reviewee_id"])
 
     # iterate through qualified users and remove blacklisted users
     qualified_users_with_blacklist = []
     for user in qualified_users:
-        if(BlacklistModel.is_blacklisted(user.id, review.id)):
+        if(BlacklistModel.is_blacklisted(user.id, review["review_id"])):
             print("User with id {} in blacklist".format(user.id))
         else:
             print("User with id {} not in blacklist".format(user.id))
@@ -53,4 +53,4 @@ def find_reviewer(review_id):
         ReviewModel.update_status(review_id, "assigned")
 
         UserModel.add_review(qualified_users_with_blacklist[0].id)
-        sendNotification(review.reviewee_id, review_id)
+        sendNotification(review["reviewee_id"], review_id)

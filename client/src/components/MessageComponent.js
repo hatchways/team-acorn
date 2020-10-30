@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import Editor from "for-editor";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiTextField-root": {
@@ -15,7 +15,7 @@ export default function MultilineTextFields() {
   const classes = useStyles();
   const [value, setValue] = React.useState("");
   const handleChange = (event) => {
-    setValue(event.target.value);
+    setValue(event);
   };
 
   const handleSubmit = (event) => {
@@ -53,19 +53,24 @@ export default function MultilineTextFields() {
       noValidate
       autoComplete="off"
     >
-      <TextField
-        id="outlined-textarea"
-        label="Message"
-        placeholder="Send a message"
-        multiline
-        rows={2}
+      <Editor
         value={value}
+        toolbar={{
+          lineNum: true,
+          preview: true,
+          h1: true,
+          h2: true,
+          code: true,
+        }}
+        language="en"
+        placeholder=" "
+        height="150px"
         onChange={handleChange}
-        variant="outlined"
-        InputProps={{
-          classes: { input: classes.input },
+        style={{
+          marginBottom: "1rem",
         }}
       />
+
       <Button
         style={{ display: "flex", margin: "1rem 0 1rem auto" }}
         type="submit"

@@ -27,10 +27,11 @@ class RequestNew(Resource):
         new_review = ReviewModel(
             reviewee_id=get_jwt_identity(),
             reviewer_id=None,
-            title=data["title"],
+            title=data["title"].capitalize(),
             status="pending",
             language=data["language"],
-            code=data["code"]
+            code=data["code"],
+            timestamp=datetime.now()
         )
 
         try:

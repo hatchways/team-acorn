@@ -15,6 +15,7 @@ class ReviewModel(db.Model):
     status = db.Column(db.String(20), nullable=False)
     language = db.Column(db.String(20), nullable=False)
     code = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False)
     blacklisted_users = db.relationship(
         "BlacklistModel", cascade="all, delete-orphan", backref="review", lazy=True)
     messages = db.relationship(
@@ -67,6 +68,7 @@ class ReviewModel(db.Model):
 
     @classmethod
     def to_json(cls, x, preview):
+        print(x)
         if(preview == True):
             return {
                 'review_id': x.id,
@@ -74,6 +76,7 @@ class ReviewModel(db.Model):
                 'reviewee_id': x.reviewee_id,
                 'title': x.title,
                 'status': x.status,
+                'timestamp': str(x.timestamp),
                 'language': x.language
             }
         else:
@@ -84,6 +87,7 @@ class ReviewModel(db.Model):
                 'title': x.title,
                 'status': x.status,
                 'code': x.code,
+                'timestamp': str(x.timestamp),
                 'language': x.language
             }
 

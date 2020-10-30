@@ -47,8 +47,8 @@ const useStyles = makeStyles((theme) => ({
 const NavBar = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
-  const userContext = useContext(UserContext);
-  const { hasNewNotification } = userContext.state;
+  const { state } = useContext(UserContext);
+  const { hasNewNotification } = state;
 
   const [snackbarNotification, setSnackbarNotification] = useState({
     open: hasNewNotification !== false,

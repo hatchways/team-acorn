@@ -70,6 +70,13 @@ class UserModel(db.Model):
     def find_by_email(cls, email):
         return cls.query.filter_by(email=email).first()
 
+    @classmethod
+    def get_user_for_messages(cls,id):
+        user = cls.query.filter(cls.id == id).first()
+        print(user)
+        return {"id": id,"full_name": user.full_name, "profile_link": "https://forums.developer.apple.com/forums/build-10052020-1/public/assets/avatars/1095.png", "designation": "senior developer at google" }
+
+
     @staticmethod
     def generate_hash(password):
         # generate hashed string to store in the database

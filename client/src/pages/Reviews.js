@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
-  Button,
   useTheme,
   useMediaQuery,
   Paper,
@@ -9,15 +8,16 @@ import {
   TextField,
   Grid,
   Divider,
+  Avatar,
 } from "@material-ui/core";
 import OnboardingContainer from "../components/LoginSignupContainer";
 import CollapsibleSideMenu from "../components/CollapsibleSideMenu";
-import MenuComponent from "../components/MenuComponent";
+// import MenuComponent from "../components/MenuComponent";
 import { ReviewsData } from "../utils/Constants";
 import Editor from "for-editor";
 import MessageComponent from "../components/MessageComponent";
-import CheckIcon from "@material-ui/icons/Check";
-import ClearIcon from "@material-ui/icons/Clear";
+import { UserContext } from "../context/userContext";
+import ResponseButtons from "../components/ResponseButtons";
 
 const useStyles = makeStyles((theme) => ({
   sidebar: {
@@ -134,6 +134,41 @@ const useStyles = makeStyles((theme) => ({
     padding: "0.5rem 1rem",
     margin: "0 0.5rem",
   },
+  msgAvatar: {
+    width: "5rem",
+    height: "5rem",
+    margin: "1rem",
+  },
+  msgUserContainer: {
+    display: "flex",
+  },
+  msgName: {
+    textTransform: "capitalize",
+    fontSize: 18,
+    marginTop: "2rem",
+    marginBottom: "-0.1rem",
+  },
+  msgDesignation: {
+    textTransform: "capitalize",
+    fontSize: 15,
+  },
+  msgContent: {
+    margin: "1.5rem 0 3rem 0",
+    width: "100%",
+  },
+  msgDate: {
+    fontSize: 10,
+    width: "100%",
+    color: "grey",
+  },
+  msgTime: {
+    fontSize: 10,
+    width: "100%",
+    color: "grey",
+  },
+  msgUserName: {
+    width: "100%",
+  },
 }));
 
 const ReviewsPage = () => {
@@ -141,10 +176,19 @@ const ReviewsPage = () => {
   const theme = useTheme();
   const isScreenSmall = useMediaQuery(theme.breakpoints.down("sm"));
   // eslint-disable-next-line
-  const [reviews, setReviews] = useState(ReviewsData);
-  const [selectedReview, setSelectedReview] = useState(
-    reviews.length > 0 ? reviews[0] : null
-  );
+  const { state, dispatch } = useContext(UserContext);
+  const {
+    reviewee_reviews: my_requests,
+    reviewer_reviews: my_reviews,
+    update,
+  } = state;
+  const [reviews, setReviews] = useState("");
+  const [selectedReview, setSelectedReview] = useState({
+    title: "",
+    submitted_date: "",
+    code: "",
+    messages: [],
+  });
   const handleEditor = (e) => {
     const value = e;
     setSelectedReview((prev) => {
@@ -155,17 +199,17 @@ const ReviewsPage = () => {
     });
   };
 
-  const handleResponse = (e, option) => {
-    const id = 3; //placholder id
-    fetch("/review_respond", {
-      method: option === "accept" ? "POST" : "DELETE",
+  const fetchReview = (e) => {
+    e.stopPropagation();
+    const review_id = e.target.id;
+    console.log(review_id);
+    fetch("/review", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
-      body: JSON.stringify({
-        review_id: id,
-      }),
+      body: JSON.stringify({ review_id: review_id }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -173,11 +217,40 @@ const ReviewsPage = () => {
           // handle error if we recieve error from server
           alert(data.error);
         } else {
-          alert(data.message);
+          console.log(data);
+          setSelectedReview((prev) => {
+            return { ...prev, ...data["review"] };
+          });
         }
       })
       .catch((err) => console.log(err));
   };
+
+  useEffect(() => {}, []);
+
+  useEffect(() => {
+    fetch("/reviewer_reviews", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          // handle error if we recieve error from server
+          alert(data.error);
+        } else {
+          dispatch({
+            type: "review",
+            payload: data,
+          });
+        }
+      })
+      .catch((err) => console.log(err));
+    //eslint-disable-next-line
+  }, [update]);
 
   return (
     <OnboardingContainer containerOnly>
@@ -228,31 +301,37 @@ const ReviewsPage = () => {
                   Reviews{" "}
                   <span className={classes.sidebarReviewsCount}>
                     {" "}
-                    ({reviews.length})
+                    ({my_requests.length})
                   </span>
                 </Typography>
               }
             >
               <Grid container={true} justify="flex-start">
-                {reviews.map((review, index) => {
+                {[...my_requests].map((review, index) => {
                   return (
                     <Grid
-                      key={review.title}
+                      key={review.review_id}
+                      id={review.review_id}
+                      onClick={fetchReview}
                       className={`${classes.regScreenGridReviewItem} ${
                         index === 0 && classes.focusedItem
                       }`}
                     >
-                      <span className={classes.moreButon}></span>
+                      <span id={review.review_id} className={classes.moreButon}>
+                        ...
+                      </span>
                       <Typography
                         variant="h6"
+                        id={review.review_id}
                         className={`${classes.title} ${classes.sidebarItemTitle}`}
                       >
                         {review.title}
                       </Typography>
                       <Typography
+                        id={review.review_id}
                         className={`${classes.date} ${classes.sidebarItemTitle}`}
                       >
-                        {review.submitted_date}
+                        {new Date(review.timestamp).toDateString()}
                       </Typography>
                     </Grid>
                   );
@@ -265,33 +344,37 @@ const ReviewsPage = () => {
                   Reviewing{" "}
                   <span className={classes.sidebarReviewsCount}>
                     {" "}
-                    ({reviews.length})
+                    ({my_reviews.length})
                   </span>
                 </Typography>
               }
             >
               <Grid container={true} justify="flex-start">
-                {reviews.map((review, index) => {
+                {[...my_reviews].map((review, index) => {
                   return (
                     <Grid
-                      key={review.title}
+                      key={review.review_id}
+                      id={review.review_id}
+                      onClick={fetchReview}
                       className={`${classes.regScreenGridReviewItem} ${
                         index === 0 && classes.focusedItem
                       }`}
                     >
-                      <span className={classes.moreButon}>
-                        <MenuComponent></MenuComponent>
+                      <span id={review.review_id} className={classes.moreButon}>
+                        ...
                       </span>
                       <Typography
                         variant="h6"
+                        id={review.review_id}
                         className={`${classes.title} ${classes.sidebarItemTitle}`}
                       >
                         {review.title}
                       </Typography>
                       <Typography
+                        id={review.review_id}
                         className={`${classes.date} ${classes.sidebarItemTitle}`}
                       >
-                        {review.submitted_date}
+                        {new Date(review.timestamp).toDateString()}
                       </Typography>
                     </Grid>
                   );
@@ -303,34 +386,15 @@ const ReviewsPage = () => {
       </Paper>
       <Paper className={classes.contentBox}>
         <Typography variant="h4" className={classes.title}>
-          {selectedReview.title}
+          {selectedReview.title || ""}
         </Typography>
         <Typography variant="body1" className={classes.date}>
-          {selectedReview.submitted_date}
+          {selectedReview.submitted_date || ""}
         </Typography>
-
-        <div className={classes.responseButtonWrapper}>
-          {/*only show this when review hasnt been accepted yet */}
-          <Button
-            variant="contained"
-            className={classes.acceptButton}
-            onClick={(e) => handleResponse(e, "accept")}
-          >
-            <CheckIcon />
-            Accept
-          </Button>
-          <Button
-            variant="contained"
-            className={classes.rejectButton}
-            onClick={(e) => handleResponse(e, "reject")}
-          >
-            <ClearIcon /> Reject
-          </Button>
-        </div>
-
+        <ResponseButtons fn={setReviews} />
         <Divider className={classes.divider} />
         <Editor
-          value={selectedReview.code}
+          value={selectedReview.code || ""}
           toolbar={{
             lineNum: true,
           }}
@@ -341,12 +405,71 @@ const ReviewsPage = () => {
           preview={true}
           style={{
             border: "none",
-            boxShadow: "none",
             marginBottom: "1rem",
           }}
         />
 
         <MessageComponent />
+        {[...selectedReview.messages].map((message) => {
+          const sender =
+            selectedReview.reviewee.id === message.owner_id
+              ? "reviewee"
+              : "reviewer";
+          return (
+            <div style={{ position: "relative" }}>
+              <Grid container direction="column">
+                <div className={classes.msgUserContainer}>
+                  <Avatar
+                    className={classes.msgAvatar}
+                    alt="Profile"
+                    src={selectedReview[`${sender}`].profile_link}
+                  />
+                  <div classNmae={classes.msgUserName}>
+                    <h4 className={classes.msgName}>
+                      {selectedReview[`${sender}`].full_name}
+                    </h4>
+                    <span className={classes.msgDesignation}>
+                      {selectedReview[`${sender}`].designation}
+                    </span>
+                    <div className={classes.msgContent}>
+                      <Editor
+                        value={message.content}
+                        toolbar={{
+                          lineNum: true,
+                        }}
+                        language="en"
+                        placeholder=" "
+                        height="100px"
+                        onChange={handleEditor}
+                        preview={true}
+                        style={{
+                          border: "none",
+                          marginBottom: "1rem",
+                          width: "100%",
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style={{ position: "absolute", right: 0, bottom: 0 }}
+                  classNmae={classes.msgTimestamp}
+                >
+                  <span className={classes.msgDate}>
+                    {new Date(message.timestamp).toDateString()}
+                  </span>
+                  <br />
+                  <span className={classes.msgTime}>
+                    {new Date(message.timestamp).toLocaleTimeString("en-US")}
+                  </span>
+                </div>
+              </Grid>
+              <Divider />
+            </div>
+          );
+        })}
+        {console.log("my console ---> ")}
+        {console.log(selectedReview)}
       </Paper>
     </OnboardingContainer>
   );
