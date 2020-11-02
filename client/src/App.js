@@ -83,9 +83,20 @@ const DefaultStack = () => {
 };
 
 const AuthStack = ({ experience }) => {
+  const hasExperience = (experience) => {
+    let ans = false;
+    Object.values(experience).forEach((value) => {
+      if (value != null) {
+        ans = true;
+      }
+    });
+    console.log(ans);
+
+    return ans;
+  };
   return (
     <>
-      {experience && <NavBar />}
+      {hasExperience(experience) && <NavBar />}
       <Switch>
         <Route exact path="/onboard" component={OnboardingExperience} />
         <Route exact path="/reviews" component={ReviewsPage} />
@@ -95,7 +106,7 @@ const AuthStack = ({ experience }) => {
           exact
           path="/"
           render={() => {
-            return !experience ? (
+            return !hasExperience(experience) ? (
               <Redirect to="/onboard" />
             ) : (
               <Redirect to="/reviews" />

@@ -109,6 +109,12 @@ class UserModel(db.Model):
         db.session.commit()
 
     @classmethod
+    def update_name(cls, id, name):
+        user = cls.query.get(id)
+        user.full_name = name
+        db.session.commit()
+
+    @classmethod
     def get_profile_img(cls, id):
         user = cls.query.get(id)
         return user.image

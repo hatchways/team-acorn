@@ -154,6 +154,7 @@ const ProfilePage = () => {
           <Typography className={classes.profileName}>Experience</Typography>
           <div className={classes.statsContainer}>
             {Object.keys(experience).map((name) => {
+              if (experience[name] == null) return null;
               return (
                 <div className={classes.langContainer}>
                   <img className={classes.langImg} src={selectImg(name)} />

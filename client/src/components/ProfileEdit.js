@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import ImageUploader from "react-images-upload";
 import {
   Typography,
@@ -6,9 +6,11 @@ import {
   Paper,
   TextField,
   Button,
+  CircularProgress,
 } from "@material-ui/core";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import { UserContext } from "../context/userContext";
+import ExperiencePicker from "./ExperiencePicker";
 
 const useStyles = makeStyles((theme) => ({
   profileContainer: {
@@ -66,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const uploadImg = (img, userId, dispatch) => {
+const uploadImg = (img, userId, dispatch, callback) => {
   img = img.split(",")[1];
   fetch("/user/profile_img", {
     method: "post",
@@ -83,15 +85,38 @@ const uploadImg = (img, userId, dispatch) => {
     .then((data) => {
       if (data.img && !data.error) {
         dispatch({ type: "updateProfileImage", payload: data.img });
+        callback();
       } else {
       }
     })
     .catch((er) => console.log(er));
 };
 
-const updateName = (name, userId, dispatch) => {};
+const updateName = (name, userId, dispatch, callback) => {
+  fetch("/user/update_name", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + localStorage.getItem("token"),
+    },
+    body: JSON.stringify({
+      name: name,
+      id: userId,
+    }),
+  })
+    .then((data) => data.json())
+    .then((data) => {
+      if (data.name && !data.error) {
+        dispatch({ type: "updateName", payload: data.name });
+        callback();
+      } else {
+      }
+    })
+    .catch((er) => console.log(er));
+};
 
 const ProfileEdit = ({ showEdit, setShowEdit }) => {
+  const userExpPickerRef = useRef();
   const theme = useTheme();
   const classes = useStyles(theme);
   const userContext = useContext(UserContext);
@@ -100,60 +125,90 @@ const ProfileEdit = ({ showEdit, setShowEdit }) => {
   const { image, userId, experience, name } = userContext.state;
   const [nameText, setNameText] = useState(name);
   const [profileImg, setProfileImg] = useState(image);
-  cons;
-  //   let nameText = name;
+  const [isLoading, setIsLoading] = useState(false);
   const onDrop = (_, base64) => {
-    // uploadImg(base64[0], userId, dispatch);
     setProfileImg(base64[0]);
   };
   const handleNameChange = (e) => {
-    setNameText(e.target.value);
+    setNameText(e.targetw.value);
+  };
+
+  const saveInfo = () => {
+    userExpPickerRef.current.uploadExperience();
+    setIsLoading(true);
+    let promises = [];
+    if (nameText != name) {
+      const imgUpload = new Promise((fulfill, reject) => {
+        updateName(nameText, userId, dispatch, fulfill);
+      });
+      promises.push(imgUpload);
+    }
+
+    if (profileImg != image) {
+      const nameUpload = new Promise((fulfill, reject) => {
+        uploadImg(profileImg, userId, dispatch, fulfill);
+      });
+      promises.push(nameUpload);
+    }
+
+    Promise.all(promises).then(() => {
+      setIsLoading(false);
+      setShowEdit(false);
+    });
   };
   return (
     <Backdrop className={classes.backdrop} open={showEdit}>
-      <Paper className={classes.profileContainer}>
-        <div className={classes.editImgContainer}>
-          <img src={profileImg} className={classes.profileImage} />
-          {/* <Typography className={classes.editImgText}>Change Image</Typography> */}
-          <ImageUploader
-            withIcon={true}
-            buttonText="Choose image"
-            onChange={onDrop}
-            imgExtension={[".png"]}
-            maxFileSize={5242880}
-            singleImage={true}
-            buttonStyles={{
-              backgroundColor: theme.darkPurple,
-              ...theme.typography,
+      {isLoading ? (
+        <CircularProgress color="inherit" />
+      ) : (
+        <Paper className={classes.profileContainer}>
+          <div className={classes.editImgContainer}>
+            <img src={profileImg} className={classes.profileImage} />
+            {/* <Typography className={classes.editImgText}>Change Image</Typography> */}
+            <ImageUploader
+              withIcon={true}
+              buttonText="Choose image"
+              onChange={onDrop}
+              imgExtension={[".png"]}
+              maxFileSize={5242880}
+              singleImage={true}
+              buttonStyles={{
+                backgroundColor: theme.darkPurple,
+                ...theme.typography,
+              }}
+            />
+          </div>
+          <TextField
+            variant="outlined"
+            value={nameText}
+            onChange={handleNameChange}
+            autoComplete="off"
+            inputProps={{
+              style: {
+                height: 3,
+                fontWeight: 700,
+              },
             }}
           />
-        </div>
-        <TextField
-          variant="outlined"
-          value={nameText}
-          onChange={handleNameChange}
-          autoComplete="off"
-          //   className={`${classes.textFieldStyling} ${classes.input}`}
-          inputProps={{
-            style: {
-              height: 3,
-              fontWeight: 700,
-            },
-          }}
-        />
-        <div className={classes.buttonContainer}>
-          <Button>
-            <Typography className={classes.buttonText}>Save</Typography>
-          </Button>
-          <Button
-            onClick={() => {
-              setShowEdit(false);
-            }}
-          >
-            <Typography className={classes.buttonText}>Cancel</Typography>
-          </Button>
-        </div>
-      </Paper>
+          <ExperiencePicker ref={userExpPickerRef} />
+          <div className={classes.buttonContainer}>
+            <Button
+              onClick={() => {
+                saveInfo();
+              }}
+            >
+              <Typography className={classes.buttonText}>Save</Typography>
+            </Button>
+            <Button
+              onClick={() => {
+                setShowEdit(false);
+              }}
+            >
+              <Typography className={classes.buttonText}>Cancel</Typography>
+            </Button>
+          </div>
+        </Paper>
+      )}
     </Backdrop>
   );
 };

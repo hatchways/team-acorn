@@ -12,6 +12,7 @@ from resources.request_new import RequestNew
 from resources.user_experience import UserExperience
 from resources.user_get import UserGet
 from resources.profile_img_upload import UserProfileImageUpload
+from resources.user_update_name import UserUpdateName
 
 
 # Testing routes, remove before production
@@ -31,6 +32,8 @@ def create_api(app):
     api.add_resource(UserExperience, '/experience')
     api.add_resource(UserGet, '/user')
     api.add_resource(UserProfileImageUpload, '/user/profile_img')
+    api.add_resource(UserUpdateName, '/user/update_name')
+
 
 
     # Routes for testing, remove when in production
