@@ -26,11 +26,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ResponseButtons({ fn: setReviews }) {
+export default function ResponseButtons({ fn: setReviews, review_id }) {
   const classes = useStyles();
 
   const handleResponse = (e, option) => {
-    const id = 3; //placholder id
+    const id = 1; //placholder id
     fetch("/review_respond", {
       method: option === "accept" ? "POST" : "DELETE",
       headers: {
@@ -38,7 +38,7 @@ export default function ResponseButtons({ fn: setReviews }) {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
       body: JSON.stringify({
-        review_id: id,
+        review_id,
       }),
     })
       .then((response) => response.json())

@@ -17,8 +17,11 @@ class SendMessage(Resource):
 
         data = parser.parse_args()
 
-
-        
+        msg = data["message"].strip()
+        print("length of message: {}".format(len(msg)))
+        print(msg)
+        if(len(msg) == 0):
+            return {"error": "Cannot send empty message"}, 400
 
         review = ReviewModel.get_review(data["review_id"])["review"]
         print(review)
@@ -43,7 +46,7 @@ class SendMessage(Resource):
             # if owner of this message is id of reviewee, send notification to reviewer
             pass
         elif(user_id == review["reviewer_id"]):
-            # if owner of this message is id of reviwer, send notification to reviewee
+            # if owner of this message is id of reviewer, send notification to reviewee
             pass
 
         return{

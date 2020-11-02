@@ -21,28 +21,26 @@ class ReviewGet(Resource):
         messages = review_with_messages["messages"]
         review = review_with_messages["review"]
 
-        
         reviewee = UserModel.get_user_for_messages(review["reviewee_id"])
         if(review["reviewer_id"]):
             reviewer = UserModel.get_user_for_messages(review["reviewer_id"])
         else:
             reviewer = None
-    
 
         # check if user is participating in the requested review
         if(user_id != review["reviewee_id"] and user_id != review["reviewer_id"]):
             return {"error": "You are not permitted to get review with review_id {}".format(data["review_id"])}, 403
 
-        
         json = {
             "review": {
+                "review_id": review_id,
                 "reviewer": reviewer,
                 "reviewee": reviewee,
                 "title": review["title"],
                 "status": review["status"],
                 "language": review["language"],
                 "code": review["code"],
-                "timestamp":str(review["timestamp"]),
+                "timestamp": str(review["timestamp"]),
                 "messages": messages,
             }
         }

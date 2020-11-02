@@ -1,7 +1,10 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Editor from "for-editor";
+import io from "socket.io-client";
+import { socket } from "../utils/SocketConfig"
+
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiTextField-root": {
@@ -11,27 +14,45 @@ const useStyles = makeStyles((theme) => ({
   },
   input: { ...theme.inputPlaceholder },
 }));
-export default function MultilineTextFields() {
-  const classes = useStyles();
+
+
+export default function MultilineTextFields({messages, setMessages, review_id}) {
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    getMessages();
+  }, [messages.length]);
+
+  const getMessages = () => {
+    socket.on("message", (msg) => {
+      setMessages([...messages, msg]);
+    });
+  };
+
   const [value, setValue] = React.useState("");
   const handleChange = (event) => {
     setValue(event);
   };
-
+  const classes = useStyles();
+  
   const handleSubmit = (event) => {
-    const id = 3; //placeholder id
+    console.log(review_id)
     event.preventDefault();
-    console.log("inside handleSubmit");
-    console.log(value);
-
-    fetch("/send_message", {
+    // if (message !== "") {
+    //   socket.emit("message", id);
+    //   setMessage("");
+    // } else {
+    //   alert("Please Add A Message");
+    // }
+    if(value.length !== 0) {
+      fetch("/send_message", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
       body: JSON.stringify({
-        review_id: id,
+        review_id,
         message: value,
       }),
     })
@@ -45,6 +66,9 @@ export default function MultilineTextFields() {
         }
       })
       .catch((err) => console.log(err));
+    } else {
+      alert("Message can't be empty")
+    }
   };
   return (
     <form

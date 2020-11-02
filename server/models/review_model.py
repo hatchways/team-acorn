@@ -50,7 +50,9 @@ class ReviewModel(db.Model):
     def get_review(cls, id):
         review = cls.query.get(id)
         messages = MessageModel.get_review_messages(id)
-        return {"review":ReviewModel.to_json(review, False), "messages": messages}
+        print(id)
+        print(review)
+        return {"review": ReviewModel.to_json(review, False), "messages": messages}
 
     @classmethod
     def get_reviews(cls, id, requester):
@@ -91,7 +93,6 @@ class ReviewModel(db.Model):
                 'language': x.language
             }
 
-
     @classmethod
     def delete_all(cls):
         try:
@@ -104,4 +105,3 @@ class ReviewModel(db.Model):
         except:
             print("Unexpected error:", sys.exc_info()[0])
             return {'error': 'Something went wrong'}, 500
-            

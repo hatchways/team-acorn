@@ -172,6 +172,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ReviewsPage = () => {
+
+  const [messages, setMessages] = useState(["Default message"]);
+
+
   const classes = useStyles();
   const theme = useTheme();
   const isScreenSmall = useMediaQuery(theme.breakpoints.down("sm"));
@@ -225,6 +229,7 @@ const ReviewsPage = () => {
       })
       .catch((err) => console.log(err));
   };
+
 
   useEffect(() => {}, []);
 
@@ -391,7 +396,7 @@ const ReviewsPage = () => {
         <Typography variant="body1" className={classes.date}>
           {selectedReview.submitted_date || ""}
         </Typography>
-        <ResponseButtons fn={setReviews} />
+        <ResponseButtons fn={setReviews} review_id={selectedReview.review_id} />
         <Divider className={classes.divider} />
         <Editor
           value={selectedReview.code || ""}
@@ -409,7 +414,7 @@ const ReviewsPage = () => {
           }}
         />
 
-        <MessageComponent />
+        
         {[...selectedReview.messages].map((message) => {
           const sender =
             selectedReview.reviewee.id === message.owner_id
@@ -424,7 +429,7 @@ const ReviewsPage = () => {
                     alt="Profile"
                     src={selectedReview[`${sender}`].profile_link}
                   />
-                  <div classNmae={classes.msgUserName}>
+                  <div className={classes.msgUserName}>
                     <h4 className={classes.msgName}>
                       {selectedReview[`${sender}`].full_name}
                     </h4>
@@ -453,7 +458,7 @@ const ReviewsPage = () => {
                 </div>
                 <div
                   style={{ position: "absolute", right: 0, bottom: 0 }}
-                  classNmae={classes.msgTimestamp}
+                  className={classes.msgTimestamp}
                 >
                   <span className={classes.msgDate}>
                     {new Date(message.timestamp).toDateString()}
@@ -468,6 +473,7 @@ const ReviewsPage = () => {
             </div>
           );
         })}
+        <MessageComponent messages={messages} setMessages={setMessages} review_id={selectedReview.review_id} />
         {console.log("my console ---> ")}
         {console.log(selectedReview)}
       </Paper>
