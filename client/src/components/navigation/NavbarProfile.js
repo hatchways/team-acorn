@@ -58,6 +58,7 @@ const NavbarProfile = () => {
     }
   };
 
+  console.log(image);
   return (
     <div className={classes.profileContainer}>
       <img src={image} className={classes.profileImage} alt="Profile Pic" />

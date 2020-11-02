@@ -8,7 +8,11 @@ const buildInitExp = () => {
   });
   return tempObj;
 };
-const initialState = { experience: buildInitExp() };
+const initialState = {
+  experience: buildInitExp(),
+  image:
+    "http://2019wcsg.ca/wp-content/uploads/2018/01/profile-placeholder.png",
+};
 const UserContext = createContext(initialState);
 
 const { Provider } = UserContext;
@@ -24,6 +28,7 @@ const UserProvider = ({ children }) => {
             ...state.experience,
             ...action.payload.experience,
           },
+          image: action.payload.image ? action.payload.image : state.image,
         };
       }
       case "storeUserExperience": {
