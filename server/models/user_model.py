@@ -17,7 +17,7 @@ class UserModel(db.Model):
         "ReviewModel", cascade="save-update", backref="reviews", lazy=True, primaryjoin="UserModel.id==ReviewModel.reviewee_id")
     experience = db.relationship(
         "ExperienceModel", cascade="all, delete-orphan", backref="experience")
-    balance =  db.Column(db.Integer, nullable=False, default=3)
+    balance = db.Column(db.Integer, nullable=False)
 
     def save_to_db(self):
         db.session.add(self)
@@ -47,7 +47,8 @@ class UserModel(db.Model):
         if(len(user_with_exp) == 0):
             # list is empty, most likely because experience hasnt
             # been set yet, return user with no exp
-            user = db.session.query(UserModel).filter(UserModel.id == user_id).first()
+            user = db.session.query(UserModel).filter(
+                UserModel.id == user_id).first()
             print(user)
             print(user_id)
             exp = None
@@ -63,7 +64,7 @@ class UserModel(db.Model):
             "email": user.email,
             "experience": exp,
             "user_id": user.id,
-            "balance":user.balance
+            "balance": user.balance
         }
 
     @classmethod
@@ -71,11 +72,10 @@ class UserModel(db.Model):
         return cls.query.filter_by(email=email).first()
 
     @classmethod
-    def get_user_for_messages(cls,id):
+    def get_user_for_messages(cls, id):
         user = cls.query.filter(cls.id == id).first()
         print(user)
-        return {"id": id,"full_name": user.full_name, "profile_link": "https://forums.developer.apple.com/forums/build-10052020-1/public/assets/avatars/1095.png", "designation": "senior developer at google" }
-
+        return {"id": id, "full_name": user.full_name, "profile_link": "https://forums.developer.apple.com/forums/build-10052020-1/public/assets/avatars/1095.png", "designation": "senior developer at google"}
 
     @staticmethod
     def generate_hash(password):
