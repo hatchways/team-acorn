@@ -46,10 +46,8 @@ const uploadUserExperience = (experiences, dispatch) => {
       } else {
         dispatch({
           type: "storeUserExperience",
-          payload: outObj,
+          payload: experiences,
         });
-        // Redirect user to Home page..
-        // history.push("/onboard");
       }
     })
     .catch((err) => console.log(err));

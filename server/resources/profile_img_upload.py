@@ -49,5 +49,9 @@ class UserProfileImageUpload(Resource):
 
 def delete_profile_img(userId,s3_url):
     oldImg= UserModel.get_profile_img(userId)
+    print("oldImg")
+    print(oldImg)
+    if oldImg is None or " ":
+        return
     oldKey = oldImg.split(s3_url)[1] 
     s3.delete_object( Bucket=S3_BUCKET, Key=oldKey)

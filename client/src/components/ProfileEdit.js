@@ -130,7 +130,7 @@ const ProfileEdit = ({ showEdit, setShowEdit }) => {
     setProfileImg(base64[0]);
   };
   const handleNameChange = (e) => {
-    setNameText(e.targetw.value);
+    setNameText(e.target.value);
   };
 
   const saveInfo = () => {
