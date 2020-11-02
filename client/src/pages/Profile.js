@@ -194,6 +194,10 @@ const selectImg = (name) => {
       return images.pythonImg;
     case "c":
       return images.cImg;
+    case "css":
+      return images.cssImg;
+    case "html":
+      return images.htmlImg;
   }
 };
 
