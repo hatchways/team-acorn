@@ -86,6 +86,12 @@ const useStyles = makeStyles((theme) => ({
     height: 30,
     width: 30,
   },
+  expPickerContainer: {
+    margin: 30,
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
+  },
   buttonDeleteIcon: {
     color: "red",
   },
