@@ -1,4 +1,4 @@
-from extensions import (Resource, jwt_required, get_jwt_identity)
+from extensions import Resource, jwt_required, get_jwt_identity
 from models.user_model import UserModel
 
 
@@ -13,11 +13,11 @@ class UserGet(Resource):
                 "email": user["email"],
                 "experience": user["experience"],
                 "balance": user["balance"],
-                "userId": user["user_id"]
+                "userId": user["user_id"],
             }
         }
 
         try:
             return json, 201
         except:
-            return{'error': 'Something went wrong'}, 500
+            return {"error": "Something went wrong"}, 500
