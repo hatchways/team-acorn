@@ -12,7 +12,6 @@ class UserModel(db.Model):
     full_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
-    experience = db.Column(db.JSON, nullable=True)
     reviews = db.Column(db.Integer, nullable=False)
     image = db.Column(db.String(), nullable=True)
 
