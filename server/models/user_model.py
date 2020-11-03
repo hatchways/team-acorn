@@ -12,6 +12,8 @@ class UserModel(db.Model):
     full_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
+    image = db.Column(db.String(), nullable=True)
+
     review_count = db.Column(db.Integer, nullable=False)
     reviews = db.relationship(
         "ReviewModel", cascade="save-update", backref="reviews", lazy=True, primaryjoin="UserModel.id==ReviewModel.reviewee_id")
@@ -146,3 +148,20 @@ class UserModel(db.Model):
             user.review_count = 0
 
         db.session.commit()
+
+    @classmethod
+    def update_profile_img(cls, id, url):
+        user = cls.query.get(id)
+        user.image = url
+        db.session.commit()
+
+    @classmethod
+    def update_name(cls, id, name):
+        user = cls.query.get(id)
+        user.full_name = name
+        db.session.commit()
+
+    @classmethod
+    def get_profile_img(cls, id):
+        user = cls.query.get(id)
+        return user.image
