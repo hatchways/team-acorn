@@ -13,6 +13,7 @@ class UserModel(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     image = db.Column(db.String(), nullable=True)
+    rating = db.Column(db.Float,default=0, nullable=True)
 
     review_count = db.Column(db.Integer, nullable=False)
     reviews = db.relationship(
@@ -165,3 +166,20 @@ class UserModel(db.Model):
     def get_profile_img(cls, id):
         user = cls.query.get(id)
         return user.image
+
+    @classmethod
+    def get_rating(cls, id):
+        user = cls.query.get(id)
+        return user.rating
+    
+    @classmethod
+    def update_rating(cls, id, new_rating):
+        user = cls.query.get(id)
+        review_count = user.review_count
+        current_rating = user.rating
+        if current_rating is None:
+            current_rating = 0
+        rating = int(new_rating) + (current_rating * (review_count-1))/review_count
+        user.rating = rating
+        db.session.commit()
+        return rating
