@@ -149,7 +149,7 @@ const ProfilePage = () => {
           <div className={classes.statsContainer}>
             <Stat name={"years of experience"} number={5} classes={classes} />
             <Stat name={"reviews"} number={24} classes={classes} />
-            <Stat name={"raiting"} number={0.8} classes={classes} />
+            <Stat name={"rating"} number={0.8} classes={classes} />
           </div>
           <Typography className={classes.profileName}>Experience</Typography>
           <div className={classes.statsContainer}>
