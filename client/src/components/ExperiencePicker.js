@@ -24,7 +24,7 @@ const experienceOptions = {
 
 const experienceLabelList = Object.keys(experienceOptions);
 const uploadUserExperience = (experiences, dispatch) => {
-  let outObj = {};
+  const outObj = {};
   Object.keys(experiences).forEach((lang) => {
     const exp = experiences[lang];
     if (exp !== null) outObj[lang] = experiences[lang];
@@ -75,7 +75,7 @@ const ExperiencePicker = forwardRef((props, ref) => {
   };
   const isExperienceEmpty = (rows) => {
     let isEmpty = true;
-    for (var key in rows) {
+    for (let key in rows) {
       const value = rows[key];
       if (value) {
         isEmpty = false;

@@ -89,7 +89,6 @@ const AuthStack = ({ experience }) => {
         ans = true;
       }
     });
-    console.log(ans);
 
     return ans;
   };
