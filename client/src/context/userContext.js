@@ -6,6 +6,7 @@ const initialState = {
   reviewee_reviews: "",
   reviewer_reviews: "",
   update: false,
+  messageUpdate: "",
 };
 const UserContext = createContext(initialState);
 
@@ -46,6 +47,12 @@ const UserProvider = ({ children }) => {
         return {
           ...state,
           update: !state.update,
+        };
+      }
+      case "messageUpdate": {
+        return {
+          ...state,
+          messageUpdate: action.payload
         };
       }
       default:

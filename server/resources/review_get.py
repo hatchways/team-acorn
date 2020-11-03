@@ -17,7 +17,6 @@ class ReviewGet(Resource):
 
         review_id = int(data["review_id"])
         review_with_messages = ReviewModel.get_review(review_id)
-        print(review_with_messages)
         messages = review_with_messages["messages"]
         review = review_with_messages["review"]
 

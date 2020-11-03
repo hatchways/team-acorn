@@ -31,7 +31,7 @@ class ReviewRespond(Resource):
         # TO-DO
 
         return {
-            'message': "Review [{}] status changed to in_review.".format(review["title"])
+            'accepted': "Review [{}] status changed to in_review.".format(review["title"])
         }, 200
 
     @jwt_required
@@ -68,5 +68,5 @@ class ReviewRespond(Resource):
                                find_reviewer, review["review_id"])
 
         return {
-            'message': "Reviewer with id {} rejected. Requeuing task to find reviewer".format(user_id)
+            'rejected': "Reviewer with id {} rejected. Requeuing task to find reviewer".format(user_id)
         }, 200

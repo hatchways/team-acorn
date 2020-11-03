@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Editor from "for-editor";
-import io from "socket.io-client";
 import { socket } from "../utils/SocketConfig"
 
 const useStyles = makeStyles((theme) => ({
@@ -16,34 +15,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function MultilineTextFields({messages, setMessages, review_id}) {
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    getMessages();
-  }, [messages.length]);
-
-  const getMessages = () => {
-    socket.on("message", (msg) => {
-      setMessages([...messages, msg]);
-    });
-  };
-
-  const [value, setValue] = React.useState("");
+export default function MultilineTextFields({review_id}) {
+  const [value, setValue] = useState("");
   const handleChange = (event) => {
     setValue(event);
   };
   const classes = useStyles();
   
   const handleSubmit = (event) => {
-    console.log(review_id)
     event.preventDefault();
-    // if (message !== "") {
-    //   socket.emit("message", id);
-    //   setMessage("");
-    // } else {
-    //   alert("Please Add A Message");
-    // }
     if(value.length !== 0) {
       fetch("/send_message", {
       method: "POST",
@@ -59,10 +39,11 @@ export default function MultilineTextFields({messages, setMessages, review_id}) 
       .then((response) => response.json())
       .then((data) => {
         if (data.error) {
-          // handle error if we recieve error from server
+          // handle error if we receive error from server
           alert(data.error);
         } else {
-          alert(data.message);
+          setValue("");
+          socket.emit("review_message", {review_id, message_id : data.message_id });
         }
       })
       .catch((err) => console.log(err));

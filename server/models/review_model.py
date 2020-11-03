@@ -50,8 +50,6 @@ class ReviewModel(db.Model):
     def get_review(cls, id):
         review = cls.query.get(id)
         messages = MessageModel.get_review_messages(id)
-        print(id)
-        print(review)
         return {"review": ReviewModel.to_json(review, False), "messages": messages}
 
     @classmethod
@@ -70,7 +68,6 @@ class ReviewModel(db.Model):
 
     @classmethod
     def to_json(cls, x, preview):
-        print(x)
         if(preview == True):
             return {
                 'review_id': x.id,

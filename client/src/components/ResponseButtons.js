@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   responseButtonWrapper: {
@@ -26,11 +27,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ResponseButtons({ fn: setReviews, review_id }) {
+export default function ResponseButtons({ fn: setSelectedReview, review_id, dispatch }) {
   const classes = useStyles();
-
+  const history = useHistory();
   const handleResponse = (e, option) => {
-    const id = 1; //placholder id
     fetch("/review_respond", {
       method: option === "accept" ? "POST" : "DELETE",
       headers: {
@@ -44,10 +44,20 @@ export default function ResponseButtons({ fn: setReviews, review_id }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.error) {
-          // handle error if we recieve error from server
+          // handle error if we receive error from server
           alert(data.error);
         } else {
-          setReviews(data);
+          if(data.rejected){
+            history.go();
+          }
+          else {
+            setSelectedReview(prev => {
+              return {
+                ...prev,
+                status: "in_review"
+              }
+            })
+          }
         }
       })
       .catch((err) => console.log(err));
@@ -55,7 +65,7 @@ export default function ResponseButtons({ fn: setReviews, review_id }) {
 
   return (
     <div className={classes.responseButtonWrapper}>
-      {/*only show this when review hasnt been accepted yet */}
+      {/*only show this when review hasn't been accepted yet */}
       <Button
         variant="contained"
         className={classes.acceptButton}

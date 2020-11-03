@@ -14,12 +14,10 @@ class UserExperience(Resource):
 
         exp = data["experience"].replace("\'", "\"")
         exp = json.loads(exp)
-
         try:
             for key, val in exp.items():
                 if(key.lower() not in Language.__members__):
                     return {"error": "Invalid language given"}, 400
-
                 new_exp = ExperienceModel(
                     user_id=get_jwt_identity(),
                     language=Language[key.lower()].value,

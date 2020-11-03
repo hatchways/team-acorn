@@ -29,7 +29,7 @@ class UserRegistration(Resource):
 
         try:
             new_user.save_to_db()
-            print("saved to db")
+            print("Saved new user to database.")
             expires = timedelta(days=1)
             access_token = create_access_token(
                 identity=UserModel.get_id(data['email']), expires_delta=expires)

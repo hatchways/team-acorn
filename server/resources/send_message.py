@@ -18,14 +18,10 @@ class SendMessage(Resource):
         data = parser.parse_args()
 
         msg = data["message"].strip()
-        print("length of message: {}".format(len(msg)))
-        print(msg)
         if(len(msg) == 0):
             return {"error": "Cannot send empty message"}, 400
 
         review = ReviewModel.get_review(data["review_id"])["review"]
-        print(review)
-        print(review["review_id"])
         if(user_id != review["reviewer_id"] and user_id != review["reviewee_id"]):
             return {"error": "You are not permitted to send messages to this review"}, 403
         elif(review["status"] != "in_review"):
@@ -50,5 +46,6 @@ class SendMessage(Resource):
             pass
 
         return{
-            "message": "Message sent"
+            "message": "Message sent",
+            "message_id": new_message.id
         }, 200

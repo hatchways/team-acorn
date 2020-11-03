@@ -49,7 +49,7 @@ const ExperienceRow = ({
         {languages.map((lang) => {
           return (
             <MenuItem key={lang} value={lang} className={classes.dropDownText}>
-              {lang}
+              {lang === "cplusplus" ? "c++" : lang}
             </MenuItem>
           );
         })}

@@ -7,12 +7,16 @@ def connected():
     emit('message', "You have connected")
 
 
+@socketio.on("review_message")
+def handleMessage(data):
+    socketio.emit(data["review_id"], {'message_id': data["message_id"]})
+
+
 @socketio.on('subscribeToNotifications')
 def joined(user_id):
     join_room(user_id)
 
 
 def sendNotification(user_id, review_id):
-    print(user_id)
     socketio.emit('notification', {
                   'msg': "Reviewer has been assigned", "reviewId": review_id}, room=user_id)
