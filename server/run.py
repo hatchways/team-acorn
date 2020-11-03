@@ -16,6 +16,9 @@ from resources.user_registration import UserRegistration
 from resources.request_new import RequestNew
 from resources.user_experience import UserExperience
 from resources.user_get import UserGet
+from resources.profile_img_upload import UserProfileImageUpload
+from resources.user_update_name import UserUpdateName
+
 from resources.stripe_checkout import HandlePayment
 from resources.review_respond import ReviewRespond
 from resources.send_message import SendMessage
@@ -40,6 +43,10 @@ def create_api(app):
     api.add_resource(RequestNew, '/new_request')
     api.add_resource(UserExperience, '/experience')
     api.add_resource(UserGet, '/user')
+    api.add_resource(UserProfileImageUpload, '/user/profile_img')
+    api.add_resource(UserUpdateName, '/user/update_name')
+
+
     api.add_resource(ReviewRespond, '/review_respond')
     api.add_resource(SendMessage, '/send_message')
     api.add_resource(ReviewGet, '/review')

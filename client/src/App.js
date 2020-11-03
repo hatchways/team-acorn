@@ -7,6 +7,7 @@ import ReviewsPage from "./pages/Reviews";
 import BalancePage from "./pages/Balance";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
+import ProfilePage from "./pages/Profile";
 import OnboardingExperience from "./pages/OnboardingExperience";
 
 import NavBar from "./components/navigation/NavBar";
@@ -81,16 +82,30 @@ const DefaultStack = () => {
 };
 
 const AuthStack = ({ experience }) => {
+  const hasExperience = (experience) => {
+    let ans = false;
+    Object.values(experience).forEach((value) => {
+      if (value != null) {
+        ans = true;
+      }
+    });
+
+    return ans;
+  };
   return (
     <>
-      {experience && <NavBar />}
+      {hasExperience(experience) && <NavBar />}
       <Switch>
         <Route exact path="/onboard" component={OnboardingExperience} />
         <Route exact path="/reviews" component={ReviewsPage} />
         <Route exact path="/balance" component={BalancePage} />
+        <Route exact path="/profile" component={ProfilePage} />
         <Route
+          exact
           path="/*"
-          component={!experience ? OnboardingExperience : ReviewsPage}
+          component={
+            !hasExperience(experience) ? OnboardingExperience : ReviewsPage
+          }
         />
       </Switch>
     </>

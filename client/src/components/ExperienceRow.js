@@ -4,13 +4,17 @@ import RemoveIcon from "@material-ui/icons/Remove";
 
 import useStyles from "../pages/LoginSignupStyles";
 
+const getKeyByValue = (object, value) => {
+  return Object.keys(object).find((key) => object[key] === value);
+};
+
 const ExperienceRow = ({
   language,
   languages,
   experience,
-  experienceOptions,
   upadateRow,
   deleteRow,
+  experienceOptions,
 }) => {
   const classes = useStyles(); // makeStyles MaterialUI hook from styles.js
 
@@ -64,18 +68,18 @@ const ExperienceRow = ({
       </Typography>
       <Select
         disableUnderline={true}
-        value={experience}
+        value={getKeyByValue(experienceOptions, experience)}
         onChange={(event) => {
           let tempObj = {};
-          tempObj[language] = event.target.value;
+          tempObj[language] = experienceOptions[event.target.value];
           upadateRow(tempObj);
         }}
         classes={{ root: classes.dropDown }}
       >
-        {experienceOptions.map((lang) => {
+        {Object.keys(experienceOptions).map((exp) => {
           return (
-            <MenuItem key={lang} value={lang} className={classes.dropDownText}>
-              {lang}
+            <MenuItem key={exp} value={exp} className={classes.dropDownText}>
+              {exp}
             </MenuItem>
           );
         })}

@@ -97,6 +97,7 @@ const SignUp = () => {
                 email: form.email,
                 name: form.name,
                 token: data.access_token,
+                userId: data.userId,
               },
             });
             // Updating context

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-
+import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
   profileImage: {
     borderRadius: 50,
-    widht: 40,
+    width: 40,
     height: 40,
   },
 }));
@@ -31,30 +31,37 @@ const useStyles = makeStyles((theme) => ({
 const NavbarProfile = () => {
   const userContext = useContext(UserContext);
   const { dispatch } = userContext;
+  const { image } = userContext.state;
   const theme = useTheme();
   const classes = useStyles(theme);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const history = useHistory();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = (option) => {
-    if (option === "logout") {
-      localStorage.removeItem("token");
-      dispatch({ type: "logout" });
-      setAnchorEl(null);
-    } else {
-      setAnchorEl(null);
+    switch (option) {
+      case "logout": {
+        localStorage.removeItem("token");
+        dispatch({ type: "logout" });
+        setAnchorEl(null);
+        break;
+      }
+      case "profile": {
+        history.push("/profile");
+      }
+      default: {
+        setAnchorEl(null);
+        break;
+      }
     }
   };
 
+  console.log(image);
   return (
     <div className={classes.profileContainer}>
-      <img
-        src={PROFILE_IMG_URL}
-        className={classes.profileImage}
-        alt="Profile Pic"
-      />
+      <img src={image} className={classes.profileImage} alt="Profile Pic" />
       <Button
         onClick={handleClick}
         classes={{
@@ -70,7 +77,7 @@ const NavbarProfile = () => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <MenuItem onClick={() => handleClose("profile")}>My Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>
         <MenuItem onClick={() => handleClose("logout")}>Logout</MenuItem>
       </Menu>

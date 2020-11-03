@@ -23,12 +23,15 @@ class UserRegistration(Resource):
             review_count=0,
             balance=3,
         )
-
         try:
             new_user.save_to_db()
-            print("Saved new user to database.")
             expires = timedelta(days=1)
-            access_token = create_access_token(identity=UserModel.get_id(data["email"]), expires_delta=expires)
-            return {"message": "User {} was created".format(data["email"]), "access_token": access_token}, 201
+            identity = UserModel.get_id(data["email"])
+            access_token = create_access_token(identity, expires_delta=expires)
+            return {
+                "message": "User {} was created".format(data["email"]),
+                "access_token": access_token,
+                "userId": identity,
+            }, 201
         except:
             return {"error": "Something went wrong"}, 500
