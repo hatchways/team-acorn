@@ -25,10 +25,9 @@ class UserRegistration(Resource):
             password=UserModel.generate_hash(data['password']),
             review_count=0
         )
-
         try:
             new_user.save_to_db()
-            expires = datetime.timedelta(days=1)
+            expires = timedelta(days=1)
             identity=UserModel.get_id(data['email'])
             access_token = create_access_token(identity, expires_delta=expires)
             return{
