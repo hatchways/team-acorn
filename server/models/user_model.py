@@ -1,6 +1,5 @@
 from extensions import db, sys
 from models.experience_model import ExperienceModel
-from models.review_model import ReviewModel
 from models.experience_model import ExperienceModel
 from passlib.hash import pbkdf2_sha256 as sha256
 

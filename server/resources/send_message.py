@@ -1,6 +1,7 @@
 from extensions import Resource, reqparse, jwt_required, get_jwt_identity, datetime
 from models.review_model import ReviewModel
 from models.message_model import MessageModel
+from utils.socket_config import sendNotification
 
 
 class SendMessage(Resource):
@@ -35,9 +36,9 @@ class SendMessage(Resource):
         # TO-DO
         if user_id == review["reviewee_id"]:
             # if owner of this message is id of reviewee, send notification to reviewer
-            pass
+            sendNotification(review["reviewer_id"], review["review_id"], "You have a new message.")
         elif user_id == review["reviewer_id"]:
             # if owner of this message is id of reviewer, send notification to reviewee
-            pass
+            sendNotification(review["reviewee_id"], review["review_id"], "You have a new message.")
 
         return {"message": "Message sent", "message_id": new_message.id}, 200

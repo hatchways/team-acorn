@@ -1,6 +1,6 @@
 from extensions import db, sys
 from models.message_model import MessageModel
-from models.blacklist_model import BlacklistModel
+from models.user_model import UserModel
 
 
 class ReviewModel(db.Model):
@@ -93,6 +93,10 @@ class ReviewModel(db.Model):
             length = len(reviews)
             for rev in reviews:
                 db.session.delete(rev)
+
+            users = db.session.query(UserModel).all()
+            for user in users:
+                user.review_count = 0
             db.session.commit()
             return {"message": "{} row(s) deleted".format(length)}
         except:
