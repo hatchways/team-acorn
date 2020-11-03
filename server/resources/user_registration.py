@@ -1,8 +1,6 @@
-from flask_restful import Resource, reqparse
-from flask_jwt_extended import (
-    create_access_token, jwt_required, get_jwt_identity)
-import datetime
+from extensions import Resource, reqparse, create_access_token, jwt_required, get_jwt_identity
 from models.user_model import UserModel
+from datetime import timedelta
 
 
 class UserRegistration(Resource):
@@ -25,7 +23,7 @@ class UserRegistration(Resource):
             full_name=data['name'],
             email=data['email'],
             password=UserModel.generate_hash(data['password']),
-            reviews=0
+            review_count=0
         )
 
         try:

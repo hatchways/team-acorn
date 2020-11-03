@@ -1,18 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import UploadCodeDialog from "../UploadCodeDialog";
-
 import NavbarLink from "./NavbarLink";
 import NavbarNotification from "./NavbarNotification";
 import NavbarProfile from "./NavbarProfile";
+import NotificationSnackBar from "../NotificationSnackBar";
+import { UserContext } from "../../context/userContext";
+import { Link } from "react-router-dom";
 
+const navBarHeight = 60;
 const useStyles = makeStyles((theme) => ({
   navbarContainer: {
-    backgroundColor: theme.darkPurple,
+    backgroundColor: theme.purple,
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "center",
-    height: 60,
+    height: navBarHeight,
     padding: "0 20px",
   },
   buttonRoot: {
@@ -30,18 +33,42 @@ const useStyles = makeStyles((theme) => ({
     textTransform: "capitalize",
     color: theme.turquoise,
   },
+  anchorOriginTopRight: {
+    justifyContent: "center",
+    top: navBarHeight + 5,
+  },
+  logo: {
+    display: "flex",
+    marginRight: "auto",
+    marginLeft: "1rem",
+  },
 }));
 
 const NavBar = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
+  const { state } = useContext(UserContext);
+  const { hasNewNotification } = state;
 
-  const [open, setOpen] = React.useState(false);
-  const [form, setForm] = React.useState({
+  const [snackbarNotification, setSnackbarNotification] = useState({
+    open: hasNewNotification !== false,
+    error: false,
+    message: hasNewNotification.message,
+  });
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState({
     title: "",
     code: "",
     language: "javascript",
   });
+
+  useEffect(() => {
+    setSnackbarNotification({
+      open: hasNewNotification !== false,
+      error: false,
+      message: hasNewNotification.message,
+    });
+  }, [hasNewNotification]);
 
   useEffect(() => {
     if (open === true) {
@@ -54,18 +81,29 @@ const NavBar = () => {
   }, [open]);
 
   return (
-    <div className={classes.navbarContainer}>
-      <NavbarLink path={"/reviews"} text={"Reviews"} />
-      <NavbarLink path={"/balance"} text={"Balance"} />
-      <NavbarNotification />
-      <UploadCodeDialog
-        form={form}
-        setForm={setForm}
-        open={open}
-        setOpen={setOpen}
+    <>
+      <NotificationSnackBar
+        open={snackbarNotification.open}
+        message={hasNewNotification.message}
+        setOpen={setSnackbarNotification}
+        classes={{ anchorOriginTopRight: classes.anchorOriginTopRight }}
       />
-      <NavbarProfile />
-    </div>
+      <div className={classes.navbarContainer}>
+        <Link className={classes.logo} to="/">
+          <img src="https://i.ibb.co/kQRn784/logo.png" alt="logo" height="40" />
+        </Link>
+        <NavbarLink path={"/reviews"} text={"Reviews"} />
+        <NavbarLink path={"/balance"} text={"Balance"} />
+        <NavbarNotification />
+        <UploadCodeDialog
+          form={form}
+          setForm={setForm}
+          open={open}
+          setOpen={setOpen}
+        />
+        <NavbarProfile />
+      </div>
+    </>
   );
 };
 

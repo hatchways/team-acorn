@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import { UserContext } from "./context/userContext";
 import { theme } from "./themes/theme";
 import ReviewsPage from "./pages/Reviews";
@@ -49,22 +49,21 @@ function App() {
   const { dispatch } = userContext;
   const [isFetchingUser, setIsFetchingUser] = useState(true);
   const userData = userContext.state;
+  const { update_info } = userContext.state;
   const token = localStorage.getItem("token");
   useEffect(() => {
     fetchUserData({ token, dispatch, setIsFetchingUser });
     // eslint-disable-next-line
-  }, []);
+  }, [isFetchingUser, update_info]);
 
   if (!isFetchingUser) {
     return (
       <MuiThemeProvider theme={theme}>
-        <Switch>
-          {token ? (
-            <AuthStack experience={userData.experience} />
-          ) : (
-            <DefaultStack />
-          )}
-        </Switch>
+        {token ? (
+          <AuthStack experience={userData.experience} />
+        ) : (
+          <DefaultStack />
+        )}
       </MuiThemeProvider>
     );
   } else {
@@ -77,7 +76,7 @@ const DefaultStack = () => {
       <Route exact path="/signup" component={SignUp} />
       <Route exact path="/signin" component={SignIn} />
       <Route exact path="/" component={SignUp} />
-      <Route path="*" component={SignUp} />
+      <Route path="/*" component={SignUp} />
     </Switch>
   );
 };
@@ -104,14 +103,10 @@ const AuthStack = ({ experience }) => {
         <Route exact path="/profile" component={ProfilePage} />
         <Route
           exact
-          path="/"
-          render={() => {
-            return !hasExperience(experience) ? (
-              <Redirect to="/onboard" />
-            ) : (
-              <Redirect to="/reviews" />
-            );
-          }}
+          path="/*"
+          component={
+            !hasExperience(experience) ? OnboardingExperience : ReviewsPage
+          }
         />
       </Switch>
     </>

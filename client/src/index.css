@@ -48,3 +48,64 @@ a:active {
   opacity: 1 !important;
   text-align: center !important;
 }
+
+.StripeElement {
+  font-family: "Roboto";
+  width: 60%;
+  padding: 18.5px 14px;
+  height: 1rem;
+  margin: 0 auto;
+  display: block;
+  background: none;
+  box-sizing: content-box;
+  letter-spacing: inherit;
+  animation-duration: 10ms;
+  font-size: 50px !important;
+  border: 0.5px solid #c4c4c4;
+}
+
+.StripeElement--focus {
+  box-shadow: 0 1px 3px 0 #cfd7df;
+}
+
+.StripeElement--invalid {
+  border-color: #fa755a;
+}
+
+.StripeElement--webkit-autofill {
+  background-color: #fefde5 !important;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  width: 7px;
+  box-shadow: none;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #cad4df;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #79807e;
+}
+
+.for-toolbar {
+  border: none !important;
+}
+
+.for-preview {
+  padding: 0 !important;
+}
+
+.for-markdown-preview > pre {
+  background: #f6f8fa !important;
+}

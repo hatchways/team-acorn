@@ -12,6 +12,11 @@ const initialState = {
   experience: buildInitExp(),
   image:
     "http://2019wcsg.ca/wp-content/uploads/2018/01/profile-placeholder.png",
+  hasNewNotification: false,
+  notifications: [],
+  reviewee_reviews: "",
+  reviewer_reviews: "",
+  update: false,
 };
 const UserContext = createContext(initialState);
 
@@ -32,7 +37,7 @@ const UserProvider = ({ children }) => {
         };
       }
       case "storeUserExperience": {
-        return { ...state, ...{ experience: action.payload } };
+        return { ...state, ...state.user, ...{ experience: action.payload } };
       }
       case "updateProfileImage": {
         return { ...state, ...{ image: action.payload } };
@@ -42,6 +47,31 @@ const UserProvider = ({ children }) => {
       }
       case "logout": {
         return { ...initialState };
+      }
+      case "setHasNewNotification": {
+        return {
+          ...state,
+          ...{ hasNewNotification: action.payload },
+          notifications: [...state.notifications, ...[action.payload]],
+        };
+      }
+      case "clearHasNewNotification": {
+        return {
+          ...state,
+          ...{ hasNewNotification: false },
+        };
+      }
+      case "review": {
+        return {
+          ...state,
+          ...action.payload,
+        };
+      }
+      case "update": {
+        return {
+          ...state,
+          update: !state.update,
+        };
       }
       default:
         throw new Error();
