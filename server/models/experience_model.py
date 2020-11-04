@@ -22,3 +22,11 @@ class ExperienceModel(db.Model):
         for exp in experience:
             dict_exp[exp.language] = exp.level
         return dict_exp
+
+    @classmethod
+    def delete_experience(cls, user_id):
+        cls.query.filter(ExperienceModel.user_id == user_id).delete()
+
+    @classmethod
+    def find_experinece(cls, user_id, language):
+        return cls.query.filter_by(user_id=user_id).filter_by(language=language).first()

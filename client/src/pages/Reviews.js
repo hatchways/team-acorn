@@ -19,6 +19,7 @@ import MessageComponent from "../components/MessageComponent";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import { UserContext } from "../context/userContext";
+import RatingPicker from "../components/RatingPicker";
 
 const useStyles = makeStyles((theme) => ({
   sidebar: {
@@ -221,6 +222,7 @@ const ReviewsPage = () => {
 
   return (
     <OnboardingContainer containerOnly>
+      <RatingPicker open={false} />
       <Paper className={classes.sidebar}>
         {isScreenSmall ? (
           <>
