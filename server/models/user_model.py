@@ -1,25 +1,27 @@
 from extensions import db, sys
 from models.experience_model import ExperienceModel
-from models.review_model import ReviewModel
 from models.experience_model import ExperienceModel
 from passlib.hash import pbkdf2_sha256 as sha256
 
 
 class UserModel(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     image = db.Column(db.String(), nullable=True)
-
     review_count = db.Column(db.Integer, nullable=False)
     reviews = db.relationship(
-        "ReviewModel", cascade="save-update", backref="reviews", lazy=True, primaryjoin="UserModel.id==ReviewModel.reviewee_id")
-    experience = db.relationship(
-        "ExperienceModel", cascade="all, delete-orphan", backref="experience")
-    balance =  db.Column(db.Integer, nullable=False, default=3)
+        "ReviewModel",
+        cascade="save-update",
+        backref="reviews",
+        lazy=True,
+        primaryjoin="UserModel.id==ReviewModel.reviewee_id",
+    )
+    experience = db.relationship("ExperienceModel", cascade="all, delete-orphan", backref="experience")
+    balance = db.Column(db.Integer, nullable=False)
 
     def save_to_db(self):
         db.session.add(self)
@@ -37,40 +39,43 @@ class UserModel(db.Model):
 
     @classmethod
     def get_user_with_experience(cls, user_id):
-        user_with_exp = db.session.query(
-            UserModel, ExperienceModel
-        ).filter(
-            UserModel.id == user_id
-        ).filter(
-            ExperienceModel.user_id == user_id
-        ).all()
-        print(len(user_with_exp))
-        print(user_with_exp)
-        if(len(user_with_exp) == 0):
-            # list is empty, most likely because experience hasnt
+        user_with_exp = (
+            db.session.query(UserModel, ExperienceModel)
+            .filter(UserModel.id == user_id)
+            .filter(ExperienceModel.user_id == user_id)
+            .all()
+        )
+        if len(user_with_exp) == 0:
+            # list is empty, most likely because experience hasn't
             # been set yet, return user with no exp
             user = db.session.query(UserModel).filter(UserModel.id == user_id).first()
-            print(user)
-            print(user_id)
             exp = None
         else:
             user = user_with_exp[0][0]
             exp = {}
             for tup in user_with_exp:
                 exp[tup[1].language] = tup[1].level
-
-        print(user)
         return {
             "full_name": user.full_name,
             "email": user.email,
             "experience": exp,
             "user_id": user.id,
-            "balance":user.balance
+            "balance": user.balance,
         }
 
     @classmethod
     def find_by_email(cls, email):
         return cls.query.filter_by(email=email).first()
+
+    @classmethod
+    def get_user_for_messages(cls, id):
+        user = cls.query.filter(cls.id == id).first()
+        return {
+            "id": id,
+            "full_name": user.full_name,
+            "profile_link": "https://forums.developer.apple.com/forums/build-10052020-1/public/assets/avatars/1095.png",
+            "designation": "senior developer at google",
+        }
 
     @staticmethod
     def generate_hash(password):
@@ -100,34 +105,33 @@ class UserModel(db.Model):
         req_language = list(lang_levels)[0]
         req_level = int(lang_levels[req_language])
 
-        qualified_experiences = db.session.query(UserModel
-                                                 ).filter(
-            UserModel.id == ExperienceModel.user_id
-        ).filter(
-            ExperienceModel.user_id != reviewee_id
-        ).filter(
-            ExperienceModel.language == req_language
-        ).filter(
-            ExperienceModel.level >= req_level
-        ).order_by(UserModel.review_count).all()
+        qualified_experiences = (
+            db.session.query(UserModel)
+            .filter(UserModel.id == ExperienceModel.user_id)
+            .filter(ExperienceModel.user_id != reviewee_id)
+            .filter(ExperienceModel.language == req_language)
+            .filter(ExperienceModel.level >= req_level)
+            .order_by(UserModel.review_count)
+            .all()
+        )
 
         return qualified_experiences
 
-    @ classmethod
+    @classmethod
     def add_review(cls, id):
         user = cls.query.get(id)
         user.review_count += 1
         db.session.commit()
 
-    @ classmethod
+    @classmethod
     def remove_review(cls, id):
         user = cls.query.get(id)
-        if(user.review_count > 0):
+        if user.review_count > 0:
             user.review_count -= 1
             db.session.commit()
 
     # Testing method, remove before production
-    @ classmethod
+    @classmethod
     def delete_all(cls):
         try:
             users = db.session.query(cls).all()
@@ -135,13 +139,13 @@ class UserModel(db.Model):
             for u in users:
                 db.session.delete(u)
             db.session.commit()
-            return {'message': '{} row(s) deleted'.format(length)}
+            return {"message": "{} row(s) deleted".format(length)}
         except:
             print("Unexpected error:", sys.exc_info()[0])
-            return {'message': 'Something went wrong'}, 500
+            return {"message": "Something went wrong"}, 500
 
     # Testing method, remove before production
-    @ classmethod
+    @classmethod
     def delete_all_review_count(cls):
         users = UserModel.query.all()
         for user in users:

@@ -8,16 +8,15 @@ class ReviewerReviewsGet(Resource):
     def get(self):
         user_id = get_jwt_identity()
 
-        reviews_from_reviewer = ReviewModel.get_reviews(user_id, "reviewer")
-
-        reviews_from_reviewee = ReviewModel.get_reviews(user_id, "reviewee")
+        reviews_from_reviewer = ReviewModel.get_reviews(user_id, "reviewer")["reviews"]
+        reviews_from_reviewee = ReviewModel.get_reviews(user_id, "reviewee")["reviews"]
 
         # check if user is participating in the requested review
         # if(len(reviews_from_reviewer["reviews"]) == 0):
-        #     return 
+        #     return
         # elif(len(reviews_from_reviewee))
 
         try:
             return {"reviewee_reviews": reviews_from_reviewee, "reviewer_reviews": reviews_from_reviewer}, 201
         except:
-            return{'error': 'Something went wrong'}, 500
+            return {"error": "Something went wrong"}, 500

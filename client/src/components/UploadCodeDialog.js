@@ -123,7 +123,7 @@ const UploadCodeDialog = ({ open, setOpen, form, setForm }) => {
     () =>
       languages.map((option) => (
         <option key={option} value={option}>
-          {option}
+          {option ==="cplusplus" ? "c++" : option}
         </option>
       )),
     []

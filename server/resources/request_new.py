@@ -13,15 +13,12 @@ class RequestNew(Resource):
         user_id = get_jwt_identity()
 
         parser = reqparse.RequestParser()
-        parser.add_argument(
-            "title", help="This field cannot be blank", required=True)
-        parser.add_argument(
-            "code", help="This field cannot be blank", required=True)
-        parser.add_argument(
-            "language", help="This field cannot be blank", required=True)
+        parser.add_argument("title", help="This field cannot be blank", required=True)
+        parser.add_argument("code", help="This field cannot be blank", required=True)
+        parser.add_argument("language", help="This field cannot be blank", required=True)
         data = parser.parse_args()
 
-        if(hasattr(Language, data["language"]) == False):
+        if hasattr(Language, data["language"]) == False:
             return {"error": "Invalid language given"}, 400
 
         new_review = ReviewModel(
@@ -31,7 +28,7 @@ class RequestNew(Resource):
             status="pending",
             language=data["language"],
             code=data["code"],
-            timestamp=datetime.now()
+            timestamp=datetime.now(),
         )
 
         try:
@@ -41,8 +38,10 @@ class RequestNew(Resource):
 
             q_len = len(queue)
 
-            return{
-                'message': "Review [{}] was created. Task added to queue. {} tasks in queue.".format(data["title"], q_len)
+            return {
+                "message": "Review [{}] was created. Task added to queue. {} tasks in queue.".format(
+                    data["title"], q_len
+                )
             }, 201
         except:
-            return{'error': 'Something went wrong'}, 500
+            return {"error": "Something went wrong"}, 500

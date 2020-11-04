@@ -11,5 +11,3 @@ class Language(Enum):
     html = "html"
     css = "css"
     jsx = "javascript"
-    
-    

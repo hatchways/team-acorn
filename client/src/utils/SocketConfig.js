@@ -11,4 +11,4 @@ function subscribeToNotifications({ callback, userId }) {
   socket.emit("subscribeToNotifications", userId);
 }
 
-export { subscribeToNotifications };
+export { subscribeToNotifications, socket };

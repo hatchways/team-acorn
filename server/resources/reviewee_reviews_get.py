@@ -11,10 +11,10 @@ class RevieweeReviewsGet(Resource):
         reviews = ReviewModel.get_reviews(user_id, "reviewee")
 
         # check if user is participating in the requested review
-        if(len(reviews["reviews"]) == 0):
+        if len(reviews["reviews"]) == 0:
             return {"error": "User with id {} has not made any requests for reviews.".format(user_id)}, 400
 
         try:
             return reviews, 201
         except:
-            return{'error': 'Something went wrong'}, 500
+            return {"error": "Something went wrong"}, 500

@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import Editor from "for-editor";
+import { socket } from "../utils/SocketConfig";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiTextField-root": {
@@ -11,43 +13,65 @@ const useStyles = makeStyles((theme) => ({
   },
   input: { ...theme.inputPlaceholder },
 }));
-export default function MultilineTextFields() {
-  const classes = useStyles();
-  const [value, setValue] = React.useState("");
+
+export default function MultilineTextFields({ review_id }) {
+  const [value, setValue] = useState("");
   const handleChange = (event) => {
-    setValue(event.target.value);
+    setValue(event);
   };
+  const classes = useStyles();
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("inside handleSubmit");
-    console.log(value);
+    if (value.length !== 0) {
+      fetch("/send_message", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+          review_id,
+          message: value,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.error) {
+            // handle error if we receive error from server
+            alert(data.error);
+          } else {
+            setValue("");
+            console.log(data);
+            socket.emit("review_message", { review_id, message_id: data.message_id });
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      alert("Message can't be empty");
+    }
   };
   return (
-    <form
-      className={classes.root}
-      onSubmit={handleSubmit}
-      noValidate
-      autoComplete="off"
-    >
-      <TextField
-        id="outlined-textarea"
-        label="Message"
-        placeholder="Send a message"
-        multiline
-        rows={2}
+    <form className={classes.root} onSubmit={handleSubmit} noValidate autoComplete="off">
+      <Editor
         value={value}
+        toolbar={{
+          lineNum: true,
+          preview: true,
+          h1: true,
+          h2: true,
+          code: true,
+        }}
+        language="en"
+        placeholder=" "
+        height="150px"
         onChange={handleChange}
-        variant="outlined"
-        InputProps={{
-          classes: { input: classes.input },
+        style={{
+          marginBottom: "1rem",
         }}
       />
-      <Button
-        style={{ display: "flex", margin: "1rem 0 1rem auto" }}
-        type="submit"
-        variant="contained"
-        color="primary"
-      >
+
+      <Button style={{ display: "flex", margin: "1rem 0 1rem auto" }} type="submit" variant="contained" color="primary">
         Send
       </Button>
     </form>
