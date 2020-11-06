@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const submitRating = (reviewerId, rating, dispatch, callback) => {
+const submitRating = (reviewerId, rating, dispatch, callback, closeModal) => {
   fetch("/submit_rating", {
     method: "post",
     headers: {
@@ -67,8 +67,8 @@ const submitRating = (reviewerId, rating, dispatch, callback) => {
     .then((data) => data.json())
     .then((data) => {
       if (data.rating) {
-        // dispatch({ type: "updateProfileImage", payload: data.img });
-        // callback();
+        callback();
+        closeModal();
       } else {
       }
     })
@@ -111,7 +111,13 @@ const RatingPicker = ({ open, onCancel, reviewerId, onSubmit, dispatch }) => {
         <div className={classes.buttonContainer}>
           <Button
             onClick={() => {
-              submitRating(reviewerId, selectedRating, dispatch, onSubmit);
+              submitRating(
+                reviewerId,
+                selectedRating,
+                dispatch,
+                onSubmit,
+                onCancel
+              );
             }}
           >
             <Typography className={classes.buttonText}>Submit</Typography>

@@ -77,7 +77,7 @@ const UserProvider = ({ children }) => {
       case "messageUpdate": {
         return {
           ...state,
-          messageUpdate: action.payload
+          messageUpdate: action.payload,
         };
       }
       default:

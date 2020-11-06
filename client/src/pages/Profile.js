@@ -121,7 +121,7 @@ const ProfilePage = () => {
 
   const userContext = useContext(UserContext);
   const { dispatch } = userContext;
-  const { image, userId, experience, name } = userContext.state;
+  const { image, userId, experience, name, rating } = userContext.state;
   const [showEdit, setShowEdit] = useState(false);
 
   return (
@@ -149,7 +149,7 @@ const ProfilePage = () => {
           <div className={classes.statsContainer}>
             <Stat name={"years of experience"} number={5} classes={classes} />
             <Stat name={"reviews"} number={24} classes={classes} />
-            <Stat name={"rating"} number={0.8} classes={classes} />
+            <Stat name={"rating"} number={rating} classes={classes} />
           </div>
           <Typography className={classes.profileName}>Experience</Typography>
           <div className={classes.statsContainer}>

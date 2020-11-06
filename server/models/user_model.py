@@ -12,7 +12,7 @@ class UserModel(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     image = db.Column(db.String(), nullable=True)
-    rating = db.Column(db.Float,default=0, nullable=True)
+    rating = db.Column(db.Float, nullable=True)
     total_reviews = db.Column(db.Integer,default=0, nullable=True)
     review_count = db.Column(db.Integer, nullable=False)
     reviews = db.relationship(
@@ -63,6 +63,7 @@ class UserModel(db.Model):
             "experience": exp,
             "user_id": user.id,
             "balance": user.balance,
+            "rating": user.rating
         }
 
     @classmethod
@@ -190,7 +191,7 @@ class UserModel(db.Model):
         current_rating = user.rating
         if current_rating is None:
             current_rating = 0
-        rating = int(new_rating) + (current_rating * (total_reviews-1))/total_reviews
+        rating = (int(new_rating) + (current_rating * (total_reviews-1)))/total_reviews
         user.rating = rating
         db.session.commit()
         return rating

@@ -231,7 +231,26 @@ const ReviewsPage = () => {
     });
   });
 
-  const closeReview = (id) => {};
+  const closeReview = (review_id) => {
+    fetch("/close_review", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify({ review_id: review_id }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          // handle error if we receive error from server
+          alert(data.error);
+        } else {
+          window.location.reload(false);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
 
   useEffect(() => {
     if (selectedReview.review_id) {
