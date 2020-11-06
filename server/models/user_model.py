@@ -13,7 +13,7 @@ class UserModel(db.Model):
     password = db.Column(db.String(120), nullable=False)
     image = db.Column(db.String(), nullable=True)
     rating = db.Column(db.Float,default=0, nullable=True)
-
+    total_reviews = db.Column(db.Integer,default=0, nullable=True)
     review_count = db.Column(db.Integer, nullable=False)
     reviews = db.relationship(
         "ReviewModel",
@@ -120,6 +120,11 @@ class UserModel(db.Model):
         return qualified_experiences
 
     @classmethod
+    def update_total_reviews(cls, id):
+        user = cls.query.get(id)
+        user.total_reviews += 1
+        db.session.commit()
+    @classmethod
     def add_review(cls, id):
         user = cls.query.get(id)
         user.review_count += 1
@@ -152,6 +157,7 @@ class UserModel(db.Model):
         users = UserModel.query.all()
         for user in users:
             user.review_count = 0
+            user.total_reviews = 0
 
         db.session.commit()
 
@@ -180,11 +186,11 @@ class UserModel(db.Model):
     @classmethod
     def update_rating(cls, id, new_rating):
         user = cls.query.get(id)
-        review_count = user.review_count
+        total_reviews = user.total_reviews
         current_rating = user.rating
         if current_rating is None:
             current_rating = 0
-        rating = int(new_rating) + (current_rating * (review_count-1))/review_count
+        rating = int(new_rating) + (current_rating * (total_reviews-1))/total_reviews
         user.rating = rating
         db.session.commit()
         return rating

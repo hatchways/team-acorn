@@ -25,6 +25,7 @@ class ReviewRespond(Resource):
         # update review status to in_review
         ReviewModel.update_status(review["review_id"], "in_review")
         UserModel.add_review(user_id)
+        UserModel.update_total_reviews(user_id)
 
         #  review has been updated, send notification reviewee and reviewer
         # TO-DO
