@@ -7,8 +7,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 import { UserContext } from "../../context/userContext";
 
-const PROFILE_IMG_URL =
-  "https://www.dovercourt.org/wp-content/uploads/2019/11/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg";
 const useStyles = makeStyles((theme) => ({
   profileContainer: {
     display: "flex",
@@ -50,6 +48,7 @@ const NavbarProfile = () => {
       }
       case "profile": {
         history.push("/profile");
+        break;
       }
       default: {
         setAnchorEl(null);
@@ -57,8 +56,6 @@ const NavbarProfile = () => {
       }
     }
   };
-
-  console.log(image);
   return (
     <div className={classes.profileContainer}>
       <img src={image} className={classes.profileImage} alt="Profile Pic" />

@@ -3,10 +3,9 @@ import React, {
   useContext,
   forwardRef,
   useImperativeHandle,
-  useEffect,
 } from "react";
 
-import { Grid, Typography, Button, IconButton } from "@material-ui/core";
+import { Typography, IconButton } from "@material-ui/core";
 import SnackBar from "./SnackbarComponent";
 import AddIcon from "@material-ui/icons/Add";
 import { UserContext } from "../context/userContext";

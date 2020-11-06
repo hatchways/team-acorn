@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Editor from "for-editor";
@@ -14,8 +14,7 @@ const useStyles = makeStyles((theme) => ({
   input: { ...theme.inputPlaceholder },
 }));
 
-export default function MultilineTextFields({ review_id }) {
-  const [value, setValue] = useState("");
+export default function MultilineTextFields({ review_id, value, setValue }) {
   const handleChange = (event) => {
     setValue(event);
   };
@@ -42,8 +41,10 @@ export default function MultilineTextFields({ review_id }) {
             alert(data.error);
           } else {
             setValue("");
-            console.log(data);
-            socket.emit("review_message", { review_id, message_id: data.message_id });
+            socket.emit("review_message", {
+              review_id,
+              message_id: data.message_id,
+            });
           }
         })
         .catch((err) => console.log(err));
@@ -52,7 +53,12 @@ export default function MultilineTextFields({ review_id }) {
     }
   };
   return (
-    <form className={classes.root} onSubmit={handleSubmit} noValidate autoComplete="off">
+    <form
+      className={classes.root}
+      onSubmit={handleSubmit}
+      noValidate
+      autoComplete="off"
+    >
       <Editor
         value={value}
         toolbar={{
@@ -60,18 +66,27 @@ export default function MultilineTextFields({ review_id }) {
           preview: true,
           h1: true,
           h2: true,
+          h3: true,
+          h4: true,
           code: true,
+          undo: true,
+          redo: true,
         }}
         language="en"
         placeholder=" "
-        height="150px"
+        height={value.length > 100 ? "300px" : "150px"}
         onChange={handleChange}
         style={{
           marginBottom: "1rem",
         }}
       />
 
-      <Button style={{ display: "flex", margin: "1rem 0 1rem auto" }} type="submit" variant="contained" color="primary">
+      <Button
+        style={{ display: "flex", margin: "1rem 0 1rem auto" }}
+        type="submit"
+        variant="contained"
+        color="primary"
+      >
         Send
       </Button>
     </form>
