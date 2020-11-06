@@ -1,7 +1,7 @@
 export const languages = [
   "javascript",
   "java",
-  "c++",
+  "cplusplus",
   "csharp",
   "c",
   "python",

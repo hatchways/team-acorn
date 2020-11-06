@@ -8,13 +8,11 @@ class UserExperience(Resource):
     @jwt_required
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument(
-            'experience', help="This field cannot be blank", required=True)
+        parser.add_argument("experience", help="This field cannot be blank", required=True)
         data = parser.parse_args()
 
-        exp = data["experience"].replace("\'", "\"")
+        exp = data["experience"].replace("'", '"')
         exp = json.loads(exp)
-
         try:
             for key, val in exp.items():
                 if(key.lower() == "c++"): key="cplusplus"
@@ -29,7 +27,7 @@ class UserExperience(Resource):
                     level=val
                 )
                 new_exp.save_to_db()
-            return{'message': 'Experience updated'}, 200
+            return {"message": "Experience updated"}, 200
         except:
             print("Unexpected error:", sys.exc_info()[0])
-            return{'error': 'Something went wrong'}, 500
+            return {"error": "Something went wrong"}, 500

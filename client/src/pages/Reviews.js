@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
-  Button,
   useTheme,
   useMediaQuery,
   Paper,
@@ -9,17 +8,16 @@ import {
   TextField,
   Grid,
   Divider,
+  Avatar,
 } from "@material-ui/core";
 import OnboardingContainer from "../components/LoginSignupContainer";
 import CollapsibleSideMenu from "../components/CollapsibleSideMenu";
-import MenuComponent from "../components/MenuComponent";
-import { ReviewsData } from "../utils/Constants";
 import Editor from "for-editor";
 import MessageComponent from "../components/MessageComponent";
-import CheckIcon from "@material-ui/icons/Check";
-import ClearIcon from "@material-ui/icons/Clear";
 import { UserContext } from "../context/userContext";
 import RatingPicker from "../components/RatingPicker";
+import ResponseButtons from "../components/ResponseButtons";
+import { socket } from "../utils/SocketConfig";
 
 const useStyles = makeStyles((theme) => ({
   sidebar: {
@@ -136,6 +134,41 @@ const useStyles = makeStyles((theme) => ({
     padding: "0.5rem 1rem",
     margin: "0 0.5rem",
   },
+  msgAvatar: {
+    width: "5rem",
+    height: "5rem",
+    margin: "1rem",
+  },
+  msgUserContainer: {
+    display: "flex",
+  },
+  msgName: {
+    textTransform: "capitalize",
+    fontSize: 18,
+    marginTop: "2rem",
+    marginBottom: "-0.1rem",
+  },
+  msgDesignation: {
+    textTransform: "capitalize",
+    fontSize: 15,
+  },
+  msgContent: {
+    margin: "1.5rem 0 3rem 0",
+    width: "100%",
+  },
+  msgDate: {
+    fontSize: 10,
+    width: "100%",
+    color: "grey",
+  },
+  msgTime: {
+    fontSize: 10,
+    width: "100%",
+    color: "grey",
+  },
+  msgUserName: {
+    width: "100%",
+  },
 }));
 
 const ReviewsPage = () => {
@@ -148,12 +181,14 @@ const ReviewsPage = () => {
     reviewee_reviews: my_requests,
     reviewer_reviews: my_reviews,
     update,
+    messageUpdate,
   } = state;
-  console.log(my_requests);
-  const [reviews, setReviews] = useState(ReviewsData);
-  const [selectedReview, setSelectedReview] = useState(
-    reviews.length > 0 ? reviews[0] : null
-  );
+  const [selectedReview, setSelectedReview] = useState({
+    title: "",
+    submitted_date: "",
+    code: "",
+    messages: [],
+  });
   const handleEditor = (e) => {
     const value = e;
     setSelectedReview((prev) => {
@@ -164,13 +199,42 @@ const ReviewsPage = () => {
     });
   };
 
-  const fetchReview = (e) => {
-    e.stopPropagation();
-    const review_id = e.target.id;
-    console.log(review_id);
+  const fetchReview = (e, id = "") => {
+    const review_id = id ? id : e.target.id;
+    fetch("/review", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify({ review_id: review_id }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          // handle error if we receive error from server
+          alert(data.error);
+        } else {
+          setSelectedReview((prev) => {
+            return { ...prev, ...data["review"] };
+          });
+        }
+      })
+      .catch((err) => console.log(err));
   };
+  socket.on(selectedReview.review_id, ({ message_id }) => {
+    dispatch({
+      type: "messageUpdate",
+      payload: message_id,
+    });
+  });
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (selectedReview.review_id) {
+      const e = new Event("event");
+      fetchReview(e, selectedReview.review_id);
+    }
+  }, [messageUpdate]);
 
   useEffect(() => {
     fetch("/reviewer_reviews", {
@@ -183,7 +247,7 @@ const ReviewsPage = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.error) {
-          // handle error if we recieve error from server
+          // handle error if we receive error from server
           alert(data.error);
         } else {
           dispatch({
@@ -195,30 +259,6 @@ const ReviewsPage = () => {
       .catch((err) => console.log(err));
     //eslint-disable-next-line
   }, [update]);
-
-  const handleResponse = (e, option) => {
-    const id = 3;
-    fetch("/review_respond", {
-      method: option === "accept" ? "POST" : "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        review_id: id,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.error) {
-          // handle error if we recieve error from server
-          alert(data.error);
-        } else {
-          setReviews(data);
-        }
-      })
-      .catch((err) => console.log(err));
-  };
 
   return (
     <OnboardingContainer containerOnly>
@@ -232,17 +272,18 @@ const ReviewsPage = () => {
                   Reviews{" "}
                   <span className={classes.sidebarReviewsCount}>
                     {" "}
-                    ({reviews.length})
+                    ({my_requests.length})
                   </span>
                 </Typography>
               </Grid>
               <Grid item xs={6} className={classes.smScreenGridItem}>
                 <TextField
                   select
-                  value={reviews.title}
+                  value={my_requests.title}
                   name="reviewTitle"
                   variant="outlined"
                   classes={{ input: classes.select }}
+                  onChange={fetchReview}
                   SelectProps={{
                     native: true,
                     style: {
@@ -252,8 +293,12 @@ const ReviewsPage = () => {
                     },
                   }}
                 >
-                  {reviews.map((review) => (
-                    <option key={review.title} value={review.title}>
+                  {[...my_requests].map((review) => (
+                    <option
+                      id={review.review_id}
+                      key={review.review_id}
+                      value={review.title}
+                    >
                       {review.title}
                     </option>
                   ))}
@@ -355,34 +400,23 @@ const ReviewsPage = () => {
       </Paper>
       <Paper className={classes.contentBox}>
         <Typography variant="h4" className={classes.title}>
-          {selectedReview.title}
+          {selectedReview.title || ""}
         </Typography>
         <Typography variant="body1" className={classes.date}>
-          {selectedReview.submitted_date}
+          {selectedReview.submitted_date || ""}
         </Typography>
-
-        <div className={classes.responseButtonWrapper}>
-          {/* use state to only show this when review hasnt been accepted yet */}
-          <Button
-            variant="contained"
-            className={classes.acceptButton}
-            onClick={(e) => handleResponse(e, "accept")}
-          >
-            <CheckIcon />
-            Accept
-          </Button>
-          <Button
-            variant="contained"
-            className={classes.rejectButton}
-            onClick={(e) => handleResponse(e, "reject")}
-          >
-            <ClearIcon /> Reject
-          </Button>
-        </div>
+        {selectedReview.status === "assigned" &&
+          selectedReview.reviewer.id === state.userId && (
+            <ResponseButtons
+              dispatch={dispatch}
+              fn={setSelectedReview}
+              review_id={selectedReview.review_id}
+            />
+          )}
 
         <Divider className={classes.divider} />
         <Editor
-          value={selectedReview.code}
+          value={selectedReview.code || ""}
           toolbar={{
             lineNum: true,
           }}
@@ -393,12 +427,71 @@ const ReviewsPage = () => {
           preview={true}
           style={{
             border: "none",
-            boxShadow: "none",
             marginBottom: "1rem",
           }}
         />
 
-        <MessageComponent />
+        {[...selectedReview.messages].map((message) => {
+          const sender =
+            selectedReview.reviewee.id === message.owner_id
+              ? "reviewee"
+              : "reviewer";
+          return (
+            <div key={message.message_id} style={{ position: "relative" }}>
+              <Grid container direction="column">
+                <div className={classes.msgUserContainer}>
+                  <Avatar
+                    className={classes.msgAvatar}
+                    alt="Profile"
+                    src={selectedReview[`${sender}`].profile_link}
+                  />
+                  <div className={classes.msgUserName}>
+                    <h4 className={classes.msgName}>
+                      {selectedReview[`${sender}`].full_name}
+                    </h4>
+                    <span className={classes.msgDesignation}>
+                      {selectedReview[`${sender}`].designation}
+                    </span>
+                    <div className={classes.msgContent}>
+                      <Editor
+                        value={message.content}
+                        toolbar={{
+                          lineNum: true,
+                        }}
+                        language="en"
+                        placeholder=" "
+                        height="100px"
+                        onChange={handleEditor}
+                        preview={true}
+                        style={{
+                          border: "none",
+                          marginBottom: "1rem",
+                          width: "100%",
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style={{ position: "absolute", right: 0, bottom: 0 }}
+                  className={classes.msgTimestamp}
+                >
+                  <span className={classes.msgDate}>
+                    {new Date(message.timestamp).toDateString()}
+                  </span>
+                  <br />
+                  <span className={classes.msgTime}>
+                    {new Date(message.timestamp).toLocaleTimeString("en-US")}
+                  </span>
+                </div>
+              </Grid>
+              <Divider />
+            </div>
+          );
+        })}
+        {selectedReview.status === "in_review" && (
+          <MessageComponent review_id={selectedReview.review_id} />
+        )}
       </Paper>
     </OnboardingContainer>
   );
