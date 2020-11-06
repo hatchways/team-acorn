@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useContext,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
+import React, { useState, useContext, forwardRef, useImperativeHandle } from "react";
 
 import { Typography, IconButton } from "@material-ui/core";
 import SnackBar from "./SnackbarComponent";
@@ -134,22 +129,15 @@ const ExperiencePicker = forwardRef((props, ref) => {
           onClick={() => {
             let currentLang = availableLanguages.splice(0, 1);
             let temp = {};
-            temp[currentLang] = experienceOptions[experience];
+            temp[currentLang] = 0;
             setRows({ ...rows, ...temp });
           }}
         >
           <AddIcon className={classes.buttonAddIcon} />
-          <Typography className={classes.addButtonText}>
-            Add Language
-          </Typography>
+          <Typography className={classes.addButtonText}>Add Language</Typography>
         </IconButton>
       )}
-      <SnackBar
-        open={snackbar.open}
-        message={snackbar.message}
-        setOpen={setSnackbar}
-        error={snackbar.error}
-      />
+      <SnackBar open={snackbar.open} message={snackbar.message} setOpen={setSnackbar} error={snackbar.error} />
     </div>
   );
 });

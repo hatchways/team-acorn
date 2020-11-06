@@ -180,18 +180,14 @@ const ReviewsPage = () => {
   const isScreenSmall = useMediaQuery(theme.breakpoints.down("sm"));
   // eslint-disable-next-line
   const { state, dispatch } = useContext(UserContext);
-  const {
-    reviewee_reviews: my_requests,
-    reviewer_reviews: my_reviews,
-    update,
-    messageUpdate,
-  } = state;
-  const [selectedReview, setSelectedReview] = useState({
+  const { reviewee_reviews: my_requests, reviewer_reviews: my_reviews, update, messageUpdate } = state;
+  const initialSelectedState = {
     title: "",
     submitted_date: "",
     code: "",
     messages: [],
-  });
+  };
+  const [selectedReview, setSelectedReview] = useState(initialSelectedState);
   const [value, setValue] = useState(""); // for message editor
   const handleEditor = (e) => {
     const value = e;
@@ -235,6 +231,14 @@ const ReviewsPage = () => {
     });
   });
 
+  socket.on("update_respond", ({ review_id }) => {
+    dispatch({
+      type: "messageUpdate",
+      payload: review_id,
+    });
+    console.log("i m update response");
+  });
+
   const closeReview = (review_id) => {
     fetch("/close_review", {
       method: "POST",
@@ -264,10 +268,10 @@ const ReviewsPage = () => {
       const e = new Event("event");
       fetchReview(
         e,
-        my_requests.length !== 0
-          ? my_requests[0].review_id
-          : my_reviews.length !== 0 && my_reviews[0].review_id
+        my_requests.length !== 0 ? my_requests[0].review_id : my_reviews.length !== 0 && my_reviews[0].review_id
       );
+    } else {
+      setSelectedReview(initialSelectedState);
     }
     // eslint-disable-next-line
   }, [messageUpdate, my_requests, my_reviews]);
@@ -315,11 +319,7 @@ const ReviewsPage = () => {
             <Grid container className={classes.smScreenGridContainer}>
               <Grid item xs={6} className={classes.smScreenGridItem}>
                 <Typography variant="h5" className={classes.sidebarHeader}>
-                  Reviews{" "}
-                  <span className={classes.sidebarReviewsCount}>
-                    {" "}
-                    ({my_requests.length})
-                  </span>
+                  Reviews <span className={classes.sidebarReviewsCount}> ({my_requests.length})</span>
                 </Typography>
               </Grid>
               <Grid item xs={6} className={classes.smScreenGridItem}>
@@ -340,11 +340,7 @@ const ReviewsPage = () => {
                   }}
                 >
                   {[...my_requests].map((review) => (
-                    <option
-                      id={review.review_id}
-                      key={review.review_id}
-                      value={review.title}
-                    >
+                    <option id={review.review_id} key={review.review_id} value={review.title}>
                       {review.title}
                     </option>
                   ))}
@@ -358,11 +354,7 @@ const ReviewsPage = () => {
               defaultExpanded={true}
               summary={
                 <Typography variant="h5" className={classes.sidebarHeader}>
-                  Reviews{" "}
-                  <span className={classes.sidebarReviewsCount}>
-                    {" "}
-                    ({my_requests.length})
-                  </span>
+                  Reviews <span className={classes.sidebarReviewsCount}> ({my_requests.length})</span>
                 </Typography>
               }
             >
@@ -374,9 +366,7 @@ const ReviewsPage = () => {
                       id={review.review_id}
                       onClick={fetchReview}
                       className={`${classes.regScreenGridReviewItem} ${
-
-                        selectedReview.review_id === review.review_id &&
-                        classes.focusedItem
+                        selectedReview.review_id === review.review_id && classes.focusedItem
                       }`}
                     >
                       <span id={review.review_id} className={classes.moreButon}>
@@ -389,10 +379,7 @@ const ReviewsPage = () => {
                       >
                         {review.title}
                       </Typography>
-                      <Typography
-                        id={review.review_id}
-                        className={`${classes.date} ${classes.sidebarItemTitle}`}
-                      >
+                      <Typography id={review.review_id} className={`${classes.date} ${classes.sidebarItemTitle}`}>
                         {new Date(review.timestamp).toDateString()}
                       </Typography>
                     </Grid>
@@ -404,11 +391,7 @@ const ReviewsPage = () => {
               defaultExpanded={true}
               summary={
                 <Typography variant="h5" className={classes.sidebarHeader}>
-                  Reviewing{" "}
-                  <span className={classes.sidebarReviewsCount}>
-                    {" "}
-                    ({my_reviews.length})
-                  </span>
+                  Reviewing <span className={classes.sidebarReviewsCount}> ({my_reviews.length})</span>
                 </Typography>
               }
             >
@@ -420,8 +403,7 @@ const ReviewsPage = () => {
                       id={review.review_id}
                       onClick={fetchReview}
                       className={`${classes.regScreenGridReviewItem} ${
-                        selectedReview.review_id === review.review_id &&
-                        classes.focusedItem
+                        selectedReview.review_id === review.review_id && classes.focusedItem
                       }`}
                     >
                       <span id={review.review_id} className={classes.moreButon}>
@@ -434,10 +416,7 @@ const ReviewsPage = () => {
                       >
                         {review.title}
                       </Typography>
-                      <Typography
-                        id={review.review_id}
-                        className={`${classes.date} ${classes.sidebarItemTitle}`}
-                      >
+                      <Typography id={review.review_id} className={`${classes.date} ${classes.sidebarItemTitle}`}>
                         {new Date(review.timestamp).toDateString()}
                       </Typography>
                     </Grid>
@@ -461,36 +440,29 @@ const ReviewsPage = () => {
           <Typography variant="h4" className={classes.title}>
             {selectedReview.title || ""}
           </Typography>
-          {selectedReview.review_id &&
-            selectedReview.reviewer &&
-            selectedReview.reviewer.id != state.userId && (
-              <Button
-                style={{
-                  display: "flex",
-                  margin: "1rem 0 1rem auto",
-                  background: "#ff7961",
-                  color: "white",
-                }}
-                variant="contained"
-                onClick={() => {
-                  setOpenRatingPicker(true);
-                }}
-              >
-                Close Review
-              </Button>
-            )}
+          {selectedReview.review_id && selectedReview.reviewer && selectedReview.reviewer.id != state.userId && (
+            <Button
+              style={{
+                display: "flex",
+                margin: "1rem 0 1rem auto",
+                background: "#ff7961",
+                color: "white",
+              }}
+              variant="contained"
+              onClick={() => {
+                setOpenRatingPicker(true);
+              }}
+            >
+              Close Review
+            </Button>
+          )}
         </div>
         <Typography variant="body1" className={classes.date}>
           {selectedReview.submitted_date || ""}
         </Typography>
-        {selectedReview.status === "assigned" &&
-          selectedReview.reviewer.id === state.userId && (
-            <ResponseButtons
-              dispatch={dispatch}
-              fn={setSelectedReview}
-              review_id={selectedReview.review_id}
-            />
-          )}
+        {selectedReview.status === "assigned" && selectedReview.reviewer.id === state.userId && (
+          <ResponseButtons dispatch={dispatch} fn={setSelectedReview} review_id={selectedReview.review_id} />
+        )}
 
         <Divider className={classes.divider} />
         <Editor
@@ -510,30 +482,19 @@ const ReviewsPage = () => {
         />
 
         {[...selectedReview.messages].map((message) => {
-          const sender =
-            selectedReview.reviewee.id === message.owner_id
-              ? "reviewee"
-              : "reviewer";
+          const sender = selectedReview.reviewee.id === message.owner_id ? "reviewee" : "reviewer";
           return (
             <div key={message.message_id} style={{ position: "relative" }}>
               <Grid container direction="column">
                 <div className={classes.msgUserContainer}>
                   <Link to={`/profile/${message.owner_id}`}>
-                    <Avatar
-                      className={classes.msgAvatar}
-                      alt="Profile"
-                      src={selectedReview[`${sender}`].dp}
-                    />
+                    <Avatar className={classes.msgAvatar} alt="Profile" src={selectedReview[`${sender}`].dp} />
                   </Link>
                   <div className={classes.msgUserName}>
                     <h4 className={classes.msgName}>
-                      <Link to={`/profile/${message.owner_id}`}>
-                        {selectedReview[`${sender}`].full_name}
-                      </Link>
+                      <Link to={`/profile/${message.owner_id}`}>{selectedReview[`${sender}`].full_name}</Link>
                     </h4>
-                    <span className={classes.msgDesignation}>
-                      {selectedReview[`${sender}`].designation}
-                    </span>
+                    <span className={classes.msgDesignation}>{selectedReview[`${sender}`].designation}</span>
                     <div className={classes.msgContent}>
                       <Editor
                         value={message.content}
@@ -554,17 +515,10 @@ const ReviewsPage = () => {
                     </div>
                   </div>
                 </div>
-                <div
-                  style={{ position: "absolute", right: 0, bottom: 0 }}
-                  className={classes.msgTimestamp}
-                >
-                  <span className={classes.msgDate}>
-                    {new Date(message.timestamp).toDateString()}
-                  </span>
+                <div style={{ position: "absolute", right: 0, bottom: 0 }} className={classes.msgTimestamp}>
+                  <span className={classes.msgDate}>{new Date(message.timestamp).toDateString()}</span>
                   <br />
-                  <span className={classes.msgTime}>
-                    {new Date(message.timestamp).toLocaleTimeString("en-US")}
-                  </span>
+                  <span className={classes.msgTime}>{new Date(message.timestamp).toLocaleTimeString("en-US")}</span>
                 </div>
               </Grid>
               <Divider />
@@ -572,11 +526,7 @@ const ReviewsPage = () => {
           );
         })}
         {selectedReview.status === "in_review" && (
-          <MessageComponent
-            value={value}
-            setValue={setValue}
-            review_id={selectedReview.review_id}
-          />
+          <MessageComponent value={value} setValue={setValue} review_id={selectedReview.review_id} />
         )}
       </Paper>
     </OnboardingContainer>

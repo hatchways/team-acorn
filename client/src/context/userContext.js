@@ -10,8 +10,7 @@ const buildInitExp = () => {
 };
 const initialState = {
   experience: buildInitExp(),
-  image:
-    "http://2019wcsg.ca/wp-content/uploads/2018/01/profile-placeholder.png",
+  image: "http://2019wcsg.ca/wp-content/uploads/2018/01/profile-placeholder.png",
   hasNewNotification: false,
   notifications: [],
   reviewee_reviews: "",
@@ -35,6 +34,7 @@ const UserProvider = ({ children }) => {
             ...action.payload.experience,
           },
           image: action.payload.image ? action.payload.image : state.image,
+          rating: action.payload.rating ? action.payload.rating : 0,
         };
       }
       case "storeUserExperience": {

@@ -11,6 +11,8 @@ class GetProfile(Resource):
                 "experience": user["experience"],
                 "userId": user["user_id"],
                 "dp": user["image"],
+                "total_reviews": user["total_reviews"],
+                "rating": user["rating"],
             }
         }
 

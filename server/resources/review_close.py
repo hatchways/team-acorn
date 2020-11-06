@@ -11,15 +11,14 @@ class CloseReview(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument("review_id", help="This field cannot be blank", required=True)
         data = parser.parse_args()
-        review_id = (data["review_id"])
-        ReviewModel.close_review(review_id)
+        review_id = data["review_id"]
         review = ReviewModel.get_review(review_id)["review"]
         reviewer_id = review["reviewer_id"]
-        reviewer = UserModel.update_balance(reviewer_id)
+        ReviewModel.close_review(review_id)
+
+        UserModel.update_balance_increase(reviewer_id)
 
         try:
-            return {
-                "message": "Review " + review_id + " has been closed"
-            }, 200
+            return {"message": "Review " + review_id + " has been closed"}, 200
         except Exception as e:
             return {"error": "something went wrong"}, 500

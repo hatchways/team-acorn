@@ -7,7 +7,7 @@ import ClearIcon from "@material-ui/icons/Clear";
 const useStyles = makeStyles((theme) => ({
   responseButtonWrapper: {
     position: "absolute",
-    top: 26,
+    top: 12,
     right: 45,
   },
   acceptButton: {
@@ -26,11 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ResponseButtons({
-  fn: setSelectedReview,
-  review_id,
-  dispatch,
-}) {
+export default function ResponseButtons({ fn: setSelectedReview, review_id, dispatch }) {
   const classes = useStyles();
   const handleResponse = (e, option) => {
     fetch("/review_respond", {
@@ -75,19 +71,11 @@ export default function ResponseButtons({
   return (
     <div className={classes.responseButtonWrapper}>
       {/*only show this when review hasn't been accepted yet */}
-      <Button
-        variant="contained"
-        className={classes.acceptButton}
-        onClick={(e) => handleResponse(e, "accept")}
-      >
+      <Button variant="contained" className={classes.acceptButton} onClick={(e) => handleResponse(e, "accept")}>
         <CheckIcon />
         Accept
       </Button>
-      <Button
-        variant="contained"
-        className={classes.rejectButton}
-        onClick={(e) => handleResponse(e, "reject")}
-      >
+      <Button variant="contained" className={classes.rejectButton} onClick={(e) => handleResponse(e, "reject")}>
         <ClearIcon />
         Reject
       </Button>

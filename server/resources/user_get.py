@@ -14,7 +14,8 @@ class UserGet(Resource):
                 "experience": user["experience"],
                 "balance": user["balance"],
                 "userId": user["user_id"],
-                "rating": user["rating"]
+                "rating": user["rating"],
+                "total_reviews": user["total_reviews"],
             }
         }
 

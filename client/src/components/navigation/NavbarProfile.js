@@ -67,15 +67,8 @@ const NavbarProfile = () => {
       >
         Profile
       </Button>
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
+      <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={() => handleClose("profile")}>My Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
         <MenuItem onClick={() => handleClose("logout")}>Logout</MenuItem>
       </Menu>
     </div>
