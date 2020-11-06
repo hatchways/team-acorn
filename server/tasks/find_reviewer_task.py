@@ -52,3 +52,4 @@ def find_reviewer(review_id):
 
         UserModel.add_review(qualified_users_with_blacklist[0].id)
         sendNotification(review["reviewee_id"], review_id, "Reviewer has been assigned")
+        sendNotification(qualified_users_with_blacklist[0].id, review_id, "New review has been assigned to you")
