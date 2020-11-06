@@ -100,6 +100,7 @@ const AuthStack = ({ experience }) => {
         <Route exact path="/reviews" component={ReviewsPage} />
         <Route exact path="/balance" component={BalancePage} />
         <Route exact path="/profile" component={ProfilePage} />
+        <Route exact path="/profile/:userId" component={ProfilePage} />
         <Route
           exact
           path="/*"

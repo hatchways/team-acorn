@@ -19,6 +19,7 @@ import { UserContext } from "../context/userContext";
 import RatingPicker from "../components/RatingPicker";
 import ResponseButtons from "../components/ResponseButtons";
 import { socket } from "../utils/SocketConfig";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   sidebar: {
@@ -191,6 +192,7 @@ const ReviewsPage = () => {
     code: "",
     messages: [],
   });
+  const [value, setValue] = useState(""); // for message editor
   const handleEditor = (e) => {
     const value = e;
     setSelectedReview((prev) => {
@@ -203,6 +205,7 @@ const ReviewsPage = () => {
 
   const fetchReview = (e, id = "") => {
     const review_id = id ? id : e.target.id;
+    if (!id) setValue("");
     fetch("/review", {
       method: "POST",
       headers: {
@@ -224,6 +227,7 @@ const ReviewsPage = () => {
       })
       .catch((err) => console.log(err));
   };
+
   socket.on(selectedReview.review_id, ({ message_id }) => {
     dispatch({
       type: "messageUpdate",
@@ -256,8 +260,17 @@ const ReviewsPage = () => {
     if (selectedReview.review_id) {
       const e = new Event("event");
       fetchReview(e, selectedReview.review_id);
+    } else if (my_reviews.length > 0 || my_requests.length > 0) {
+      const e = new Event("event");
+      fetchReview(
+        e,
+        my_requests.length !== 0
+          ? my_requests[0].review_id
+          : my_reviews.length !== 0 && my_reviews[0].review_id
+      );
     }
-  }, [messageUpdate]);
+    // eslint-disable-next-line
+  }, [messageUpdate, my_requests, my_reviews]);
 
   useEffect(() => {
     fetch("/reviewer_reviews", {
@@ -361,7 +374,9 @@ const ReviewsPage = () => {
                       id={review.review_id}
                       onClick={fetchReview}
                       className={`${classes.regScreenGridReviewItem} ${
-                        index === 0 && classes.focusedItem
+
+                        selectedReview.review_id === review.review_id &&
+                        classes.focusedItem
                       }`}
                     >
                       <span id={review.review_id} className={classes.moreButon}>
@@ -374,7 +389,6 @@ const ReviewsPage = () => {
                       >
                         {review.title}
                       </Typography>
-
                       <Typography
                         id={review.review_id}
                         className={`${classes.date} ${classes.sidebarItemTitle}`}
@@ -387,6 +401,7 @@ const ReviewsPage = () => {
               </Grid>
             </CollapsibleSideMenu>
             <CollapsibleSideMenu
+              defaultExpanded={true}
               summary={
                 <Typography variant="h5" className={classes.sidebarHeader}>
                   Reviewing{" "}
@@ -405,7 +420,8 @@ const ReviewsPage = () => {
                       id={review.review_id}
                       onClick={fetchReview}
                       className={`${classes.regScreenGridReviewItem} ${
-                        index === 0 && classes.focusedItem
+                        selectedReview.review_id === review.review_id &&
+                        classes.focusedItem
                       }`}
                     >
                       <span id={review.review_id} className={classes.moreButon}>
@@ -502,14 +518,18 @@ const ReviewsPage = () => {
             <div key={message.message_id} style={{ position: "relative" }}>
               <Grid container direction="column">
                 <div className={classes.msgUserContainer}>
-                  <Avatar
-                    className={classes.msgAvatar}
-                    alt="Profile"
-                    src={selectedReview[`${sender}`].profile_link}
-                  />
+                  <Link to={`/profile/${message.owner_id}`}>
+                    <Avatar
+                      className={classes.msgAvatar}
+                      alt="Profile"
+                      src={selectedReview[`${sender}`].dp}
+                    />
+                  </Link>
                   <div className={classes.msgUserName}>
                     <h4 className={classes.msgName}>
-                      {selectedReview[`${sender}`].full_name}
+                      <Link to={`/profile/${message.owner_id}`}>
+                        {selectedReview[`${sender}`].full_name}
+                      </Link>
                     </h4>
                     <span className={classes.msgDesignation}>
                       {selectedReview[`${sender}`].designation}
@@ -552,7 +572,11 @@ const ReviewsPage = () => {
           );
         })}
         {selectedReview.status === "in_review" && (
-          <MessageComponent review_id={selectedReview.review_id} />
+          <MessageComponent
+            value={value}
+            setValue={setValue}
+            review_id={selectedReview.review_id}
+          />
         )}
       </Paper>
     </OnboardingContainer>

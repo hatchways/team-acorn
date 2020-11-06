@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
-import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   responseButtonWrapper: {
@@ -27,9 +26,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ResponseButtons({ fn: setSelectedReview, review_id, dispatch }) {
+export default function ResponseButtons({
+  fn: setSelectedReview,
+  review_id,
+  dispatch,
+}) {
   const classes = useStyles();
-  const history = useHistory();
   const handleResponse = (e, option) => {
     fetch("/review_respond", {
       method: option === "accept" ? "POST" : "DELETE",
@@ -47,16 +49,23 @@ export default function ResponseButtons({ fn: setSelectedReview, review_id, disp
           // handle error if we receive error from server
           alert(data.error);
         } else {
-          if(data.rejected){
-            history.go();
-          }
-          else {
-            setSelectedReview(prev => {
+          if (data.rejected) {
+            setSelectedReview((prev) => {
+              delete prev.review_id;
               return {
                 ...prev,
-                status: "in_review"
-              }
-            })
+              };
+            });
+            dispatch({
+              type: "update",
+            });
+          } else {
+            setSelectedReview((prev) => {
+              return {
+                ...prev,
+                status: "in_review",
+              };
+            });
           }
         }
       })

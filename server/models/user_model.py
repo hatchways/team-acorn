@@ -64,6 +64,7 @@ class UserModel(db.Model):
             "user_id": user.id,
             "balance": user.balance,
             "rating": user.rating
+            "image": user.image
         }
 
     @classmethod
@@ -76,7 +77,7 @@ class UserModel(db.Model):
         return {
             "id": id,
             "full_name": user.full_name,
-            "profile_link": "https://forums.developer.apple.com/forums/build-10052020-1/public/assets/avatars/1095.png",
+            "dp": user.image,
             "designation": "senior developer at google",
         }
 
