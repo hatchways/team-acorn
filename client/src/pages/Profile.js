@@ -1,13 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
-import { Typography, Backdrop } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import { UserContext } from "../context/userContext";
 import ProfileEdit from "../components/ProfileEdit";
 import EditIcon from "@material-ui/icons/Edit";
 import images from "../images";
-
-const PROFILE_IMG_URL =
-  "https://www.dovercourt.org/wp-content/uploads/2019/11/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -121,7 +118,7 @@ const ProfilePage = () => {
 
   const userContext = useContext(UserContext);
   const { dispatch } = userContext;
-  const { image, userId, experience, name } = userContext.state;
+  const { image, experience, name } = userContext.state;
   const [showEdit, setShowEdit] = useState(false);
 
   return (
@@ -141,7 +138,7 @@ const ProfilePage = () => {
               setShowEdit(true);
             }}
           />
-          <img src={image} className={classes.profileImage} />
+          <img src={image} className={classes.profileImage} alt="profile-img" />
           <Typography className={classes.profileName}>{name}</Typography>
           <Typography className={classes.title}>
             Senior Developer at Google
@@ -157,7 +154,11 @@ const ProfilePage = () => {
               if (experience[name] == null) return null;
               return (
                 <div className={classes.langContainer}>
-                  <img className={classes.langImg} src={selectImg(name)} />
+                  <img
+                    className={classes.langImg}
+                    src={selectImg(name)}
+                    alt="experience-pic"
+                  />
                   <Typography className={classes.langLvl}>
                     {selectLevel(experience[name])}
                   </Typography>
@@ -198,6 +199,7 @@ const selectImg = (name) => {
       return images.cssImg;
     case "html":
       return images.htmlImg;
+    default:
   }
 };
 
@@ -211,6 +213,7 @@ const selectLevel = (lvl) => {
       return "Intermediate";
     case 3:
       return "Senior";
+    default:
   }
 };
 export default ProfilePage;

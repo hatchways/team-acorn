@@ -123,7 +123,7 @@ const UploadCodeDialog = ({ open, setOpen, form, setForm }) => {
     () =>
       languages.map((option) => (
         <option key={option} value={option}>
-          {option ==="cplusplus" ? "c++" : option}
+          {option === "cplusplus" ? "c++" : option}
         </option>
       )),
     []
@@ -184,13 +184,22 @@ const UploadCodeDialog = ({ open, setOpen, form, setForm }) => {
         }),
       });
       setBackdrop(false);
-      setRedirect(true);
       const data = await response.json();
+      !data.error && setRedirect(true);
       if (data.error) {
         console.log(data.error);
+        setSnackbar({
+          open: true,
+          message: data.error,
+          error: true,
+        });
       } else {
         dispatch({
           type: "update",
+        });
+        dispatch({
+          type: "update_balance",
+          payload: data.new_balance,
         });
         setOpen(false);
       }

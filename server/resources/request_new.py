@@ -4,6 +4,7 @@ from models.message_model import MessageModel
 from tasks.find_reviewer_task import find_reviewer
 from models.language import Language
 from datetime import datetime
+from models.user_model import UserModel
 
 
 class RequestNew(Resource):
@@ -30,10 +31,12 @@ class RequestNew(Resource):
             code=data["code"],
             timestamp=datetime.now(),
         )
-
+        current_balance = UserModel.get_balance(user_id)
         try:
+            if (current_balance == 0):
+                return {"error": "No balance. Please topup to request reviews."}, 500
             new_review.save_to_db()
-
+            UserModel.update_balance(user_id, current_balance - 1)
             job = queue.enqueue(find_reviewer, new_review.id)
 
             q_len = len(queue)
@@ -41,7 +44,8 @@ class RequestNew(Resource):
             return {
                 "message": "Review [{}] was created. Task added to queue. {} tasks in queue.".format(
                     data["title"], q_len
-                )
+                ),
+                "new_balance": current_balance -1
             }, 201
         except:
             return {"error": "Something went wrong"}, 500

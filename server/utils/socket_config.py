@@ -7,9 +7,8 @@ def connected():
     emit("message", "You have connected")
 
 
-@socketio.on("review_message")
-def handleMessage(data):
-    socketio.emit(data["review_id"], {"message_id": data["message_id"]})
+def handleMessage(review_id, message_id):
+    socketio.emit(review_id, message_id)
 
 
 @socketio.on("subscribeToNotifications")

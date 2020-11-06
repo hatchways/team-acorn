@@ -74,10 +74,16 @@ const UserProvider = ({ children }) => {
           update: !state.update,
         };
       }
+      case "update_balance": {
+        return {
+          ...state,
+          balance: action.payload,
+        };
+      }
       case "messageUpdate": {
         return {
           ...state,
-          messageUpdate: action.payload
+          messageUpdate: action.payload,
         };
       }
       default:
