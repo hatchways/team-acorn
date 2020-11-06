@@ -446,6 +446,7 @@ const ReviewsPage = () => {
             {selectedReview.title || ""}
           </Typography>
           {selectedReview.review_id &&
+            selectedReview.reviewer &&
             selectedReview.reviewer.id != state.userId && (
               <Button
                 style={{
