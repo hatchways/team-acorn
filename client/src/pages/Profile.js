@@ -1,10 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import { UserContext } from "../context/userContext";
 import ProfileEdit from "../components/ProfileEdit";
 import EditIcon from "@material-ui/icons/Edit";
 import images from "../images";
+import { useParams, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -115,12 +116,34 @@ const useStyles = makeStyles((theme) => ({
 const ProfilePage = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
-
+  const history = useHistory();
+  const { userId } = useParams();
   const userContext = useContext(UserContext);
   const { dispatch } = userContext;
-  const { image, experience, name } = userContext.state;
+  const { image } = userContext.state;
   const [showEdit, setShowEdit] = useState(false);
-
+  const [user, setUser] = useState({});
+  const Exp = { ...user.experience };
+  useEffect(() => {
+    fetch(`/profile/${userId ? userId : userContext.state.userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          history.replace("/profile");
+        } else {
+          setUser((prev) => ({ ...prev, ...data.user }));
+          console.log(data);
+        }
+      })
+      .catch((err) => console.log(err));
+    //eslint-disable-next-line
+  }, []);
   return (
     <>
       {showEdit && (
@@ -138,8 +161,14 @@ const ProfilePage = () => {
               setShowEdit(true);
             }}
           />
-          <img src={image} className={classes.profileImage} alt="profile-img" />
-          <Typography className={classes.profileName}>{name}</Typography>
+          <img
+            src={user.dp || image}
+            className={classes.profileImage}
+            alt="profile-img"
+          />
+          <Typography className={classes.profileName}>
+            {user.full_name}
+          </Typography>
           <Typography className={classes.title}>
             Senior Developer at Google
           </Typography>
@@ -150,17 +179,17 @@ const ProfilePage = () => {
           </div>
           <Typography className={classes.profileName}>Experience</Typography>
           <div className={classes.statsContainer}>
-            {Object.keys(experience).map((name) => {
-              if (experience[name] == null) return null;
+            {Object.keys(Exp).map((name) => {
+              if (Exp[name] == null) return null;
               return (
-                <div className={classes.langContainer}>
+                <div key={name} className={classes.langContainer}>
                   <img
                     className={classes.langImg}
                     src={selectImg(name)}
                     alt="experience-pic"
                   />
                   <Typography className={classes.langLvl}>
-                    {selectLevel(experience[name])}
+                    {selectLevel(Exp[name])}
                   </Typography>
                 </div>
               );

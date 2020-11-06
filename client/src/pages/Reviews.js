@@ -17,6 +17,7 @@ import MessageComponent from "../components/MessageComponent";
 import { UserContext } from "../context/userContext";
 import ResponseButtons from "../components/ResponseButtons";
 import { socket } from "../utils/SocketConfig";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   sidebar: {
@@ -452,14 +453,18 @@ const ReviewsPage = () => {
             <div key={message.message_id} style={{ position: "relative" }}>
               <Grid container direction="column">
                 <div className={classes.msgUserContainer}>
-                  <Avatar
-                    className={classes.msgAvatar}
-                    alt="Profile"
-                    src={selectedReview[`${sender}`].profile_link}
-                  />
+                  <Link to={`/profile/${message.owner_id}`}>
+                    <Avatar
+                      className={classes.msgAvatar}
+                      alt="Profile"
+                      src={selectedReview[`${sender}`].dp}
+                    />
+                  </Link>
                   <div className={classes.msgUserName}>
                     <h4 className={classes.msgName}>
-                      {selectedReview[`${sender}`].full_name}
+                      <Link to={`/profile/${message.owner_id}`}>
+                        {selectedReview[`${sender}`].full_name}
+                      </Link>
                     </h4>
                     <span className={classes.msgDesignation}>
                       {selectedReview[`${sender}`].designation}
