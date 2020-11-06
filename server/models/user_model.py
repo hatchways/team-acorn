@@ -192,6 +192,13 @@ class UserModel(db.Model):
         if current_rating is None:
             current_rating = 0
         rating = (int(new_rating) + (current_rating * (total_reviews-1)))/total_reviews
+        rating = round(rating, 1)
         user.rating = rating
         db.session.commit()
         return rating
+
+    @classmethod
+    def update_balance(cls, id):
+        user = cls.query.get(id)
+        user.balance += 1
+        db.session.commit()

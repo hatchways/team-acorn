@@ -13,6 +13,9 @@ class CloseReview(Resource):
         data = parser.parse_args()
         review_id = (data["review_id"])
         ReviewModel.close_review(review_id)
+        review = ReviewModel.get_review(review_id)["review"]
+        reviewer_id = review["reviewer_id"]
+        reviewer = UserModel.update_balance(reviewer_id)
 
         try:
             return {
