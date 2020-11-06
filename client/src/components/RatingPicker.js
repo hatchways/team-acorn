@@ -66,16 +66,16 @@ const submitRating = (reviewerId, rating, dispatch, callback) => {
   })
     .then((data) => data.json())
     .then((data) => {
-      if (data.img && !data.error) {
-        dispatch({ type: "updateProfileImage", payload: data.img });
-        callback();
+      if (data.rating) {
+        // dispatch({ type: "updateProfileImage", payload: data.img });
+        // callback();
       } else {
       }
     })
     .catch((er) => console.log(er));
 };
 
-const RatingPicker = ({ open, setOpen }) => {
+const RatingPicker = ({ open, onCancel, reviewerId, onSubmit, dispatch }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const [selectedRating, setSelectedRating] = useState(1);
@@ -109,10 +109,14 @@ const RatingPicker = ({ open, setOpen }) => {
           })}
         </div>
         <div className={classes.buttonContainer}>
-          <Button onClick={() => {}}>
+          <Button
+            onClick={() => {
+              submitRating(reviewerId, selectedRating, dispatch, onSubmit);
+            }}
+          >
             <Typography className={classes.buttonText}>Submit</Typography>
           </Button>
-          <Button onClick={() => {}}>
+          <Button onClick={onCancel}>
             <Typography className={classes.buttonText}>Cancel</Typography>
           </Button>
         </div>

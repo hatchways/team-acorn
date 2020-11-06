@@ -9,6 +9,7 @@ import {
   Grid,
   Divider,
   Avatar,
+  Button,
 } from "@material-ui/core";
 import OnboardingContainer from "../components/LoginSignupContainer";
 import CollapsibleSideMenu from "../components/CollapsibleSideMenu";
@@ -174,6 +175,7 @@ const useStyles = makeStyles((theme) => ({
 const ReviewsPage = () => {
   const classes = useStyles();
   const theme = useTheme();
+  const [openRatingPicker, setOpenRatingPicker] = useState(false);
   const isScreenSmall = useMediaQuery(theme.breakpoints.down("sm"));
   // eslint-disable-next-line
   const { state, dispatch } = useContext(UserContext);
@@ -229,6 +231,8 @@ const ReviewsPage = () => {
     });
   });
 
+  const closeReview = (id) => {};
+
   useEffect(() => {
     if (selectedReview.review_id) {
       const e = new Event("event");
@@ -262,7 +266,17 @@ const ReviewsPage = () => {
 
   return (
     <OnboardingContainer containerOnly>
-      <RatingPicker open={false} />
+      <RatingPicker
+        dispatch={dispatch}
+        open={openRatingPicker}
+        reviewerId={selectedReview.reviewer ? selectedReview.reviewer.id : null}
+        onCancel={() => {
+          setOpenRatingPicker(false);
+        }}
+        onSubmit={() => {
+          closeReview(selectedReview.review_id);
+        }}
+      />
       <Paper className={classes.sidebar}>
         {isScreenSmall ? (
           <>
@@ -341,6 +355,7 @@ const ReviewsPage = () => {
                       >
                         {review.title}
                       </Typography>
+
                       <Typography
                         id={review.review_id}
                         className={`${classes.date} ${classes.sidebarItemTitle}`}
@@ -399,9 +414,36 @@ const ReviewsPage = () => {
         )}
       </Paper>
       <Paper className={classes.contentBox}>
-        <Typography variant="h4" className={classes.title}>
-          {selectedReview.title || ""}
-        </Typography>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            height: 40,
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h4" className={classes.title}>
+            {selectedReview.title || ""}
+          </Typography>
+          {selectedReview.review_id &&
+            selectedReview.reviewer.id != state.userId && (
+              <Button
+                style={{
+                  display: "flex",
+                  margin: "1rem 0 1rem auto",
+                  background: "#ff7961",
+                  color: "white",
+                }}
+                variant="contained"
+                onClick={() => {
+                  setOpenRatingPicker(true);
+                }}
+              >
+                Close Review
+              </Button>
+            )}
+        </div>
         <Typography variant="body1" className={classes.date}>
           {selectedReview.submitted_date || ""}
         </Typography>
