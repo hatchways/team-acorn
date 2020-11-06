@@ -122,7 +122,7 @@ const ProfileEdit = ({ showEdit, setShowEdit }) => {
   const userContext = useContext(UserContext);
 
   const { dispatch } = userContext;
-  const { image, userId, experience, name } = userContext.state;
+  const { image, userId, name } = userContext.state;
   const [nameText, setNameText] = useState(name);
   const [profileImg, setProfileImg] = useState(image);
   const [isLoading, setIsLoading] = useState(false);
@@ -137,14 +137,14 @@ const ProfileEdit = ({ showEdit, setShowEdit }) => {
     userExpPickerRef.current.uploadExperience();
     setIsLoading(true);
     let promises = [];
-    if (nameText != name) {
+    if (nameText !== name) {
       const imgUpload = new Promise((fulfill, reject) => {
         updateName(nameText, userId, dispatch, fulfill);
       });
       promises.push(imgUpload);
     }
 
-    if (profileImg != image) {
+    if (profileImg !== image) {
       const nameUpload = new Promise((fulfill, reject) => {
         uploadImg(profileImg, userId, dispatch, fulfill);
       });
@@ -163,7 +163,11 @@ const ProfileEdit = ({ showEdit, setShowEdit }) => {
       ) : (
         <Paper className={classes.profileContainer}>
           <div className={classes.editImgContainer}>
-            <img src={profileImg} className={classes.profileImage} />
+            <img
+              src={profileImg}
+              className={classes.profileImage}
+              alt="profile-img"
+            />
             {/* <Typography className={classes.editImgText}>Change Image</Typography> */}
             <ImageUploader
               withIcon={true}

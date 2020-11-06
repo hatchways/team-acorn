@@ -24,6 +24,7 @@ from resources.stripe_checkout import HandlePayment
 from resources.review_respond import ReviewRespond
 from resources.send_message import SendMessage
 from resources.user_get import UserGet
+from resources.get_profile import GetProfile
 from resources.review_get import ReviewGet
 from resources.reviewer_reviews_get import ReviewerReviewsGet
 from resources.reviewee_reviews_get import RevieweeReviewsGet
@@ -45,6 +46,7 @@ def create_api(app):
     api.add_resource(RequestNew, '/new_request')
     api.add_resource(UserExperience, '/experience')
     api.add_resource(UserGet, '/user')
+    api.add_resource(GetProfile, '/profile/<user_id>')
     api.add_resource(UserProfileImageUpload, '/user/profile_img')
     api.add_resource(UserUpdateName, '/user/update_name')
     api.add_resource(UserRatingSubmit, '/submit_rating')
