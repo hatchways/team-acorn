@@ -51,6 +51,30 @@ const useStyles = makeStyles((theme) => ({
     color: theme.darkPurple,
   },
 }));
+
+const submitRating = (reviewerId, rating, dispatch, callback) => {
+  fetch("/submit_rating", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + localStorage.getItem("token"),
+    },
+    body: JSON.stringify({
+      reviewerId: reviewerId,
+      rating: rating,
+    }),
+  })
+    .then((data) => data.json())
+    .then((data) => {
+      if (data.img && !data.error) {
+        dispatch({ type: "updateProfileImage", payload: data.img });
+        callback();
+      } else {
+      }
+    })
+    .catch((er) => console.log(er));
+};
+
 const RatingPicker = ({ open, setOpen }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
