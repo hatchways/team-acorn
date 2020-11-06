@@ -224,6 +224,7 @@ const ReviewsPage = () => {
       })
       .catch((err) => console.log(err));
   };
+
   socket.on(selectedReview.review_id, ({ message_id }) => {
     dispatch({
       type: "messageUpdate",

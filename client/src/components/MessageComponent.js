@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Editor from "for-editor";
+import { socket } from "../utils/SocketConfig";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,6 +41,10 @@ export default function MultilineTextFields({ review_id, value, setValue }) {
             alert(data.error);
           } else {
             setValue("");
+            socket.emit("review_message", {
+              review_id,
+              message_id: data.message_id,
+            });
           }
         })
         .catch((err) => console.log(err));
