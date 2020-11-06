@@ -12,6 +12,8 @@ class UserModel(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     image = db.Column(db.String(), nullable=True)
+    rating = db.Column(db.Float, nullable=True)
+    total_reviews = db.Column(db.Integer, default=0, nullable=True)
     review_count = db.Column(db.Integer, nullable=False)
     reviews = db.relationship(
         "ReviewModel",
@@ -61,7 +63,9 @@ class UserModel(db.Model):
             "experience": exp,
             "user_id": user.id,
             "balance": user.balance,
-            "image": user.image
+            "rating": user.rating,
+            "image": user.image,
+            "total_reviews": user.total_reviews,
         }
 
     @classmethod
@@ -89,12 +93,6 @@ class UserModel(db.Model):
         return sha256.verify(password, hash)
 
     @classmethod
-    def update_balance(cls, id, balance):
-        user = cls.query.get(id)
-        user.balance = balance
-        db.session.commit()
-
-    @classmethod
     def get_balance(cls, id):
         user = cls.query.get(id)
         return user.balance
@@ -117,6 +115,12 @@ class UserModel(db.Model):
         )
 
         return qualified_experiences
+
+    @classmethod
+    def update_total_reviews(cls, id):
+        user = cls.query.get(id)
+        user.total_reviews += 1
+        db.session.commit()
 
     @classmethod
     def add_review(cls, id):
@@ -151,6 +155,7 @@ class UserModel(db.Model):
         users = UserModel.query.all()
         for user in users:
             user.review_count = 0
+            user.total_reviews = 0
 
         db.session.commit()
 
@@ -170,3 +175,33 @@ class UserModel(db.Model):
     def get_profile_img(cls, id):
         user = cls.query.get(id)
         return user.image
+
+    @classmethod
+    def get_rating(cls, id):
+        user = cls.query.get(id)
+        return user.rating
+
+    @classmethod
+    def update_rating(cls, id, new_rating):
+        user = cls.query.get(id)
+        total_reviews = user.total_reviews
+        current_rating = user.rating
+        if current_rating is None:
+            current_rating = 0
+        rating = (int(new_rating) + (current_rating * (total_reviews - 1))) / total_reviews
+        rating = round(rating, 1)
+        user.rating = rating
+        db.session.commit()
+        return rating
+
+    @classmethod
+    def update_balance_increase(cls, id):
+        user = cls.query.get(id)
+        user.balance += 1
+        db.session.commit()
+
+    @classmethod
+    def update_balance(cls, id, balance):
+        user = cls.query.get(id)
+        user.balance = balance
+        db.session.commit()

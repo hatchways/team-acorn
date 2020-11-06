@@ -21,6 +21,7 @@ class UserRegistration(Resource):
             email=data["email"],
             password=UserModel.generate_hash(data["password"]),
             review_count=0,
+            total_reviews=0,
             balance=3,
         )
         try:

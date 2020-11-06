@@ -117,15 +117,15 @@ const ProfilePage = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const history = useHistory();
-  const { userId } = useParams();
+  const { userId: id } = useParams();
   const userContext = useContext(UserContext);
   const { dispatch } = userContext;
-  const { image } = userContext.state;
+  const { image, userId, experience, name, rating, total_reviews } = userContext.state;
   const [showEdit, setShowEdit] = useState(false);
   const [user, setUser] = useState({});
   const Exp = { ...user.experience };
   useEffect(() => {
-    fetch(`/profile/${userId ? userId : userContext.state.userId}`, {
+    fetch(`/profile/${id ? id : userContext.state.userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -146,36 +146,24 @@ const ProfilePage = () => {
   }, []);
   return (
     <>
-      {showEdit && (
-        <ProfileEdit
-          dispatch={dispatch}
-          showEdit={true}
-          setShowEdit={setShowEdit}
-        />
-      )}
+      {showEdit && <ProfileEdit dispatch={dispatch} showEdit={true} setShowEdit={setShowEdit} />}
       <div className={classes.container}>
         <div className={classes.profileContainer}>
-          <EditIcon
-            className={classes.editIcon}
-            onClick={() => {
-              setShowEdit(true);
-            }}
-          />
-          <img
-            src={user.dp || image}
-            className={classes.profileImage}
-            alt="profile-img"
-          />
-          <Typography className={classes.profileName}>
-            {user.full_name}
-          </Typography>
-          <Typography className={classes.title}>
-            Senior Developer at Google
-          </Typography>
+          {!id && (
+            <EditIcon
+              className={classes.editIcon}
+              onClick={() => {
+                setShowEdit(true);
+              }}
+            />
+          )}
+          <img src={user.dp || image} className={classes.profileImage} alt="profile-img" />
+          <Typography className={classes.profileName}>{user.full_name}</Typography>
+          <Typography className={classes.title}>Senior Developer at Google</Typography>
           <div className={classes.statsContainer}>
             <Stat name={"years of experience"} number={5} classes={classes} />
-            <Stat name={"reviews"} number={24} classes={classes} />
-            <Stat name={"rating"} number={0.8} classes={classes} />
+            <Stat name={"reviews"} number={user.total_reviews} classes={classes} />
+            <Stat name={"rating"} number={user.rating || 0} classes={classes} />
           </div>
           <Typography className={classes.profileName}>Experience</Typography>
           <div className={classes.statsContainer}>
@@ -183,14 +171,8 @@ const ProfilePage = () => {
               if (Exp[name] == null) return null;
               return (
                 <div key={name} className={classes.langContainer}>
-                  <img
-                    className={classes.langImg}
-                    src={selectImg(name)}
-                    alt="experience-pic"
-                  />
-                  <Typography className={classes.langLvl}>
-                    {selectLevel(Exp[name])}
-                  </Typography>
+                  <img className={classes.langImg} src={selectImg(name)} alt="experience-pic" />
+                  <Typography className={classes.langLvl}>{selectLevel(Exp[name])}</Typography>
                 </div>
               );
             })}

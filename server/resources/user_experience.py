@@ -15,9 +15,17 @@ class UserExperience(Resource):
         exp = json.loads(exp)
         try:
             for key, val in exp.items():
-                if key.lower() not in Language.__members__:
+                if(key.lower() == "c++"): key="cplusplus"
+                if(key.lower() not in Language.__members__):
                     return {"error": "Invalid language given"}, 400
-                new_exp = ExperienceModel(user_id=get_jwt_identity(), language=Language[key.lower()].value, level=val)
+            ExperienceModel.delete_experience(get_jwt_identity()) 
+            for key, val in exp.items():
+                if(key.lower() == "c++"): key="cplusplus"
+                new_exp = ExperienceModel(
+                    user_id=get_jwt_identity(),
+                    language=Language[key.lower()].value,
+                    level=val
+                )
                 new_exp.save_to_db()
             return {"message": "Experience updated"}, 200
         except:

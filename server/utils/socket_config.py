@@ -15,7 +15,12 @@ def joined(user_id):
 def sendNotification(user_id, review_id, msg):
     socketio.emit("notification", {"msg": msg, "reviewId": review_id}, room=user_id)
 
+
 @socketio.on("review_message")
 def handleMessage(data):
     socketio.emit(data["review_id"], {"message_id": data["message_id"]})
     print("i m here in update message")
+
+
+def trigger(user_id, review_id):
+    socketio.emit("update_respond", {"review_id": review_id}, room=user_id)

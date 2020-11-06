@@ -4,6 +4,7 @@ from models.user_model import UserModel
 from models.blacklist_model import BlacklistModel
 from tasks.find_reviewer_task import find_reviewer
 from datetime import timedelta
+from utils import socket_config
 
 
 class ReviewRespond(Resource):
@@ -25,9 +26,8 @@ class ReviewRespond(Resource):
         # update review status to in_review
         ReviewModel.update_status(review["review_id"], "in_review")
         UserModel.add_review(user_id)
-
-        #  review has been updated, send notification reviewee and reviewer
-        # TO-DO
+        UserModel.update_total_reviews(user_id)
+        socket_config.trigger(review["reviewee_id"], review["review_id"])
 
         return {"accepted": "Review [{}] status changed to in_review.".format(review["title"])}, 200
 
