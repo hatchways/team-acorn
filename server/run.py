@@ -73,6 +73,10 @@ def create_api(app):
 
 
 app = create_app()
+@app.route('/')
+def index():
+    print("INSIDE /")
+    return app.send_static_file('index.html')
 api = create_api(app)
 
 
@@ -89,4 +93,6 @@ def check_if_token_in_blacklist(decrypted_token):
     return revoked_token_model.RevokedTokenModel.is_jti_blacklisted(jti)
 
 
-socketio.run(app, debug=True)
+port = int(os.environ.get('PORT', 5000))
+
+socketio.run(app, debug=True, port = port)

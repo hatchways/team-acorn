@@ -1,0 +1,34 @@
+{
+  "files": {
+    "main.css": "/static/css/main.c32c478c.chunk.css",
+    "main.js": "/static/js/main.6287e0c4.chunk.js",
+    "main.js.map": "/static/js/main.6287e0c4.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.09b85ec0.js",
+    "runtime-main.js.map": "/static/js/runtime-main.09b85ec0.js.map",
+    "static/css/2.2ce93ba3.chunk.css": "/static/css/2.2ce93ba3.chunk.css",
+    "static/js/2.b96eb3a5.chunk.js": "/static/js/2.b96eb3a5.chunk.js",
+    "static/js/2.b96eb3a5.chunk.js.map": "/static/js/2.b96eb3a5.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.1dd05620889a51279b99736982105095.js": "/precache-manifest.1dd05620889a51279b99736982105095.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.2ce93ba3.chunk.css.map": "/static/css/2.2ce93ba3.chunk.css.map",
+    "static/css/main.c32c478c.chunk.css.map": "/static/css/main.c32c478c.chunk.css.map",
+    "static/js/2.b96eb3a5.chunk.js.LICENSE.txt": "/static/js/2.b96eb3a5.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/static/media/Avenir-Book.ecb0c2ae.otf",
+    "static/media/UploadIcon.svg": "/static/media/UploadIcon.1cedb6e9.svg",
+    "static/media/c.png": "/static/media/c.df7e79f2.png",
+    "static/media/cplusplus.png": "/static/media/cplusplus.0f80aafb.png",
+    "static/media/csharp.png": "/static/media/csharp.284ffd92.png",
+    "static/media/css.png": "/static/media/css.bf104c5e.png",
+    "static/media/html.png": "/static/media/html.f2282f94.png",
+    "static/media/java.png": "/static/media/java.a7fd72b8.png",
+    "static/media/js.png": "/static/media/js.2e347452.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.09b85ec0.js",
+    "static/css/2.2ce93ba3.chunk.css",
+    "static/js/2.b96eb3a5.chunk.js",
+    "static/css/main.c32c478c.chunk.css",
+    "static/js/main.6287e0c4.chunk.js"
+  ]
+}

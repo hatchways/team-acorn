@@ -11,9 +11,9 @@ from datetime import datetime
 import json
 from flask_socketio import SocketIO
 
-
-app = Flask(__name__)
+app = Flask(__name__, static_folder='./build', static_url_path='/')
 api = Api(app)
+
 
 
 def register_extensions(app):
@@ -24,7 +24,7 @@ def register_extensions(app):
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='./build', static_url_path='/')
 
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
         'SQLALCHEMY_DATABASE_URI')
