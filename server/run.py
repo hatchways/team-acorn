@@ -93,6 +93,6 @@ def check_if_token_in_blacklist(decrypted_token):
     return revoked_token_model.RevokedTokenModel.is_jti_blacklisted(jti)
 
 
-port = int(os.environ.get('PORT', 5000))
+port = int(os.environ.get('PORT'))
 
 socketio.run(app, debug=True, port = port)
