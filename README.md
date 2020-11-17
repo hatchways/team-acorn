@@ -1,67 +1,61 @@
-# flask-starter
+## Peer Code Review
+A web app that matches programmers to a mentor to review their code. Programmers earn credits by giving code reviews, and you can spend credits on getting your code reviewed (by someone a level up from you).
 
-## Starting the server:
+### Who’s it for?
+Programmers who are looking for a mentor to provide code feedback! 
 
+### Features:
+  - Login/sign up flow with e-mail address
+  - Create profile
+  - Buy/earn/spend credits
+  - Notifications center
+  - Upload code using rich text editor
+  - Receive code review with real time messaging using web-sockets
+  - Send code review
+
+### Tech Stack Used:
+1. React, MaterialUI, react-router, context API
+2. Python, Flask, Redis server, 
+3. Postgres, SQLAlchemy, web-sockets, Stripe API, For-editor, S3 Bucket, JWT
+
+### How to setup this project on local environment?
 1. Open a terminal and go to the server folder. Make sure you have **pipenv** installed (`pip install pipenv`)
 2. Install the dependencies with `pipenv install`. This also createa a virtual environment, if there isn't one already
 3. Activate the virtual environment `pipenv shell`
-4. Make sure, your Postgres local server is running on local machine. (See below for setup)
-5. run `pipenv run python run.py` from the server folder
-6. proceed to run worker instructions.
-
-## Starting the worker for tasks: (for linux machines)
-
-0. Open new terminal and go to the server folder.
-1. run `pipenv shell`
-2. update pipenv `pipenv update`
-3. run worker `rq worker --with-scheduler`
-
-## Setup Local Postgres Database: (for linux machines)
-
-1. Update `sudo apt-get update`
-2. Install PostgreSQL `sudo apt-get install postgresql`
-3. Create postgres user `sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"`
-4. Start PostgresSQL server `sudo service postgresql start`
-5. Login to server `sudo -i -u postgres`
-6. Open Postgres command line `psql`
-7. Create databases, `create database team_acorn;`, `create database team_acorn_test;`
-8. To stop server `sudo service postgresql stop`
-
-## Setup Local Postgres Database: (for Windows machines)
-
-1. install latest version of Postgres with default options from https://www.postgresql.org/download/.
-2. Run it and Choose USER= postgres
-3. Chose password= postgres and rest of the stuff can be default ex: port#.
-4. Run PSQL terminal from start menu.
-5. Enter the user and password with defaults for rest of options.
-6. Create a database using `create database team_acorn;`
-7. all set and you can close the terminal. But make sure it is running in the background. Check the taskbar icon near wifi icon.
-8. Check below commands to use in PSQL terminal if you want to do some testing (not mandatory though)
-
-## Other importants things to note:
-
-1. You need to add STRIPE_API_SK (secret key to .env file on server side to make payment methods to work) Please consult your team members to get the key.
-2. One PK (public key) needed on client .env side. (That's included in the bundle)
-
-### Useful commands for postgres command line (will remove later)
-
-- `psql` - open postgres command line
-- `\list` - list all databases hosted on server
-- `\c team_acorn` - connect to database "team_acorn"
-- `\dt` - if connected to a database, list all tables in selected database
-- `TABLE tableName;` - if connected to a database, list rows inside the table tableName
-- `\q` - exit out of psql command line
-
-# To run the React Front End Server.
-
-## Windows :-
-
-1. Open cmd and move to the client directory inside your project.
-2. Run `npm install`
-3. Wait couple of minutes for it to finish
-4. Run `npm start`
-5. That's it.
-
-# Note: Server port will be 5000 & Client port will be 3000 (Most of the time, unless these ports are being used by some other apps.)
-
-=======
+4. Make sure, your Postgres local server is running on local machine.
+###### FOR LINUX
+     - Update `sudo apt-get update`
+     - Install PostgreSQL `sudo apt-get install postgresql`
+     - Create postgres user `sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"`
+     - Start PostgresSQL server `sudo service postgresql start`
+     - Login to server `sudo -i -u postgres`
+     - Open Postgres command line `psql`
+     - Create databases, `create database team_acorn;`, `create database team_acorn_test;`
+     - To stop server `sudo service postgresql stop`
+###### FOR WINDOWS
+     - Install latest version of Postgres with default options from https://www.postgresql.org/download/.
+     - Run it and Choose USER= postgres
+     - Chose password= postgres and rest of the stuff can be default ex: port#.
+     - Run PSQL terminal from start menu.
+     - Enter the user and password with defaults for rest of options.
+     - Create a database using `create database team_acorn;`
+5. Make sure redis server is installed and running on local machine. (Linux only or install WSLv2 on windows)
+      - `sudo apt update`
+      - `sudo apt install redis-server`
+      - `sudo service redis-server start`
+6. Now run the service worker
+      - Open new terminal and go to the server folder.
+      - run `pipenv shell`
+      - update pipenv `pipenv update`
+      - run worker `rq worker --with-scheduler`
+7. Now goto server folder rename the `example.env` file to `.env` file and open it and change all the keys to your own keys (!important)
+8. Start the server now:
+      - Open a terminal and go to the server folder.
+      - Activate the virtual environment `pipenv shell`
+      - run `pipenv run python run.py` from the server folder
+9. Now we will setup client side (make sure NodeJS is installed)
+      - Open cmd and move to the client directory inside your project.
+      - Run `npm install`
+      - Wait couple of minutes for it to finish
+      - Run `npm start`
+10. That's it.
