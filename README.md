@@ -18,6 +18,10 @@ Programmers who are looking for a mentor to provide code feedback!
 2. Python, Flask, Redis server, 
 3. Postgres, SQLAlchemy, web-sockets, Stripe API, For-editor, S3 Bucket, JWT
 
+#### DEMO - http://blame-my-code.herokuapp.com/
+
+![Demo](Demo.gif)
+
 ### How to setup this project on local environment?
 1. Open a terminal and go to the server folder. Make sure you have **pipenv** installed (`pip install pipenv`)
 2. Install the dependencies with `pipenv install`. This also createa a virtual environment, if there isn't one already
